@@ -177,16 +177,16 @@ export default function ReviewsSection() {
         <div className="reviews-header">
           <div className="eyebrow-container">
             <span className="eyebrow-line" />
-            <span className="eyebrow">CUSTOMER LOVE</span>
+            <span className="eyebrow">TESTIMONIALS</span>
             <span className="eyebrow-line" />
           </div>
 
           <h2 className="reviews-title">
-            Real Stories, <em className="reviews-title-italic">Timeless Jewellery</em>
+            Loved <em className="reviews-title-italic">By You</em>
           </h2>
 
           <p className="reviews-subtitle">
-            Loved by thousands for our quality, designs and service.
+            Real stories and reflections from our cherished silver patrons across India.
           </p>
 
           {/* Lotus motif divider */}

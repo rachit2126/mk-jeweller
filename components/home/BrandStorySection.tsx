@@ -678,64 +678,57 @@ export default function BrandStorySection() {
           }
         }
 
-        /* Mobile Viewport (<= 768px): Horizontal Swipe Carousel */
+        /* Mobile Viewport (<= 768px): Vertical Stacked Premium Cards (Section 11) */
         @media (max-width: 768px) {
           .why-editorial-section {
-            padding: 60px 0 75px;
+            padding: 50px 0 65px;
           }
 
           .why-cards-grid {
-            display: flex;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-            gap: 16px;
-            padding: 12px 24px 20px;
-            scrollbar-width: none;
-            margin: 0 -20px;
-          }
-
-          .why-cards-grid::-webkit-scrollbar {
-            display: none;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 28px !important;
+            max-width: 350px !important;
+            margin: 0 auto !important;
+            padding: 8px 12px !important;
           }
 
           .why-card-wrapper {
-            flex: 0 0 82%;
-            max-width: 320px;
-            scroll-snap-align: center;
+            width: 100% !important;
+            max-width: 100% !important;
           }
 
           .why-card {
-            height: 480px;
+            height: 440px !important;
           }
 
           .image-frame {
-            height: 340px;
-            border-radius: 95px 95px 22px 22px;
+            height: 310px !important;
+            border-radius: 95px 95px 22px 22px !important;
           }
 
           .glass-panel {
-            left: 8px;
-            right: 8px;
-            bottom: 10px;
-            padding: 34px 14px 16px;
-            border-radius: 24px;
+            left: 8px !important;
+            right: 8px !important;
+            bottom: 10px !important;
+            padding: 34px 14px 16px !important;
+            border-radius: 24px !important;
           }
 
           .card-title {
-            font-size: 22px;
+            font-size: 22px !important;
           }
 
           .card-desc {
-            font-size: 13px;
+            font-size: 13.5px !important;
           }
 
           .mobile-dots {
-            display: flex;
+            display: none !important;
           }
 
           .botanical-sketch {
-            display: none;
+            display: none !important;
           }
         }
 

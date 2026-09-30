@@ -440,48 +440,72 @@ export default function TrustStrip() {
           }
         }
 
-        /* RESPONSIVE: MOBILE (640px and below) */
-        @media (max-width: 640px) {
+        /* RESPONSIVE: MOBILE (768px and below) */
+        @media (max-width: 768px) {
           .trust-strip-section {
-            margin-top: -28px;
-            margin-bottom: -35px;
+            margin-top: 16px;
+            margin-bottom: 24px;
             padding: 0 14px;
+            position: relative;
+            z-index: 10;
           }
 
           .trust-strip-container {
-            border-radius: 28px;
-            padding: 26px 14px;
+            border-radius: 24px;
+            padding: 16px 12px;
+            background: rgba(255, 249, 243, 0.94);
+            box-shadow: 0 8px 24px rgba(59, 43, 43, 0.06);
           }
 
           .floral-corner {
-            width: 80px;
-            opacity: 0.45;
+            display: none;
+          }
+
+          .benefit-separator-col {
+            display: none !important;
           }
 
           :global(.trust-strip-track) {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px 10px;
+            display: flex !important;
+            overflow-x: auto !important;
+            scroll-snap-type: x mandatory !important;
+            -webkit-overflow-scrolling: touch !important;
+            gap: 12px !important;
+            padding: 6px 4px 10px 4px !important;
+            scrollbar-width: none;
           }
 
-          /* 5TH ITEM SPANS FULL WIDTH (CENTERED) */
-          :global(.trust-motion-wrapper.trust-item-last) {
-            grid-column: 1 / -1;
-            max-width: 280px;
-            margin: 0 auto;
+          :global(.trust-strip-track)::-webkit-scrollbar {
+            display: none;
+          }
+
+          :global(.trust-motion-wrapper) {
+            flex: 0 0 78vw !important;
+            max-width: 300px !important;
+            scroll-snap-align: center !important;
+          }
+
+          .trust-benefit-card {
+            background: #FFFFFF;
+            border-radius: 18px;
+            border: 1px solid rgba(232, 216, 208, 0.85);
+            padding: 18px 14px;
+            box-shadow: 0 4px 14px rgba(59, 43, 43, 0.04);
+            height: 100%;
           }
 
           .badge-circle {
+            width: 48px;
+            height: 48px;
+          }
+
+          .hero-item .badge-circle {
             width: 50px;
             height: 50px;
           }
 
-          .hero-item .badge-circle {
-            width: 54px;
-            height: 54px;
-          }
-
           .benefit-title {
-            font-size: 1.08rem;
+            font-size: 1.1rem;
           }
 
           .hero-item .benefit-title {
@@ -490,11 +514,11 @@ export default function TrustStrip() {
 
           .benefit-description {
             font-size: 0.78rem;
-            max-width: 160px;
+            max-width: 220px;
           }
 
           .benefit-decorative-line {
-            margin: 5px auto 7px auto;
+            margin: 6px auto 8px auto;
           }
         }
 

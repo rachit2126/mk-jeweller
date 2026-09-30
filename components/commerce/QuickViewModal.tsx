@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { X, Heart, ShoppingBag, ShieldCheck, Star, MessageCircle, ArrowRight } from 'lucide-react';
+import { X, Heart, ShoppingBag, ShieldCheck, Star, MessageCircle, ArrowRight, Sparkles } from 'lucide-react';
 import { useCommerce } from './CommerceContext';
 import { formatPrice } from '@/lib/api';
 
@@ -42,7 +42,7 @@ export default function QuickViewModal() {
   )}`;
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+    <div className="quickview-modal-backdrop" style={{ position: 'fixed', inset: 0, zIndex: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
       {/* Backdrop */}
       <div
         onClick={closeQuickView}
@@ -55,16 +55,16 @@ export default function QuickViewModal() {
         }}
       />
 
-      {/* Modal Dialog Card */}
+      {/* Modal Dialog Card (Bottom sheet on mobile) */}
       <div
         style={{
           position: 'relative',
           width: '100%',
           maxWidth: '850px',
           maxHeight: '90vh',
-          backgroundColor: 'var(--bg-cream)',
-          borderRadius: 'var(--radius-editorial)',
-          boxShadow: 'var(--shadow-modal)',
+          backgroundColor: '#FFF9F3',
+          borderRadius: '24px',
+          boxShadow: '0 20px 60px rgba(59, 43, 43, 0.25)',
           zIndex: 10,
           overflowY: 'auto',
           animation: 'slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -75,6 +75,10 @@ export default function QuickViewModal() {
         }}
         className="quickview-grid"
       >
+        {/* Mobile Drag Handle */}
+        <div className="mobile-drag-handle" style={{ display: 'none' }}>
+          <div style={{ width: '42px', height: '4.5px', borderRadius: '999px', backgroundColor: '#D5CDC7', margin: '0 auto 12px auto' }} />
+        </div>
         {/* Close Button */}
         <button
           onClick={closeQuickView}
@@ -209,20 +213,36 @@ export default function QuickViewModal() {
               {quickViewProduct.description}
             </p>
 
+            {/* Hallmark & Certification Row */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', margin: '14px 0 20px 0' }}>
+              <div style={{ textAlign: 'center', padding: '10px 6px', backgroundColor: '#FFFDF9', border: '1px solid #EFE6DE', borderRadius: '12px' }}>
+                <span style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#B76E79' }}>925</span>
+                <span style={{ fontSize: '0.68rem', color: '#806D68', letterSpacing: '0.02em' }}>Sterling Silver</span>
+              </div>
+              <div style={{ textAlign: 'center', padding: '10px 6px', backgroundColor: '#FFFDF9', border: '1px solid #EFE6DE', borderRadius: '12px' }}>
+                <ShieldCheck size={16} color="#B76E79" style={{ margin: '0 auto 2px auto' }} />
+                <span style={{ fontSize: '0.68rem', color: '#806D68', letterSpacing: '0.02em', display: 'block' }}>Hypoallergenic</span>
+              </div>
+              <div style={{ textAlign: 'center', padding: '10px 6px', backgroundColor: '#FFFDF9', border: '1px solid #EFE6DE', borderRadius: '12px' }}>
+                <Sparkles size={16} color="#B76E79" style={{ margin: '0 auto 2px auto' }} />
+                <span style={{ fontSize: '0.68rem', color: '#806D68', letterSpacing: '0.02em', display: 'block' }}>Premium Quality</span>
+              </div>
+            </div>
+
             {/* Quantity Stepper */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
               <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--color-espresso)' }}>Quantity:</span>
-              <div style={{ display: 'inline-flex', alignItems: 'center', border: '1px solid var(--color-border)', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', border: '1px solid var(--color-border)', borderRadius: '999px', backgroundColor: '#FFFFFF', padding: '2px 4px' }}>
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  style={{ padding: '6px 12px', color: 'var(--color-espresso)' }}
+                  style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-espresso)', fontSize: '1.1rem' }}
                 >
                   -
                 </button>
-                <span style={{ minWidth: '30px', textAlign: 'center', fontWeight: 600, fontSize: '0.9rem' }}>{quantity}</span>
+                <span style={{ minWidth: '32px', textAlign: 'center', fontWeight: 600, fontSize: '0.9rem' }}>{quantity}</span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  style={{ padding: '6px 12px', color: 'var(--color-espresso)' }}
+                  style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-espresso)', fontSize: '1.1rem' }}
                 >
                   +
                 </button>
@@ -239,25 +259,50 @@ export default function QuickViewModal() {
                   closeQuickView();
                 }}
                 className="btn-primary"
-                style={{ flex: 1, padding: '14px' }}
+                style={{ flex: 1, padding: '14px', borderRadius: '999px', backgroundColor: '#B76E79', borderColor: '#B76E79', color: '#FFFFFF', fontWeight: 600 }}
               >
                 <ShoppingBag size={18} />
                 <span>Add to Bag</span>
               </button>
 
               <button
+                onClick={() => {
+                  addToCart(quickViewProduct, quantity, selectedSize);
+                  closeQuickView();
+                  window.location.href = '/checkout';
+                }}
+                style={{
+                  flex: 1,
+                  padding: '14px',
+                  borderRadius: '999px',
+                  backgroundColor: '#FCE8DE',
+                  border: '1.5px solid #B76E79',
+                  color: '#B76E79',
+                  fontWeight: 600,
+                  fontSize: '0.92rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer'
+                }}
+              >
+                <span>Buy Now</span>
+              </button>
+
+              <button
                 onClick={() => toggleWishlist(quickViewProduct)}
                 aria-label="Wishlist toggle"
                 style={{
-                  width: '50px',
-                  height: '50px',
-                  borderRadius: 'var(--radius-pill)',
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '50%',
                   border: '1px solid var(--color-border)',
                   backgroundColor: '#FFFFFF',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: isFavorited ? '#E53E3E' : 'var(--color-espresso)'
+                  color: isFavorited ? '#E53E3E' : 'var(--color-espresso)',
+                  flexShrink: 0
                 }}
               >
                 <Heart size={20} fill={isFavorited ? '#E53E3E' : 'none'} />
@@ -312,9 +357,21 @@ export default function QuickViewModal() {
 
       <style jsx>{`
         @media (max-width: 768px) {
+          :global(.quickview-modal-backdrop) {
+            align-items: flex-end !important;
+            padding: 0 !important;
+          }
           .quickview-grid {
             grid-template-columns: 1fr !important;
-            padding: 24px 18px !important;
+            padding: 16px 20px 32px 20px !important;
+            border-radius: 26px 26px 0 0 !important;
+            max-height: 88vh !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-shadow: 0 -10px 40px rgba(52, 39, 39, 0.2) !important;
+          }
+          .mobile-drag-handle {
+            display: block !important;
           }
         }
       `}</style>

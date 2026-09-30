@@ -30,6 +30,8 @@ export default function Footer() {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [quickLinksOpen, setQuickLinksOpen] = useState(false);
   const [customerCareOpen, setCustomerCareOpen] = useState(false);
+  const [policiesOpen, setPoliciesOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,7 +123,7 @@ export default function Footer() {
 
             {/* Description */}
             <p className="footer-description">
-              Fine 925 sterling silver jewellery crafted for everyday elegance and royal celebrations.
+              Fine 925 sterling silver jewellery crafted for everyday elegance and special moments.
             </p>
 
             {/* TRUST FEATURES: EXACTLY THE 3 SPECIFIED */}
@@ -201,7 +203,7 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* SOCIAL ICONS (Instagram, Facebook, YouTube, Pinterest) */}
+            {/* SOCIAL ICONS (Instagram, Facebook, YouTube) */}
             <div className="footer-social-row">
               <a
                 href="https://instagram.com"
@@ -230,20 +232,11 @@ export default function Footer() {
               >
                 <YoutubeIcon size={16} />
               </a>
-              <a
-                href="https://pinterest.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="MK Silver Hub Pinterest"
-                className="social-icon-btn"
-              >
-                <PinterestIcon size={16} />
-              </a>
             </div>
           </div>
 
           {/* ========================================================= */}
-          {/* COLUMN 2: QUICK LINKS                                     */}
+          {/* COLUMN 2: QUICK LINKS ACCORDION                           */}
           {/* ========================================================= */}
           <div className="footer-col-nav">
             <button
@@ -274,7 +267,7 @@ export default function Footer() {
           </div>
 
           {/* ========================================================= */}
-          {/* COLUMN 3: CUSTOMER CARE                                   */}
+          {/* COLUMN 3: CUSTOMER CARE ACCORDION                         */}
           {/* ========================================================= */}
           <div className="footer-col-nav">
             <button
@@ -301,13 +294,67 @@ export default function Footer() {
               <li><Link href="/faq" className="footer-link">FAQs</Link></li>
               <li><Link href="/size-guide" className="footer-link">Size Guide</Link></li>
               <li><Link href="/jewellery-care" className="footer-link">Care Instructions</Link></li>
-              <li><Link href="/contact" className="footer-link">Support</Link></li>
             </ul>
           </div>
 
           {/* ========================================================= */}
-          {/* COLUMN 4: NEWSLETTER (CLEAN, NO PROMO CARDS UNDERNEATH)   */}
+          {/* COLUMN 4: POLICIES ACCORDION (Mobile) / NEWSLETTER (Desk) */}
           {/* ========================================================= */}
+          <div className="footer-col-nav footer-col-policies-mobile">
+            <button
+              type="button"
+              className="col-heading-btn"
+              onClick={() => setPoliciesOpen(!policiesOpen)}
+              aria-expanded={policiesOpen}
+            >
+              <h3 className="col-heading">Policies</h3>
+              <span className="accordion-chevron-wrap">
+                <ChevronDown
+                  size={16}
+                  className={`accordion-chevron ${policiesOpen ? 'open' : ''}`}
+                  aria-hidden="true"
+                />
+              </span>
+            </button>
+            <div className="heading-underline" />
+
+            <ul className={`col-link-list ${policiesOpen ? 'show-mobile' : ''}`}>
+              <li><Link href="/privacy" className="footer-link">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="footer-link">Terms & Conditions</Link></li>
+              <li><Link href="/returns" className="footer-link">Return Policy</Link></li>
+              <li><Link href="/shipping" className="footer-link">Shipping Policy</Link></li>
+            </ul>
+          </div>
+
+          {/* ========================================================= */}
+          {/* COLUMN 5: CONTACT ACCORDION (Mobile)                      */}
+          {/* ========================================================= */}
+          <div className="footer-col-nav footer-col-contact-mobile">
+            <button
+              type="button"
+              className="col-heading-btn"
+              onClick={() => setContactOpen(!contactOpen)}
+              aria-expanded={contactOpen}
+            >
+              <h3 className="col-heading">Contact</h3>
+              <span className="accordion-chevron-wrap">
+                <ChevronDown
+                  size={16}
+                  className={`accordion-chevron ${contactOpen ? 'open' : ''}`}
+                  aria-hidden="true"
+                />
+              </span>
+            </button>
+            <div className="heading-underline" />
+
+            <ul className={`col-link-list ${contactOpen ? 'show-mobile' : ''}`}>
+              <li><a href="tel:+917425058118" className="footer-link">+91 74250 58118</a></li>
+              <li><a href="mailto:support@mksilverhub.in" className="footer-link">support@mksilverhub.in</a></li>
+              <li><span className="footer-link" style={{ cursor: 'default' }}>Jaipur, Rajasthan, India</span></li>
+            </ul>
+          </div>
+
+          {/* Desktop Newsletter Column */}
           <div className="footer-col-newsletter">
             <h3 className="col-heading">Subscribe to Our Newsletter</h3>
             <div className="heading-underline" />
@@ -784,6 +831,11 @@ export default function Footer() {
           }
         }
 
+        .footer-col-policies-mobile,
+        .footer-col-contact-mobile {
+          display: none;
+        }
+
         /* RESPONSIVE TABLET */
         @media (max-width: 960px) {
           .footer-main-grid {
@@ -793,10 +845,19 @@ export default function Footer() {
         }
 
         /* RESPONSIVE MOBILE */
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
+          .footer-col-policies-mobile,
+          .footer-col-contact-mobile {
+            display: block !important;
+          }
+
+          .footer-col-newsletter {
+            display: none !important;
+          }
+
           .footer-root {
-            padding-top: 44px;
-            padding-bottom: 84px; /* extra clearance for mobile bottom floating nav */
+            padding-top: 40px;
+            padding-bottom: 96px; /* extra clearance for mobile bottom floating nav */
           }
 
           .footer-container {
@@ -805,41 +866,55 @@ export default function Footer() {
 
           .footer-main-grid {
             grid-template-columns: 1fr;
-            gap: 28px;
-            padding-bottom: 30px;
+            gap: 16px;
+            padding-bottom: 24px;
           }
 
           .col-heading-btn {
             cursor: pointer;
+            padding: 8px 0;
           }
 
           .accordion-chevron-wrap {
-            display: inline-block;
+            display: flex !important;
+            align-items: center;
           }
 
           .accordion-chevron {
             color: #8E7A77;
-            transition: transform 250ms ease;
+            transition: transform 220ms ease;
           }
 
           .accordion-chevron.open {
             transform: rotate(180deg);
+            color: #B76E79;
+          }
+
+          .heading-underline {
+            display: none;
           }
 
           .col-link-list {
             display: none;
-            padding-top: 6px;
+            padding-bottom: 8px;
           }
 
           .col-link-list.show-mobile {
-            display: flex;
+            display: flex !important;
+            flex-direction: column;
+            gap: 10px;
+            padding-top: 6px;
+          }
+
+          .footer-trust-row {
+            display: none !important;
           }
 
           .footer-bottom-bar {
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 14px;
+            gap: 12px;
           }
 
           .bottom-links-group {

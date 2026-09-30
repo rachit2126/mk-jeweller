@@ -10,16 +10,20 @@ export default function AnnouncementBar() {
       style={{
         backgroundColor: '#FFE3D3',
         color: '#3B2B2B',
-        height: '38px',
+        height: '36px',
         fontSize: '0.74rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '0 clamp(16px, 3.5vw, 42px)',
+        padding: '0 clamp(12px, 3vw, 42px)',
         position: 'relative',
         zIndex: 50,
         border: 'none',
         margin: 0,
+        width: '100%',
+        maxWidth: '100vw',
+        overflow: 'hidden',
+        boxSizing: 'border-box',
         fontFamily: 'var(--font-ui), "Jost", sans-serif',
       }}
     >
@@ -46,9 +50,11 @@ export default function AnnouncementBar() {
           letterSpacing: '0.03em',
           color: '#3B2B2B',
           textAlign: 'center',
+          flex: 1,
         }}
       >
-        <span>Flat 10% Off on First Order · Code: <strong>FIRST10</strong></span>
+        <span className="desktop-announcement">Flat 10% Off on First Order · Code: <strong>FIRST10</strong></span>
+        <span className="mobile-announcement">Flat 10% Off · Code: <strong>FIRST10</strong></span>
       </div>
 
       {/* Right: Hallmark & Shop Now */}
@@ -80,9 +86,21 @@ export default function AnnouncementBar() {
         .announcement-link:hover {
           color: #9C5762 !important;
         }
+        .mobile-announcement {
+          display: none;
+        }
         @media (max-width: 900px) {
           .hidden-mobile {
             display: none !important;
+          }
+        }
+        @media (max-width: 640px) {
+          .desktop-announcement {
+            display: none !important;
+          }
+          .mobile-announcement {
+            display: inline !important;
+            font-size: 0.72rem !important;
           }
         }
       `}</style>

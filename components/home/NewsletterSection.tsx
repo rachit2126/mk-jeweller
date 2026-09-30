@@ -120,7 +120,7 @@ export default function NewsletterSection() {
               <div className="newsletter-success-pill" role="status">
                 <CheckCircle2 size={20} className="success-icon" />
                 <span className="success-text">
-                  Thank you! Check your inbox for your 10% welcome gift code.
+                  You&apos;re on the list.
                 </span>
               </div>
             ) : (
@@ -796,22 +796,33 @@ export default function NewsletterSection() {
           }
         }
 
-        @media (max-width: 440px) {
+        @media (max-width: 540px) {
           .newsletter-container {
-            padding: 16px 12px;
+            padding: 16px 14px;
+            width: 100% !important;
+            box-sizing: border-box !important;
+          }
+
+          .newsletter-form-container {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
           }
 
           .newsletter-form {
-            padding: 5px 5px 5px 14px;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            padding: 4px 4px 4px 12px;
           }
 
           .subscribe-btn {
-            padding: 10px 18px;
-            font-size: 0.84rem;
+            padding: 9px 15px;
+            font-size: 0.82rem;
           }
 
           .email-input {
-            font-size: 0.88rem;
+            font-size: 0.85rem;
           }
 
           .newsletter-benefits {

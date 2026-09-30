@@ -132,21 +132,21 @@ export default function OccasionSection() {
         {/* Left Side: Editorial Typography & CTA */}
         <div className="collections-copy">
           <div className="eyebrow-container">
-            <span className="eyebrow">OUR COLLECTIONS</span>
+            <span className="eyebrow">CURATED OCCASIONS</span>
             <span className="eyebrow-rule" />
           </div>
 
           <h2 className="editorial-title">
-            Designed
-            <span className="editorial-title-italic">for Every Story</span>
+            Curated
+            <span className="editorial-title-italic">For Every You</span>
           </h2>
 
           <p className="editorial-desc">
-            From everyday essentials to extraordinary pieces, explore jewellery that celebrates every moment.
+            From everyday minimal pieces to grand celebrations, discover silver jewellery styled for your special moments.
           </p>
 
           <Link href="/collections" className="collections-cta">
-            <span>EXPLORE ALL COLLECTIONS</span>
+            <span>EXPLORE ALL OCCASIONS</span>
             <ArrowRight size={16} className="cta-arrow" />
           </Link>
         </div>
@@ -192,6 +192,62 @@ export default function OccasionSection() {
                 </div>
               </Link>
             </div>
+          ))}
+        </div>
+
+        {/* Dedicated Mobile Horizontal Snap Carousel (Section 10: Everyday, Festive, Bridal, Date Night) */}
+        <div className="mobile-occasions-carousel">
+          {[
+            {
+              id: 'everyday',
+              title: 'EVERYDAY',
+              desc: 'Minimal pieces for every day.',
+              image: '/images/occasions/everyday-elegance.jpg',
+              href: '/shop?style=minimal',
+            },
+            {
+              id: 'festive',
+              title: 'FESTIVE',
+              desc: 'Designed to make celebrations shine.',
+              image: '/images/products/necklaces-festive-lotus-ruby-necklace-01.jpg',
+              href: '/collections?theme=festive',
+            },
+            {
+              id: 'bridal',
+              title: 'BRIDAL',
+              desc: 'Timeless pieces for special moments.',
+              image: '/images/occasions/bridal-collection.jpg',
+              href: '/collections?theme=bridal',
+            },
+            {
+              id: 'date-night',
+              title: 'DATE NIGHT',
+              desc: 'Elegant statement pieces.',
+              image: '/images/occasions/gifting-collection.jpg',
+              href: '/collections?theme=statement',
+            },
+          ].map((occ) => (
+            <Link key={occ.id} href={occ.href} className="mobile-occasion-card">
+              <div className="mobile-occasion-img-wrap">
+                <Image
+                  src={occ.image}
+                  alt={occ.title}
+                  fill
+                  sizes="(max-width: 768px) 80vw, 320px"
+                  style={{ objectFit: 'cover' }}
+                />
+                <div className="mobile-occasion-gradient" />
+              </div>
+              <div className="mobile-occasion-glass-panel">
+                <div className="mobile-occasion-text">
+                  <span className="mobile-occasion-title">{occ.title}</span>
+                  <span className="mobile-occasion-desc">{occ.desc}</span>
+                </div>
+                <div className="mobile-occasion-arrow">
+                  <ArrowRight size={15} />
+                </div>
+              </div>
+            </Link>
           ))}
         </div>
       </div>
@@ -693,43 +749,92 @@ export default function OccasionSection() {
           }
         }
 
+        .mobile-occasions-carousel {
+          display: none;
+        }
+
         /* Mobile Alternating Lookbook Sequence (<= 768px) */
         @media (max-width: 768px) {
           .collections-collage {
-            position: relative;
-            min-height: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 32px;
-            max-width: 360px;
-            margin: 0 auto;
+            display: none !important;
           }
-          .collection-everyday,
-          .collection-bridal,
-          .collection-gifting {
-            position: relative !important;
-            left: auto !important;
-            right: auto !important;
-            top: auto !important;
-            bottom: auto !important;
-            transform: none !important;
-            width: 100% !important;
-            max-width: 330px;
-            margin: 0 auto;
+          .mobile-occasions-carousel {
+            display: flex !important;
+            overflow-x: auto !important;
+            scroll-snap-type: x mandatory !important;
+            gap: 14px !important;
+            padding: 10px 4px 20px 4px !important;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
           }
-
-          .image-frame,
-          .hero-arch {
+          .mobile-occasions-carousel::-webkit-scrollbar {
+            display: none;
+          }
+          :global(.mobile-occasion-card) {
+            flex: 0 0 78vw !important;
+            max-width: 310px !important;
             height: 380px !important;
-            border-radius: 100px 100px 24px 24px !important;
+            scroll-snap-align: start !important;
+            border-radius: 22px !important;
+            overflow: hidden !important;
+            position: relative !important;
+            text-decoration: none !important;
+            box-shadow: 0 12px 30px rgba(59, 43, 43, 0.12) !important;
+            display: block !important;
           }
-
-          .collection-glass {
-            left: 10px;
-            right: 10px;
-            bottom: 10px;
-            padding: 14px 16px;
-            border-radius: 22px;
+          .mobile-occasion-img-wrap {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+          }
+          .mobile-occasion-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(59, 43, 43, 0.45) 100%);
+          }
+          .mobile-occasion-glass-panel {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.84);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            border-radius: 18px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 8px 24px rgba(59, 43, 43, 0.10);
+          }
+          .mobile-occasion-title {
+            font-family: var(--font-ui), "Jost", sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: #342727;
+            display: block;
+          }
+          .mobile-occasion-desc {
+            font-family: var(--font-ui), "Jost", sans-serif;
+            font-size: 0.74rem;
+            color: #806D68;
+            display: block;
+            margin-top: 2px;
+          }
+          .mobile-occasion-arrow {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #B76E79;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(183, 110, 121, 0.35);
           }
 
           .botanical-drawing {

@@ -391,6 +391,68 @@ export default function CategorySection() {
               </Link>
             </div>
           </div>
+
+          {/* Dedicated Mobile Horizontal Snap Carousel (Section 6: NECKLACES, EARRINGS, RINGS, BRACELETS, PENDANTS) */}
+          <div className="mobile-collections-carousel">
+            {[
+              {
+                name: 'Necklaces',
+                desc: 'Elegant & timeless',
+                href: '/collections/necklaces',
+                image: '/images/collection-necklaces.jpg',
+              },
+              {
+                name: 'Earrings',
+                desc: 'Everyday to statement',
+                href: '/collections/earrings',
+                image: '/images/collection-earrings.jpg',
+              },
+              {
+                name: 'Rings',
+                desc: 'Symbols of love',
+                href: '/collections/rings',
+                image: '/images/collection-rings.jpg',
+              },
+              {
+                name: 'Bracelets',
+                desc: 'Modern essentials',
+                href: '/collections/bracelets',
+                image: '/images/occasions/everyday-elegance.jpg',
+              },
+              {
+                name: 'Pendants',
+                desc: 'Delicate charm',
+                href: '/collections/pendants',
+                image: '/images/why-choose/ethically-sourced-necklace.jpg',
+              },
+            ].map((cat) => (
+              <Link
+                key={cat.name}
+                href={cat.href}
+                className="mobile-category-card"
+              >
+                <div className="mobile-card-img-wrap">
+                  <Image
+                    src={cat.image}
+                    alt={cat.name}
+                    fill
+                    sizes="(max-width: 768px) 80vw, 320px"
+                    style={{ objectFit: 'cover' }}
+                  />
+                  <div className="mobile-card-gradient" />
+                </div>
+                <div className="mobile-card-glass-panel">
+                  <div className="mobile-card-text">
+                    <span className="mobile-card-title">{cat.name}</span>
+                    <span className="mobile-card-desc">{cat.desc}</span>
+                  </div>
+                  <div className="mobile-card-arrow-circle">
+                    <ArrowRight size={15} />
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -858,66 +920,92 @@ export default function CategorySection() {
           }
         }
 
+        .mobile-collections-carousel {
+          display: none;
+        }
+
         /* Mobile Alternating Editorial Sequence (<= 768px) */
         @media (max-width: 768px) {
           .editorial-collage-stage {
-            position: relative;
-            height: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 34px;
-            max-width: 360px;
-            margin: 0 auto;
+            display: none !important;
           }
-          .node-necklace,
-          .node-earrings,
-          .node-rings {
+          .mobile-collections-carousel {
+            display: flex !important;
+            overflow-x: auto !important;
+            scroll-snap-type: x mandatory !important;
+            gap: 14px !important;
+            padding: 10px 4px 20px 4px !important;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+          }
+          .mobile-collections-carousel::-webkit-scrollbar {
+            display: none;
+          }
+          :global(.mobile-category-card) {
+            flex: 0 0 78vw !important;
+            max-width: 310px !important;
+            height: 380px !important;
+            scroll-snap-align: start !important;
+            border-radius: 22px !important;
+            overflow: hidden !important;
             position: relative !important;
-            left: auto !important;
-            right: auto !important;
-            top: auto !important;
-            transform: none !important;
-            width: 100% !important;
-            max-width: 330px;
+            text-decoration: none !important;
+            box-shadow: 0 12px 30px rgba(59, 43, 43, 0.12) !important;
+            display: block !important;
           }
-
-          /* Alternating Alignment */
-          .node-necklace {
-            margin-right: auto;
-            margin-left: 0;
+          .mobile-card-img-wrap {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
           }
-          .necklace-arch {
-            height: 380px;
-            border-radius: 160px 160px 28px 28px;
+          .mobile-card-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(59, 43, 43, 0.45) 100%);
           }
-
-          .node-earrings {
-            margin-left: auto;
-            margin-right: 0;
-            margin-top: -20px;
-            z-index: 5;
+          .mobile-card-glass-panel {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.84);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            border-radius: 18px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 8px 24px rgba(59, 43, 43, 0.10);
           }
-          .earrings-arch {
-            height: 350px;
-            border-radius: 150px 150px 28px 28px;
+          .mobile-card-title {
+            font-family: var(--font-display), "Cormorant Garamond", Georgia, serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #342727;
+            display: block;
+            line-height: 1.15;
           }
-
-          .node-rings {
-            margin-right: auto;
-            margin-left: 0;
-            margin-top: -20px;
+          .mobile-card-desc {
+            font-family: var(--font-ui), "Jost", sans-serif;
+            font-size: 0.74rem;
+            color: #806D68;
+            display: block;
+            margin-top: 2px;
           }
-          .rings-arch {
-            height: 360px;
-            border-radius: 155px 155px 28px 28px;
-          }
-
-          .overlapping-curved-panel {
-            bottom: 10px;
-            left: 8px;
-            right: 8px;
-            padding: 14px 14px;
-            border-radius: 26px;
+          .mobile-card-arrow-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #B76E79;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(183, 110, 121, 0.35);
           }
 
           .corner-botanical-bottom {

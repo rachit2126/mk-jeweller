@@ -301,33 +301,52 @@ export default function BrandLogo({
         }
 
         @media (max-width: 768px) {
+          .brand-title-full {
+            display: inline !important;
+            font-size: 0.94rem !important;
+            letter-spacing: 0.12em !important;
+          }
+          .brand-title-mobile {
+            display: none !important;
+          }
           .brand-logo-root.horizontal .brand-divider {
             display: none !important;
           }
           .brand-logo-root.horizontal .brand-tagline {
-            display: none !important;
-          }
-          .brand-title {
-            font-size: 0.98rem !important;
-            letter-spacing: 0.12em !important;
-          }
-        }
-
-        @media (max-width: 540px) {
-          .brand-title-full {
-            display: none !important;
-          }
-          .brand-title-mobile {
-            display: inline !important;
-            font-size: 0.88rem !important;
-            letter-spacing: 0.08em !important;
+            display: block !important;
+            font-size: 0.44rem !important;
+            letter-spacing: 0.16em !important;
+            opacity: 0.85;
+            margin-top: 2px;
           }
         }
 
         @media (max-width: 360px) {
-          .brand-title-mobile {
-            font-size: 0.82rem !important;
+          .brand-logo-root.horizontal {
+            gap: 5px !important;
+          }
+          .brand-monogram-container {
+            transform: scale(0.82) !important;
+            transform-origin: center right !important;
+          }
+          .brand-title-full {
+            font-size: 0.74rem !important;
+            letter-spacing: 0.04em !important;
+          }
+          .brand-logo-root.horizontal .brand-tagline {
+            font-size: 0.35rem !important;
             letter-spacing: 0.06em !important;
+          }
+        }
+
+        @media (max-width: 330px) {
+          .brand-title-full {
+            font-size: 0.68rem !important;
+            letter-spacing: 0.02em !important;
+          }
+          .brand-logo-root.horizontal .brand-tagline {
+            font-size: 0.32rem !important;
+            letter-spacing: 0.04em !important;
           }
         }
       `}</style>

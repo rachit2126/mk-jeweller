@@ -159,9 +159,12 @@ export default function MainNavbar() {
             </button>
           </div>
 
-          {/* Left: Brand Logo */}
-          <div className="brand-logo-container" style={{ flexShrink: 0 }}>
+          {/* Brand Logo */}
+          <div className="brand-logo-container desktop-logo" style={{ flexShrink: 0 }}>
             <BrandLogo size={isScrolled ? 'compact' : 'normal'} />
+          </div>
+          <div className="brand-logo-container mobile-logo" style={{ flexShrink: 0, display: 'none' }}>
+            <BrandLogo size="compact" />
           </div>
 
           {/* Center Navigation Links (Minimalist 4-Item Architecture with Warm Animations) */}
@@ -243,6 +246,7 @@ export default function MainNavbar() {
 
           {/* Right Action Icons */}
           <div
+            className="nav-actions-right"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -580,6 +584,14 @@ export default function MainNavbar() {
           .mobile-nav-toggle {
             display: flex !important;
           }
+          .desktop-logo {
+            display: none !important;
+          }
+          .mobile-logo {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+          }
           .brand-logo-container {
             position: absolute;
             left: 50%;
@@ -589,6 +601,27 @@ export default function MainNavbar() {
         @media (max-width: 640px) {
           .hidden-mobile {
             display: none !important;
+          }
+          .floating-navbar-pill {
+            padding: 0 10px !important;
+            height: 56px !important;
+          }
+          .nav-action-icon-btn {
+            padding: 4px !important;
+          }
+        }
+        @media (max-width: 400px) {
+          .nav-actions-right {
+            gap: 2px !important;
+          }
+        }
+        @media (max-width: 360px) {
+          .floating-navbar-pill {
+            padding: 0 6px !important;
+            width: 96% !important;
+          }
+          .nav-action-icon-btn {
+            padding: 2px !important;
           }
         }
       `}</style>

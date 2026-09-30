@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { X, ChevronDown, MessageCircle, Heart, User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { X, ChevronDown, MessageCircle, Heart, User, Search, ShoppingBag, Package, HelpCircle } from 'lucide-react';
 import BrandLogo from '@/components/ui/BrandLogo';
 
 interface MobileDrawerProps {
@@ -16,18 +17,22 @@ const SHOP_CATEGORIES = [
   { label: 'Rings', href: '/collections/rings' },
   { label: 'Bracelets', href: '/collections/bracelets' },
   { label: 'Pendants', href: '/collections/pendants' },
+  { label: 'Mangalsutra', href: '/collections?category=mangalsutra' },
 ];
 
 const COLLECTION_LINKS = [
+  { label: 'New Arrivals', href: '/shop?badge=NEW%20ARRIVAL' },
   { label: 'Best Sellers', href: '/collections/best-sellers' },
-  { label: 'New Arrivals', href: '/collections/new-arrivals' },
   { label: 'Everyday Essentials', href: '/collections' },
-  { label: 'Bridal Collection', href: '/collections' },
+  { label: 'Festive Collection', href: '/collections?theme=festive' },
+  { label: 'Bridal Collection', href: '/collections?theme=bridal' },
 ];
 
 export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
-  const [isShopOpen, setIsShopOpen] = useState(false);
+  const router = useRouter();
+  const [isShopOpen, setIsShopOpen] = useState(true);
   const [isCollectionsOpen, setIsCollectionsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Close on Escape
   useEffect(() => {
@@ -45,6 +50,14 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen, onClose]);
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      onClose();
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -74,8 +87,8 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
       <div
         style={{
           position: 'relative',
-          width: '86vw',
-          maxWidth: '360px',
+          width: '90vw',
+          maxWidth: '380px',
           height: '100%',
           backgroundColor: '#FFF9F3',
           borderTopRightRadius: '24px',
@@ -92,7 +105,7 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
         {/* Header */}
         <div
           style={{
-            padding: '20px 24px',
+            padding: '20px 20px 14px 20px',
             borderBottom: '1px solid #E8D8D0',
             display: 'flex',
             alignItems: 'center',
@@ -121,23 +134,77 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
           </button>
         </div>
 
+        {/* Search Field */}
+        <div style={{ padding: '16px 20px 8px 20px' }}>
+          <form onSubmit={handleSearchSubmit}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                backgroundColor: '#FFFFFF',
+                borderRadius: '14px',
+                border: '1px solid #E8D8D0',
+                padding: '10px 14px',
+                gap: '10px',
+                boxShadow: '0 2px 8px rgba(59, 43, 43, 0.04)',
+              }}
+            >
+              <Search size={16} color="#806D68" />
+              <input
+                type="text"
+                placeholder="Search jewellery..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  border: 'none',
+                  outline: 'none',
+                  backgroundColor: 'transparent',
+                  fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                  fontSize: '0.86rem',
+                  color: '#342727',
+                  width: '100%',
+                }}
+              />
+            </div>
+          </form>
+        </div>
+
         {/* Navigation List */}
-        <nav style={{ padding: '16px 24px', flex: 1 }}>
+        <nav style={{ padding: '8px 20px', flex: 1 }}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {/* 0. HOME Link */}
+            <div style={{ borderBottom: '1px solid #F0E2DA' }}>
+              <Link
+                href="/"
+                onClick={onClose}
+                style={{
+                  display: 'block',
+                  padding: '13px 0',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.08em',
+                  color: '#342727',
+                  textDecoration: 'none',
+                }}
+              >
+                HOME
+              </Link>
+            </div>
+
             {/* 1. SHOP Accordion */}
-            <div style={{ borderBottom: '1px solid #E8D8D0' }}>
+            <div style={{ borderBottom: '1px solid #F0E2DA' }}>
               <button
                 onClick={() => setIsShopOpen(!isShopOpen)}
                 style={{
                   width: '100%',
-                  padding: '14px 0',
+                  padding: '13px 0',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  fontSize: '0.88rem',
+                  fontSize: '0.9rem',
                   fontWeight: 600,
-                  letterSpacing: '0.12em',
-                  color: '#3B2B2B',
+                  letterSpacing: '0.08em',
+                  color: isShopOpen ? '#B76E79' : '#342727',
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
@@ -150,13 +217,13 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
                   style={{
                     transform: isShopOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                     transition: 'transform 0.22s ease',
-                    color: isShopOpen ? '#B76E79' : '#6F5A58',
+                    color: isShopOpen ? '#B76E79' : '#806D68',
                   }}
                 />
               </button>
 
               {isShopOpen && (
-                <div style={{ paddingLeft: '14px', paddingBottom: '14px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <div style={{ paddingLeft: '14px', paddingBottom: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {SHOP_CATEGORIES.map((cat) => (
                     <Link
                       key={cat.label}
@@ -179,19 +246,19 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
             </div>
 
             {/* 2. COLLECTIONS Accordion */}
-            <div style={{ borderBottom: '1px solid #E8D8D0' }}>
+            <div style={{ borderBottom: '1px solid #F0E2DA' }}>
               <button
                 onClick={() => setIsCollectionsOpen(!isCollectionsOpen)}
                 style={{
                   width: '100%',
-                  padding: '14px 0',
+                  padding: '13px 0',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  fontSize: '0.88rem',
+                  fontSize: '0.9rem',
                   fontWeight: 600,
-                  letterSpacing: '0.12em',
-                  color: '#3B2B2B',
+                  letterSpacing: '0.08em',
+                  color: isCollectionsOpen ? '#B76E79' : '#342727',
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
@@ -204,13 +271,13 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
                   style={{
                     transform: isCollectionsOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                     transition: 'transform 0.22s ease',
-                    color: isCollectionsOpen ? '#B76E79' : '#6F5A58',
+                    color: isCollectionsOpen ? '#B76E79' : '#806D68',
                   }}
                 />
               </button>
 
               {isCollectionsOpen && (
-                <div style={{ paddingLeft: '14px', paddingBottom: '14px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <div style={{ paddingLeft: '14px', paddingBottom: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {COLLECTION_LINKS.map((col) => (
                     <Link
                       key={col.label}
@@ -232,153 +299,189 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
               )}
             </div>
 
-            {/* 3. GIFTS Direct Link */}
-            <div style={{ borderBottom: '1px solid #E8D8D0' }}>
+            {/* 3. GIFTS */}
+            <div style={{ borderBottom: '1px solid #F0E2DA' }}>
               <Link
                 href="/gifts"
                 onClick={onClose}
                 style={{
-                  padding: '14px 0',
-                  fontSize: '0.88rem',
-                  fontWeight: 600,
-                  letterSpacing: '0.12em',
-                  color: '#3B2B2B',
-                  textDecoration: 'none',
                   display: 'block',
+                  padding: '13px 0',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.08em',
+                  color: '#342727',
+                  textDecoration: 'none',
                 }}
               >
                 GIFTS
               </Link>
             </div>
 
-            {/* 4. ABOUT Direct Link */}
-            <div style={{ borderBottom: '1px solid #E8D8D0' }}>
+            {/* 4. ABOUT */}
+            <div style={{ borderBottom: '1px solid #F0E2DA' }}>
               <Link
                 href="/about"
                 onClick={onClose}
                 style={{
-                  padding: '14px 0',
-                  fontSize: '0.88rem',
-                  fontWeight: 600,
-                  letterSpacing: '0.12em',
-                  color: '#3B2B2B',
-                  textDecoration: 'none',
                   display: 'block',
+                  padding: '13px 0',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.08em',
+                  color: '#342727',
+                  textDecoration: 'none',
                 }}
               >
                 ABOUT
               </Link>
             </div>
 
-            {/* 5. CONTACT Direct Link */}
-            <div style={{ borderBottom: '1px solid #E8D8D0' }}>
+            {/* 5. CONTACT */}
+            <div style={{ borderBottom: '1px solid #F0E2DA' }}>
               <Link
                 href="/contact"
                 onClick={onClose}
                 style={{
-                  padding: '14px 0',
-                  fontSize: '0.88rem',
-                  fontWeight: 600,
-                  letterSpacing: '0.12em',
-                  color: '#3B2B2B',
-                  textDecoration: 'none',
                   display: 'block',
+                  padding: '13px 0',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.08em',
+                  color: '#342727',
+                  textDecoration: 'none',
                 }}
               >
                 CONTACT
               </Link>
             </div>
-          </div>
 
-          {/* Quick Account / Wishlist Links */}
-          <div style={{ marginTop: '28px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <Link
-              href="/account"
-              onClick={onClose}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                fontSize: '0.84rem',
-                color: '#3B2B2B',
-                textDecoration: 'none',
-                fontWeight: 500,
-              }}
-            >
-              <User size={16} strokeWidth={1.4} />
-              <span>My Account</span>
-            </Link>
-
-            <Link
-              href="/wishlist"
-              onClick={onClose}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                fontSize: '0.84rem',
-                color: '#3B2B2B',
-                textDecoration: 'none',
-                fontWeight: 500,
-              }}
-            >
-              <Heart size={16} strokeWidth={1.4} color="#B76E79" />
-              <span>Saved Wishlist</span>
-            </Link>
+            {/* 6. FAQ */}
+            <div style={{ borderBottom: '1px solid #F0E2DA' }}>
+              <Link
+                href="/faq"
+                onClick={onClose}
+                style={{
+                  display: 'block',
+                  padding: '13px 0',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.08em',
+                  color: '#342727',
+                  textDecoration: 'none',
+                }}
+              >
+                FAQ
+              </Link>
+            </div>
           </div>
         </nav>
 
-        {/* Bottom Styling Advice & WhatsApp CTA */}
+        {/* WhatsApp Styling Advice Card (Section 3) */}
+        <div style={{ padding: '14px 20px', backgroundColor: '#FCE8DE', margin: '0 16px 12px 16px', borderRadius: '16px', border: '1px solid #E8D8D0' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div>
+              <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#342727' }}>Need styling advice?</div>
+              <div style={{ fontSize: '0.72rem', color: '#806D68' }}>Chat with our silver expert</div>
+            </div>
+            <a
+              href="https://wa.me/917425058118?text=Hi%20MK%20Silver%20Hub%2C%20I%20need%20styling%20advice"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="WhatsApp Styling Advice"
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                backgroundColor: '#25D366',
+                color: '#FFFFFF',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 4px 12px rgba(37, 211, 102, 0.35)',
+              }}
+            >
+              <MessageCircle size={18} />
+            </a>
+          </div>
+        </div>
+
+        {/* Bottom Quick Actions (Matching Screen 2 in Reference) */}
         <div
           style={{
-            padding: '20px 24px',
-            backgroundColor: '#FFE3D3',
+            padding: '12px 16px',
             borderTop: '1px solid #E8D8D0',
+            backgroundColor: '#FFFFFF',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: '8px',
+            textAlign: 'center',
           }}
         >
-          <span
+          <Link
+            href="/account"
+            onClick={onClose}
             style={{
-              fontSize: '0.72rem',
-              fontWeight: 600,
-              letterSpacing: '0.08em',
-              color: '#B76E79',
-              textTransform: 'uppercase',
-              display: 'block',
-              marginBottom: '3px',
-            }}
-          >
-            Need styling advice?
-          </span>
-          <p
-            style={{
-              margin: '0 0 10px 0',
-              fontSize: '0.82rem',
-              color: '#6F5A58',
-            }}
-          >
-            Chat with our silver expert
-          </p>
-          <a
-            href="https://wa.me/917425058118?text=Hi%20MK%20Silver%20Hub,%20I'd%20like%20styling%20advice%20for%20your%20925%20silver%20jewellery."
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'inline-flex',
+              display: 'flex',
+              flexDirection: 'column',
               alignItems: 'center',
-              gap: '8px',
-              backgroundColor: '#B76E79',
-              color: '#FFFFFF',
-              padding: '9px 16px',
-              borderRadius: '999px',
-              fontSize: '0.82rem',
-              fontWeight: 600,
+              gap: '4px',
+              color: '#806D68',
               textDecoration: 'none',
-              transition: 'background-color 0.2s ease',
+              fontSize: '0.66rem',
             }}
           >
-            <MessageCircle size={15} />
-            <span>WhatsApp Us</span>
-          </a>
+            <User size={18} />
+            <span>My Account</span>
+          </Link>
+          <Link
+            href="/account#orders"
+            onClick={onClose}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '4px',
+              color: '#806D68',
+              textDecoration: 'none',
+              fontSize: '0.66rem',
+            }}
+          >
+            <Package size={18} />
+            <span>My Orders</span>
+          </Link>
+          <Link
+            href="/wishlist"
+            onClick={onClose}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '4px',
+              color: '#806D68',
+              textDecoration: 'none',
+              fontSize: '0.66rem',
+            }}
+          >
+            <Heart size={18} />
+            <span>Wishlist</span>
+          </Link>
+          <Link
+            href="/cart"
+            onClick={onClose}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '4px',
+              color: '#806D68',
+              textDecoration: 'none',
+              fontSize: '0.66rem',
+            }}
+          >
+            <ShoppingBag size={18} />
+            <span>Cart</span>
+          </Link>
         </div>
       </div>
 

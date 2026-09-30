@@ -170,6 +170,7 @@ export default function HeroSlider() {
   return (
     <section
       aria-label="Featured Collection Carousel"
+      className="hero-slider-section"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onTouchStart={handleTouchStart}
@@ -642,54 +643,55 @@ export default function HeroSlider() {
       </div>
 
       <style jsx>{`
-        .hero-primary-cta {
-          background-color: #B76E79;
-          color: #FFFFFF;
-          border: 1px solid #B76E79;
-          border-radius: 999px;
-          padding: 13px 28px;
-          font-family: var(--font-ui), 'Jost', sans-serif;
-          font-size: 0.84rem;
-          font-weight: 500;
-          letter-spacing: 0.05em;
-          text-decoration: none;
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          transition: all 0.24s ease;
-          box-shadow: 0 6px 20px rgba(183, 110, 121, 0.35);
+        :global(.hero-primary-cta) {
+          background-color: #B76E79 !important;
+          color: #FFFFFF !important;
+          border: 1px solid #B76E79 !important;
+          border-radius: 999px !important;
+          padding: 13px 28px !important;
+          font-family: var(--font-ui), 'Jost', sans-serif !important;
+          font-size: 0.84rem !important;
+          font-weight: 500 !important;
+          letter-spacing: 0.05em !important;
+          text-decoration: none !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          gap: 8px !important;
+          transition: all 0.24s ease !important;
+          box-shadow: 0 6px 20px rgba(183, 110, 121, 0.4) !important;
         }
-        .hero-primary-cta:hover {
-          background-color: #9C5762;
-          border-color: #9C5762;
+        :global(.hero-primary-cta:hover) {
+          background-color: #9C5762 !important;
+          border-color: #9C5762 !important;
           transform: translateY(-1px);
-          box-shadow: 0 8px 24px rgba(183, 110, 121, 0.45);
+          box-shadow: 0 8px 24px rgba(183, 110, 121, 0.5) !important;
         }
-        .hero-primary-cta:hover .cta-arrow {
+        :global(.hero-primary-cta:hover) .cta-arrow {
           transform: translateX(4px);
         }
         .cta-arrow {
           transition: transform 0.2s ease;
         }
-        .hero-secondary-cta {
-          background-color: rgba(255, 255, 255, 0.12);
-          color: #FFFFFF;
-          border: 1px solid rgba(255, 255, 255, 0.7);
-          border-radius: 999px;
-          padding: 13px 28px;
-          font-family: var(--font-ui), 'Jost', sans-serif;
-          font-size: 0.84rem;
-          font-weight: 500;
-          letter-spacing: 0.05em;
-          text-decoration: none;
-          display: inline-flex;
-          align-items: center;
-          transition: all 0.24s ease;
-          backdrop-filter: blur(6px);
+        :global(.hero-secondary-cta) {
+          background-color: rgba(255, 255, 255, 0.16) !important;
+          color: #FFFFFF !important;
+          border: 1px solid rgba(255, 255, 255, 0.75) !important;
+          border-radius: 999px !important;
+          padding: 13px 28px !important;
+          font-family: var(--font-ui), 'Jost', sans-serif !important;
+          font-size: 0.84rem !important;
+          font-weight: 500 !important;
+          letter-spacing: 0.05em !important;
+          text-decoration: none !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          transition: all 0.24s ease !important;
+          backdrop-filter: blur(8px) !important;
+          WebkitBackdropFilter: blur(8px) !important;
         }
-        .hero-secondary-cta:hover {
-          border-color: #FFFFFF;
-          background-color: rgba(255, 255, 255, 0.25);
+        :global(.hero-secondary-cta:hover) {
+          border-color: #FFFFFF !important;
+          background-color: rgba(255, 255, 255, 0.3) !important;
           transform: translateY(-1px);
         }
         .hero-side-nav-btn:hover {
@@ -718,12 +720,24 @@ export default function HeroSlider() {
             height: 38px !important;
           }
         }
+        @media (max-width: 768px) {
+          .hero-slider-section {
+            height: 78vh !important;
+            min-height: 520px !important;
+            max-height: 680px !important;
+          }
+        }
         @media (max-width: 640px) {
           .cta-arrow {
             display: inline-block;
           }
           .hero-thumbnail-strip {
             display: none !important;
+          }
+          .hero-primary-cta,
+          .hero-secondary-cta {
+            padding: 11px 22px !important;
+            font-size: 0.8rem !important;
           }
         }
       `}</style>

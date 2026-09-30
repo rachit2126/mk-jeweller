@@ -235,14 +235,14 @@ export default function EditorialBanner() {
             <span
               style={{
                 fontFamily: 'var(--font-ui), "Jost", sans-serif',
-                fontSize: '0.76rem',
+                fontSize: '0.74rem',
                 fontWeight: 600,
                 letterSpacing: '0.22em',
                 color: '#B76E79',
                 textTransform: 'uppercase',
               }}
             >
-              BRIDAL COLLECTION
+              CRAFTED FOR YOUR STORY
             </span>
             <span
               style={{
@@ -259,11 +259,11 @@ export default function EditorialBanner() {
           <h2
             style={{
               fontFamily: 'var(--font-display), "Cormorant Garamond", Georgia, serif',
-              fontSize: 'clamp(2.7rem, 4.4vw, 4rem)',
+              fontSize: 'clamp(2.3rem, 4.2vw, 3.8rem)',
               fontWeight: 400,
               lineHeight: 1.08,
-              color: '#3B2B2B',
-              marginBottom: '20px',
+              color: '#342727',
+              marginBottom: '16px',
               letterSpacing: '-0.015em',
             }}
           >
@@ -271,30 +271,30 @@ export default function EditorialBanner() {
             <span style={{ fontStyle: 'italic', fontWeight: 400 }}>of Forever</span>
           </h2>
 
-          {/* Description */}
+          {/* Description (Section 9) */}
           <p
             style={{
               fontFamily: 'var(--font-ui), "Jost", sans-serif',
-              fontSize: 'clamp(0.96rem, 1.15vw, 1.05rem)',
+              fontSize: 'clamp(0.92rem, 1.15vw, 1.05rem)',
               color: '#6F5A58',
-              lineHeight: 1.7,
-              marginBottom: '34px',
+              lineHeight: 1.65,
+              marginBottom: '28px',
               maxWidth: '430px',
             }}
           >
-            Discover our exclusive bridal collection crafted for life&apos;s most beautiful moments.
+            Jewellery that becomes part of your most beautiful moments.
           </p>
 
           {/* Primary Action Button */}
           <Link
-            href="/collections?theme=bridal"
+            href="/collections"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: '10px',
               backgroundColor: '#B76E79',
               color: '#FFFFFF',
-              padding: '14px 34px',
+              padding: '13px 32px',
               borderRadius: '999px',
               fontFamily: 'var(--font-ui), "Jost", sans-serif',
               fontSize: '0.82rem',
@@ -307,7 +307,7 @@ export default function EditorialBanner() {
             }}
             className="bridal-cta-btn"
           >
-            <span>Explore Bridal Collection</span>
+            <span>Explore Collection</span>
             <ArrowRight size={15} className="bridal-arrow-icon" />
           </Link>
         </motion.div>

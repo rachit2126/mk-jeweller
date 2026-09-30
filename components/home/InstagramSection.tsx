@@ -123,10 +123,25 @@ export default function InstagramSection() {
             grid-template-columns: repeat(4, 1fr) !important;
           }
         }
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
           .ig-gallery-grid {
-            grid-template-columns: repeat(3, 1fr) !important;
-            gap: 8px !important;
+            display: flex !important;
+            overflow-x: auto !important;
+            scroll-snap-type: x mandatory !important;
+            gap: 12px !important;
+            padding: 4px 14px 12px 14px !important;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+          }
+          .ig-gallery-grid::-webkit-scrollbar {
+            display: none;
+          }
+          :global(.ig-photo-box) {
+            flex: 0 0 140px !important;
+            width: 140px !important;
+            height: 140px !important;
+            padding-top: 0 !important;
+            scroll-snap-align: start !important;
           }
         }
       `}</style>

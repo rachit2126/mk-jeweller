@@ -1,8 +1,9 @@
 import React from 'react';
 import HeroSlider from '@/components/home/HeroSlider';
-import TrustStrip from '@/components/home/TrustStrip';
 import CategorySection from '@/components/home/CategorySection';
+import TrustStrip from '@/components/home/TrustStrip';
 import BestSellersSection from '@/components/home/BestSellersSection';
+import NewArrivalsSection from '@/components/home/NewArrivalsSection';
 import EditorialBanner from '@/components/home/EditorialBanner';
 import OccasionSection from '@/components/home/OccasionSection';
 import BrandStorySection from '@/components/home/BrandStorySection';
@@ -12,31 +13,34 @@ import NewsletterSection from '@/components/home/NewsletterSection';
 export default function HomePage() {
   return (
     <>
-      {/* 01 Hero Video/Image Slider */}
+      {/* 01 Hero Slider */}
       <HeroSlider />
 
-      {/* 02 Shop By Collections */}
+      {/* 02 Shop By Category / Collections */}
       <CategorySection />
 
-      {/* 03 Benefits Strip */}
+      {/* 03 Trust Strip (Floating overlap between Collections & Best Sellers) */}
       <TrustStrip />
 
       {/* 04 Best Sellers */}
       <BestSellersSection />
 
-      {/* 05 Editorial Bridal Banner */}
+      {/* 05 New Arrivals */}
+      <NewArrivalsSection />
+
+      {/* 06 Editorial Campaign */}
       <EditorialBanner />
 
-      {/* 06 Three Feature Cards */}
+      {/* 07 Curated Occasions */}
       <OccasionSection />
 
-      {/* 07 Why Choose MK Silver Hub */}
+      {/* 08 Why Choose MK Silver Hub */}
       <BrandStorySection />
 
-      {/* 08 Testimonial */}
+      {/* 09 Testimonials */}
       <ReviewsSection />
 
-      {/* 09 Newsletter */}
+      {/* 10 Newsletter */}
       <NewsletterSection />
     </>
   );

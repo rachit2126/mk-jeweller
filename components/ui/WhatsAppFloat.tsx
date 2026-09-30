@@ -85,11 +85,22 @@ export default function WhatsAppFloat() {
         }
         @media (max-width: 768px) {
           .whatsapp-floating-wrapper {
-            bottom: 80px !important;
-            right: 18px !important;
+            bottom: 82px !important;
+            right: 14px !important;
+            flex-direction: column-reverse !important;
+            align-items: flex-end !important;
+            gap: 6px !important;
+            z-index: 140 !important;
           }
           .whatsapp-tooltip {
-            display: none !important;
+            display: flex !important;
+            max-width: 220px !important;
+            padding: 6px 10px !important;
+            border-radius: 10px !important;
+          }
+          :global(.whatsapp-btn) {
+            width: 50px !important;
+            height: 50px !important;
           }
         }
       `}</style>

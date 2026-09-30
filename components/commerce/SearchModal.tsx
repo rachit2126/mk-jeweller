@@ -3,18 +3,21 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, X, ArrowRight, Sparkles, Clock } from 'lucide-react';
+import { Search, X, ArrowRight, Sparkles, Clock, ArrowLeft } from 'lucide-react';
 import { useCommerce } from './CommerceContext';
 import { PRODUCTS } from '@/data/products';
 import { formatPrice } from '@/lib/api';
 import { useRecentSearchesStore } from '@/stores/recent-searches';
+import BrandLogo from '@/components/ui/BrandLogo';
 
-const POPULAR_SEARCHES = ['Chandbali', 'Polki Choker', '925 Silver Ring', 'Ruby Pendant', 'Freshwater Pearls', 'Kada Bangles'];
+const POPULAR_SEARCHES = ['Silver Rings', '925 Necklaces', 'Stud Earrings', 'Bracelets', 'New Arrivals'];
 
 export default function SearchModal() {
   const { isSearchOpen, closeSearch, openQuickView } = useCommerce();
   const [query, setQuery] = useState('');
   const { searches: recentSearches, addSearch } = useRecentSearchesStore();
+
+  const trendingProducts = useMemo(() => PRODUCTS.slice(0, 4), []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -65,31 +68,45 @@ export default function SearchModal() {
         style={{
           position: 'relative',
           width: '100%',
-          backgroundColor: 'var(--bg-cream)',
+          backgroundColor: '#FFF9F3',
           borderBottom: '1px solid var(--color-border)',
-          padding: '32px 0 24px',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.12)',
+          padding: '24px 0 20px',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
           zIndex: 10,
           animation: 'slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
         }}
       >
         <div className="container" style={{ maxWidth: '900px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-            <span style={{ fontSize: '0.75rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--color-champagne)', fontWeight: 600 }}>
-              Search Catalogue
-            </span>
+          {/* Mobile Top Navigation Row */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+            <button
+              onClick={closeSearch}
+              style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'none', border: 'none', color: '#342727', fontSize: '0.9rem', fontWeight: 500, cursor: 'pointer', padding: '4px' }}
+            >
+              <ArrowLeft size={18} color="#B76E79" />
+              <span>Back</span>
+            </button>
+
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <BrandLogo size="compact" />
+            </div>
+
             <button
               onClick={closeSearch}
               aria-label="Close search"
               style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(183, 110, 121, 0.08)',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '4px',
-                color: 'var(--color-espresso)',
-                fontSize: '0.85rem'
+                justifyContent: 'center',
+                color: '#342727',
+                border: 'none',
+                cursor: 'pointer'
               }}
             >
-              <span>ESC</span>
               <X size={18} />
             </button>
           </div>
@@ -100,17 +117,17 @@ export default function SearchModal() {
               display: 'flex',
               alignItems: 'center',
               backgroundColor: '#FFFFFF',
-              border: '1.5px solid var(--color-border)',
+              border: '1.5px solid #F6D6D9',
               borderRadius: 'var(--radius-pill)',
-              padding: '8px 20px',
+              padding: '8px 18px',
               gap: '12px',
-              boxShadow: '0 4px 18px rgba(25, 20, 15, 0.05)'
+              boxShadow: '0 4px 18px rgba(183, 110, 121, 0.08)'
             }}
           >
-            <Search size={22} color="var(--color-champagne)" />
+            <Search size={20} color="#B76E79" />
             <input
               type="text"
-              placeholder="Search jewellery, earrings, polki, rings, 925 silver..."
+              placeholder="Search necklaces, rings, earrings..."
               value={query}
               onChange={e => setQuery(e.target.value)}
               autoFocus
@@ -118,14 +135,14 @@ export default function SearchModal() {
                 flex: 1,
                 border: 'none',
                 outline: 'none',
-                fontSize: '1.1rem',
+                fontSize: '1rem',
                 backgroundColor: 'transparent',
-                color: 'var(--color-espresso)',
+                color: '#342727',
                 fontFamily: 'var(--font-ui)'
               }}
             />
             {query && (
-              <button onClick={() => setQuery('')} style={{ color: 'var(--color-muted-text)', padding: '4px' }}>
+              <button onClick={() => setQuery('')} style={{ color: '#806D68', padding: '4px', background: 'none', border: 'none', cursor: 'pointer' }}>
                 <X size={18} />
               </button>
             )}
@@ -200,10 +217,86 @@ export default function SearchModal() {
       >
         <div className="container" style={{ maxWidth: '1000px' }}>
           {query.trim() === '' ? (
-            <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--color-muted-text)' }}>
-              <Sparkles size={32} color="var(--color-champagne)" style={{ margin: '0 auto 12px' }} />
-              <p style={{ fontSize: '1rem', color: 'var(--color-espresso)' }}>Start typing to discover fine 925 sterling pieces.</p>
-              <p style={{ fontSize: '0.85rem' }}>Browse rings, necklaces, earrings, bracelets, and heirloom gifts.</p>
+            <div style={{ padding: '6px 0 30px' }}>
+              {/* Popular Searches */}
+              <div style={{ marginBottom: '28px' }}>
+                <h4 style={{ fontSize: '0.9rem', fontWeight: 600, color: '#342727', marginBottom: '12px', letterSpacing: '0.04em' }}>
+                  Popular Searches
+                </h4>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                  {POPULAR_SEARCHES.map((term, i) => (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        setQuery(term);
+                        addSearch(term);
+                      }}
+                      style={{
+                        fontSize: '0.82rem',
+                        padding: '8px 16px',
+                        borderRadius: '999px',
+                        backgroundColor: '#FFFFFF',
+                        color: '#342727',
+                        border: '1px solid #F6D6D9',
+                        cursor: 'pointer',
+                        fontWeight: 500,
+                        boxShadow: '0 2px 6px rgba(183, 110, 121, 0.05)'
+                      }}
+                    >
+                      {term}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Trending Products */}
+              <div>
+                <h4 style={{ fontSize: '0.9rem', fontWeight: 600, color: '#342727', marginBottom: '14px', letterSpacing: '0.04em' }}>
+                  Trending Products
+                </h4>
+                <div
+                  className="no-scrollbar"
+                  style={{
+                    display: 'flex',
+                    gap: '14px',
+                    overflowX: 'auto',
+                    paddingBottom: '10px',
+                    WebkitOverflowScrolling: 'touch'
+                  }}
+                >
+                  {trendingProducts.map((p) => (
+                    <div
+                      key={p.id}
+                      onClick={() => {
+                        closeSearch();
+                        openQuickView(p);
+                      }}
+                      style={{
+                        minWidth: '130px',
+                        maxWidth: '130px',
+                        cursor: 'pointer',
+                        backgroundColor: '#FFFFFF',
+                        borderRadius: '16px',
+                        padding: '8px',
+                        border: '1px solid #F6D6D9',
+                        boxShadow: '0 4px 12px rgba(183, 110, 121, 0.06)'
+                      }}
+                    >
+                      <div style={{ position: 'relative', width: '100%', height: '120px', borderRadius: '12px', overflow: 'hidden', backgroundColor: '#FCE8DE' }}>
+                        <Image src={p.images[0]} alt={p.name} fill sizes="130px" style={{ objectFit: 'cover' }} />
+                      </div>
+                      <div style={{ marginTop: '8px', textAlign: 'center' }}>
+                        <p style={{ fontSize: '0.78rem', fontWeight: 600, color: '#342727', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {p.name}
+                        </p>
+                        <p style={{ fontSize: '0.8rem', fontWeight: 700, color: '#B76E79', marginTop: '2px' }}>
+                          {formatPrice(p.price)}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           ) : filteredProducts.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '60px 20px' }}>

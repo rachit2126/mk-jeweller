@@ -8,27 +8,73 @@ import { PRODUCTS } from '@/data/products';
 
 export default function NewArrivalsSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const newArrivals = PRODUCTS.filter(p => p.isNewArrival || p.featured).slice(0, 8);
+  const newArrivals = PRODUCTS.filter((p) => p.isNewArrival || p.badge === 'NEW ARRIVAL' || p.featured).slice(0, 8);
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
-      const offset = direction === 'left' ? -340 : 340;
+      const offset = direction === 'left' ? -320 : 320;
       scrollRef.current.scrollBy({ left: offset, behavior: 'smooth' });
     }
   };
 
   return (
-    <section className="section-padding" style={{ backgroundColor: 'var(--bg-cream)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
-      <div className="container">
+    <section
+      style={{
+        backgroundColor: '#FFF9F3',
+        padding: 'clamp(48px, 6vw, 84px) 0',
+        position: 'relative',
+        borderTop: '1px solid rgba(232, 216, 208, 0.65)',
+        borderBottom: '1px solid rgba(232, 216, 208, 0.65)',
+      }}
+    >
+      <div className="container" style={{ maxWidth: '1440px', margin: '0 auto', padding: '0 clamp(16px, 4vw, 32px)' }}>
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '36px', flexWrap: 'wrap', gap: '16px' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'space-between',
+            marginBottom: '32px',
+            flexWrap: 'wrap',
+            gap: '16px',
+          }}
+        >
           <div>
-            <span className="eyebrow">JUST DROPPED</span>
-            <h2 style={{ fontSize: 'clamp(2rem, 3.5vw, 2.8rem)', color: 'var(--color-espresso)', marginBottom: '8px' }}>
-              New Arrivals
+            <div
+              style={{
+                fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                fontSize: '0.74rem',
+                fontWeight: 600,
+                letterSpacing: '0.24em',
+                color: '#B76E79',
+                textTransform: 'uppercase',
+                marginBottom: '6px',
+              }}
+            >
+              NEW ARRIVALS
+            </div>
+            <h2
+              style={{
+                fontFamily: 'var(--font-display), "Cormorant Garamond", Georgia, serif',
+                fontSize: 'clamp(2.1rem, 3.4vw, 3rem)',
+                fontWeight: 500,
+                color: '#342727',
+                lineHeight: 1.12,
+                margin: 0,
+              }}
+            >
+              Freshly crafted for you.
             </h2>
-            <p style={{ fontSize: '1rem', color: 'var(--color-muted-text)' }}>
-              Fresh designs, made to become your next favourites.
+            <p
+              style={{
+                fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                fontSize: '0.88rem',
+                color: '#806D68',
+                marginTop: '6px',
+                marginBottom: 0,
+              }}
+            >
+              Handcrafted in 925 sterling silver, sculpted for effortless elegance.
             </p>
           </div>
 
@@ -39,34 +85,37 @@ export default function NewArrivalsSection() {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                fontSize: '0.9rem',
+                fontSize: '0.86rem',
                 fontWeight: 600,
-                color: 'var(--color-espresso)'
+                color: '#B76E79',
+                textDecoration: 'none',
+                fontFamily: 'var(--font-ui), "Jost", sans-serif',
               }}
               className="view-all-link"
             >
               <span>View All</span>
-              <ArrowRight size={16} />
+              <ArrowRight size={15} />
             </Link>
 
-            {/* Slider Navigation Controls */}
-            <div style={{ display: 'flex', gap: '8px' }}>
+            {/* Slider Navigation Controls (Desktop) */}
+            <div className="desktop-slider-arrows" style={{ display: 'flex', gap: '8px' }}>
               <button
                 onClick={() => scroll('left')}
                 aria-label="Previous products"
                 style={{
-                  width: '36px',
-                  height: '36px',
+                  width: '38px',
+                  height: '38px',
                   borderRadius: '50%',
-                  border: '1px solid var(--color-border)',
+                  border: '1px solid #E8D8D0',
                   backgroundColor: '#FFFFFF',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: 'var(--color-espresso)',
-                  transition: 'all 0.2s ease'
+                  color: '#342727',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 2px 8px rgba(59, 43, 43, 0.05)',
                 }}
-                className="nav-arrow-btn"
               >
                 <ChevronLeft size={18} />
               </button>
@@ -74,18 +123,19 @@ export default function NewArrivalsSection() {
                 onClick={() => scroll('right')}
                 aria-label="Next products"
                 style={{
-                  width: '36px',
-                  height: '36px',
+                  width: '38px',
+                  height: '38px',
                   borderRadius: '50%',
-                  border: '1px solid var(--color-border)',
+                  border: '1px solid #E8D8D0',
                   backgroundColor: '#FFFFFF',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: 'var(--color-espresso)',
-                  transition: 'all 0.2s ease'
+                  color: '#342727',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 2px 8px rgba(59, 43, 43, 0.05)',
                 }}
-                className="nav-arrow-btn"
               >
                 <ChevronRight size={18} />
               </button>
@@ -93,16 +143,17 @@ export default function NewArrivalsSection() {
           </div>
         </div>
 
-        {/* Product Slider / Grid */}
+        {/* Product Slider (1.25-card horizontal carousel on mobile) */}
         <div
           ref={scrollRef}
           style={{
             display: 'flex',
-            gap: '20px',
+            gap: '16px',
             overflowX: 'auto',
             scrollSnapType: 'x mandatory',
             paddingBottom: '16px',
-            scrollbarWidth: 'none'
+            scrollbarWidth: 'none',
+            WebkitOverflowScrolling: 'touch',
           }}
           className="arrivals-slider"
         >
@@ -110,9 +161,9 @@ export default function NewArrivalsSection() {
             <div
               key={product.id}
               style={{
-                flex: '0 0 calc(25% - 15px)',
+                flex: '0 0 calc((100% - 48px) / 4)',
                 minWidth: '260px',
-                scrollSnapAlign: 'start'
+                scrollSnapAlign: 'start',
               }}
               className="product-col"
             >
@@ -127,22 +178,21 @@ export default function NewArrivalsSection() {
           display: none;
         }
         .view-all-link:hover {
-          color: var(--color-champagne);
-        }
-        .nav-arrow-btn:hover {
-          background-color: var(--color-espresso);
-          color: #FFFFFF;
-          border-color: var(--color-espresso);
+          color: #9C5762;
         }
         @media (max-width: 1024px) {
           .product-col {
-            flex: 0 0 calc(33.333% - 14px) !important;
+            flex: 0 0 calc((100% - 32px) / 3) !important;
           }
         }
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
+          .desktop-slider-arrows {
+            display: none !important;
+          }
           .product-col {
-            flex: 0 0 calc(75% - 10px) !important;
-            min-width: 210px !important;
+            flex: 0 0 78vw !important;
+            max-width: 310px !important;
+            min-width: 250px !important;
           }
         }
       `}</style>
