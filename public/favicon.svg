@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <defs>
+    <linearGradient id="silverGrad" x1="20" y1="20" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" />
+      <stop offset="0.25" stop-color="#E6E6E6" />
+      <stop offset="0.5" stop-color="#A6A6A6" />
+      <stop offset="0.75" stop-color="#D1D1D1" />
+      <stop offset="1" stop-color="#7A7A7A" />
+    </linearGradient>
+    <linearGradient id="roseGrad" x1="20" y1="100" x2="100" y2="20" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FCEEEB" />
+      <stop offset="0.5" stop-color="#D99BA4" />
+      <stop offset="1" stop-color="#B76E79" />
+    </linearGradient>
+    <radialGradient id="diamondGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#B76E79" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Outer Rose-Gold Frame Ring -->
+  <circle cx="64" cy="60" r="48" stroke="url(#roseGrad)" stroke-width="1.8" />
+
+  <!-- Inner Silver Frame Ring -->
+  <circle cx="61" cy="58" r="45" stroke="url(#silverGrad)" stroke-width="2.2" />
+
+  <!-- Botanical Vine & Leaves on Left -->
+  <path d="M24 64 C20 45 28 32 40 24" stroke="url(#roseGrad)" stroke-width="1.6" stroke-linecap="round" fill="none" />
+  <path d="M26 62 C23 75 32 86 48 94" stroke="url(#roseGrad)" stroke-width="1.6" stroke-linecap="round" fill="none" />
+
+  <!-- Leaves -->
+  <path d="M26 40 C18 36 18 28 25 30 C30 32 28 38 26 40 Z" fill="url(#roseGrad)" stroke="#9C5762" stroke-width="0.5" />
+  <path d="M22 50 C14 48 15 40 22 42 C27 44 25 49 22 50 Z" fill="url(#roseGrad)" stroke="#9C5762" stroke-width="0.5" />
+  <path d="M24 62 C16 64 18 72 25 70 C29 68 27 63 24 62 Z" fill="url(#roseGrad)" stroke="#9C5762" stroke-width="0.5" />
+  <path d="M32 78 C26 84 31 92 38 88 C40 85 36 80 32 78 Z" fill="url(#roseGrad)" stroke="#9C5762" stroke-width="0.5" />
+  <path d="M42 90 C38 96 46 102 52 96 C53 93 47 88 42 90 Z" fill="url(#roseGrad)" stroke="#9C5762" stroke-width="0.5" />
+
+  <!-- 5-Petal Flower with Diamond Center -->
+  <g transform="translate(32, 68)">
+    <circle cx="0" cy="-5" r="3.5" fill="url(#roseGrad)" />
+    <circle cx="4.8" cy="-1.5" r="3.5" fill="url(#roseGrad)" />
+    <circle cx="3" cy="4.2" r="3.5" fill="url(#roseGrad)" />
+    <circle cx="-3" cy="4.2" r="3.5" fill="url(#roseGrad)" />
+    <circle cx="-4.8" cy="-1.5" r="3.5" fill="url(#roseGrad)" />
+    <!-- Diamond center -->
+    <circle cx="0" cy="0" r="2.2" fill="#FFFFFF" stroke="#9C5762" stroke-width="0.6" />
+    <circle cx="0" cy="0" r="1" fill="#D9B98A" />
+  </g>
+
+  <!-- Diamond Dewdrop on Vine -->
+  <circle cx="24" cy="35" r="2" fill="#FFFFFF" stroke="#B76E79" stroke-width="0.6" />
+  <circle cx="38" cy="92" r="1.8" fill="#FFFFFF" stroke="#B76E79" stroke-width="0.6" />
+
+  <!-- 4-Point Diamond Sparkle Star (Top Right) -->
+  <path d="M88 32 C88.5 35.5 90.5 37.5 94 38 C90.5 38.5 88.5 40.5 88 44 C87.5 40.5 85.5 38.5 82 38 C85.5 37.5 87.5 35.5 88 32 Z" fill="url(#roseGrad)" />
+
+  <!-- Intertwined MK Monogram -->
+  <!-- Letter M: Curved serif crest, sweeping arches, loops down-right -->
+  <path d="M38 32 C41 30 46 29 49 34 C52 40 56 60 58 72 L52 72 C50 62 47 44 45 38 C43 35 41 36 39 37 L38 32 Z" fill="url(#silverGrad)" />
+  <path d="M48 35 C52 42 60 62 65 72 L60 74 C56 64 50 48 47 38 C46 36 47 35 48 35 Z" fill="url(#silverGrad)" />
+  <path d="M64 42 C64 36 67 31 72 31 C73 31 74 32 74 34 C72 36 70 42 70 48 C70 58 74 68 82 72 C87 74 92 73 95 72 L93 75 C89 77 82 77 76 73 C68 68 64 56 64 42 Z" fill="url(#silverGrad)" />
+
+  <!-- Letter K: Upright stem, upper flared arm, lower sweeping leg extending past ring -->
+  <rect x="66" y="32" width="3.2" height="40" rx="0.8" fill="url(#silverGrad)" />
+  <path d="M68 50 L84 34 L89 34 L73 50 Z" fill="url(#silverGrad)" />
+  <path d="M71 48 L96 76 C98 78 101 80 104 81 L103 82.5 C99 81.5 95 79 92 75 L70 52 Z" fill="url(#silverGrad)" />
+</svg>
