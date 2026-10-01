@@ -4,7 +4,9 @@ const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/mk_silver_hub'
 
 const options = {
   maxPoolSize: 20,
-  serverSelectionTimeoutMS: 5000,
+  serverSelectionTimeoutMS: 10000,
+  connectTimeoutMS: 10000,
+  socketTimeoutMS: 20000,
 };
 
 declare global {
