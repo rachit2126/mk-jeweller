@@ -175,7 +175,7 @@ export default function ContactPage() {
                     <input
                       type="tel"
                       required
-                      placeholder="+91 98765 43210"
+                      placeholder="Enter your phone number"
                       value={formData.phone}
                       onChange={e => setFormData({ ...formData, phone: e.target.value })}
                       style={{ width: '100%', padding: '12px 16px', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: '#FFFFFF' }}

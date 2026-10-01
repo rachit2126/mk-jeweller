@@ -4,44 +4,23 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, ChevronLeft, ChevronRight, Heart, ShoppingBag, Eye, Star } from 'lucide-react';
-import { PRODUCTS } from '@/data/products';
 import { Product } from '@/lib/types';
 import { useCommerce } from '@/components/commerce/CommerceContext';
-import { formatPrice } from '@/lib/api';
+import { formatPrice } from '@/lib/format';
 
 export default function BestSellersSection() {
   const { addToCart, toggleWishlist, isInWishlist, openQuickView } = useCommerce();
+  const [bestSellers, setBestSellers] = useState<Product[]>([]);
 
-  // Curated Best Sellers list (matches the reference: Pearl Blossom, Lotus Bloom, Baroque Pearl, Pink Stone Floral + top best sellers)
-  const bestSellers: Product[] = React.useMemo(() => {
-    // Specifically arrange the 4 hero pieces from the mockup first:
-    const targetOrder = [
-      'pearl-blossom-necklace',
-      'kundan-chandbali-earrings', // Lotus Bloom Ruby & Polki Choker Set
-      'minimal-silver-chain-necklace', // Sculpted Baroque Pearl Layered Chain
-      'pink-stone-pendant',
-      'emerald-dewdrop-ring',
-      'floral-silver-earrings',
-      'royal-heritage-choker-set',
-      'rose-quartz-pendant',
-    ];
-
-    const ordered: Product[] = [];
-    targetOrder.forEach((slug) => {
-      const match = PRODUCTS.find((p) => p.slug === slug);
-      if (match && !ordered.some((item) => item.id === match.id)) {
-        ordered.push(match);
-      }
-    });
-
-    // Fill remaining if needed
-    PRODUCTS.forEach((p) => {
-      if ((p.isBestSeller || p.badge === 'BEST SELLER') && !ordered.some((item) => item.id === p.id)) {
-        ordered.push(p);
-      }
-    });
-
-    return ordered.slice(0, 8);
+  useEffect(() => {
+    fetch('/api/products?isBestSeller=true&limit=8')
+      .then(res => res.json())
+      .then(data => {
+        if (data.products && data.products.length > 0) {
+          setBestSellers(data.products);
+        }
+      })
+      .catch(err => console.error('Failed to load best sellers:', err));
   }, []);
 
   const total = bestSellers.length;
@@ -62,12 +41,32 @@ export default function BestSellersSection() {
   const maxTabletIndex = Math.max(0, total - 2);
 
   const handlePrev = useCallback(() => {
-    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : maxDesktopIndex));
-  }, [maxDesktopIndex]);
+    setCurrentIndex((prev) => {
+      const next = prev > 0 ? prev - 1 : total - 1;
+      if (mobileScrollRef.current && typeof window !== 'undefined' && window.innerWidth <= 768) {
+        const cardWidth = mobileScrollRef.current.clientWidth * 0.82;
+        mobileScrollRef.current.scrollTo({
+          left: next * (cardWidth + 14),
+          behavior: 'smooth',
+        });
+      }
+      return typeof window !== 'undefined' && window.innerWidth > 768 ? Math.min(next, maxDesktopIndex) : next;
+    });
+  }, [total, maxDesktopIndex]);
 
   const handleNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev < maxDesktopIndex ? prev + 1 : 0));
-  }, [maxDesktopIndex]);
+    setCurrentIndex((prev) => {
+      const next = (prev + 1) % total;
+      if (mobileScrollRef.current && typeof window !== 'undefined' && window.innerWidth <= 768) {
+        const cardWidth = mobileScrollRef.current.clientWidth * 0.82;
+        mobileScrollRef.current.scrollTo({
+          left: next * (cardWidth + 14),
+          behavior: 'smooth',
+        });
+      }
+      return typeof window !== 'undefined' && window.innerWidth > 768 ? (prev < maxDesktopIndex ? prev + 1 : 0) : next;
+    });
+  }, [total, maxDesktopIndex]);
 
   const goToSlide = (idx: number) => {
     setCurrentIndex(Math.min(idx, maxDesktopIndex));
@@ -1092,9 +1091,9 @@ export default function BestSellersSection() {
           })}
         </div>
 
-        {/* Carousel Pagination Progress Indicators (● ━ ━ ━ ━) */}
+        {/* Carousel Pagination Progress Indicators (Desktop & Mobile) */}
         <div
-          className="carousel-pagination-pills"
+          className="carousel-pagination-pills desktop-pills"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -1113,6 +1112,47 @@ export default function BestSellersSection() {
                 style={{
                   height: '5px',
                   width: isActive ? '34px' : '9px',
+                  borderRadius: '999px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  backgroundColor: isActive ? '#B76E79' : 'rgba(59, 43, 43, 0.20)',
+                  transition: 'all 320ms cubic-bezier(0.22, 1, 0.36, 1)',
+                  padding: 0,
+                }}
+              />
+            );
+          })}
+        </div>
+
+        <div
+          className="carousel-pagination-pills mobile-pills"
+          style={{
+            display: 'none',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '6px',
+            marginTop: '16px',
+          }}
+        >
+          {bestSellers.map((_, idx) => {
+            const isActive = idx === currentIndex;
+            return (
+              <button
+                key={idx}
+                onClick={() => {
+                  setCurrentIndex(idx);
+                  if (mobileScrollRef.current) {
+                    const cardWidth = mobileScrollRef.current.clientWidth * 0.82;
+                    mobileScrollRef.current.scrollTo({
+                      left: idx * (cardWidth + 14),
+                      behavior: 'smooth',
+                    });
+                  }
+                }}
+                aria-label={`Go to product ${idx + 1}`}
+                style={{
+                  height: '5px',
+                  width: isActive ? '24px' : '7px',
                   borderRadius: '999px',
                   border: 'none',
                   cursor: 'pointer',
@@ -1251,6 +1291,12 @@ export default function BestSellersSection() {
           }
           .carousel-nav-btn {
             display: none !important;
+          }
+          .desktop-pills {
+            display: none !important;
+          }
+          .mobile-pills {
+            display: flex !important;
           }
         }
 

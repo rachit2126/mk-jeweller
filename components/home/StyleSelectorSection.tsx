@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProductCard from '@/components/products/ProductCard';
-import { PRODUCTS } from '@/data/products';
+import { Product } from '@/lib/types';
 import { Sparkles, Compass, Gem, Crown } from 'lucide-react';
 
 const STYLES = [
@@ -34,8 +34,18 @@ const STYLES = [
 
 export default function StyleSelectorSection() {
   const [activeStyle, setActiveStyle] = useState('minimal');
+  const [matchingProducts, setMatchingProducts] = useState<Product[]>([]);
 
-  const matchingProducts = PRODUCTS.filter(p => p.style.includes(activeStyle as any)).slice(0, 4);
+  useEffect(() => {
+    fetch(`/api/products?style=${activeStyle}&limit=4`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.products) {
+          setMatchingProducts(data.products);
+        }
+      })
+      .catch(err => console.error('Failed to load style products:', err));
+  }, [activeStyle]);
 
   return (
     <section className="section-padding" style={{ backgroundColor: 'var(--bg-main)' }}>

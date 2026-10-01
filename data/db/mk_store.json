@@ -1,0 +1,2465 @@
+{
+  "products": [
+    {
+      "id": "prod-01",
+      "slug": "floral-silver-earrings",
+      "name": "Floral Silver Earrings",
+      "category": "earrings",
+      "categoryLabel": "Earrings",
+      "price": 3999,
+      "compareAtPrice": 3499,
+      "discountPercent": 29,
+      "rating": 4.8,
+      "reviewsCount": 120,
+      "weight": "8.4g",
+      "purity": "925 Sterling Silver",
+      "badge": "NEW ARRIVAL",
+      "images": [
+        "https://images.unsplash.com/photo-1630019852942-f89202989a59?q=80&w=1000&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1000&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "secondaryImage": "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1000&auto=format&fit=crop",
+      "description": "Masterfully sculpted by our Jaipur silversmiths, these floral jhumka earrings unite delicate botanical filigree with lustrous freshwater pearls. Finished with anti-tarnish rhodium for an everlasting moonlight silver sheen.",
+      "shortDescription": "Everyday to Extraordinary",
+      "details": {
+        "material": "Solid 925 Sterling Silver",
+        "plating": "Anti-Tarnish Rhodium Finish",
+        "dimensions": "42mm x 18mm",
+        "gemstone": "Natural Seed Pearls & Cubic Zirconia",
+        "claspType": "Comfort Push Back",
+        "hallmark": "BIS 925 Hallmarked"
+      },
+      "occasion": [
+        "everyday",
+        "festive",
+        "gifting"
+      ],
+      "style": [
+        "classic",
+        "festive"
+      ],
+      "inStock": true,
+      "isNewArrival": true,
+      "featured": true,
+      "sku": "MK-EAR-101",
+      "stock": 22,
+      "reservedStock": 0,
+      "lowStockThreshold": 5,
+      "costPrice": 1374,
+      "status": "active",
+      "collectionIds": [
+        "new-arrivals"
+      ],
+      "attributes": {
+        "material": "Solid 925 Sterling Silver",
+        "purity": "925",
+        "weight": "8.4g",
+        "hallmark": "BIS 925 Hallmarked",
+        "plating": "Anti-Tarnish Rhodium Finish"
+      },
+      "createdAt": "2026-09-30T15:30:33.980Z",
+      "updatedAt": "2026-09-30T16:05:12.382Z"
+    },
+    {
+      "id": "prod-02",
+      "slug": "pearl-blossom-necklace",
+      "name": "Pearl Blossom Choker Necklace",
+      "category": "necklaces",
+      "categoryLabel": "Necklaces",
+      "price": 3499,
+      "compareAtPrice": 4699,
+      "discountPercent": 26,
+      "rating": 4.9,
+      "reviewsCount": 142,
+      "weight": "24.2g",
+      "purity": "925 Sterling Silver",
+      "badge": "BEST SELLER",
+      "images": [
+        "/images/products/necklaces-pearl-blossom-collar-01.png",
+        "/images/products/necklaces-modern-baroque-pearl-chain-01.png",
+        "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "secondaryImage": "/images/products/necklaces-pearl-blossom-collar-01.png",
+      "description": "An ethereal collar of graduated freshwater pearls embraced by handcrafted sterling silver floral cups and crystal drop pendants. Perfect for graceful celebrations, intimate soirees, or royal evening gatherings.",
+      "shortDescription": "Regal Statement Collar",
+      "details": {
+        "material": "Solid 925 Sterling Silver",
+        "plating": "18K White Rhodium",
+        "dimensions": "16 inches + 2 inch extender",
+        "gemstone": "Selected Cultured Freshwater Pearls",
+        "claspType": "Spring Ring with 925 Stamp Tag",
+        "hallmark": "BIS 925 Hallmarked"
+      },
+      "occasion": [
+        "everyday",
+        "office",
+        "festive"
+      ],
+      "style": [
+        "minimal",
+        "classic"
+      ],
+      "inStock": true,
+      "isBestSeller": true,
+      "featured": true,
+      "sku": "MK-NEC-102",
+      "stock": 8,
+      "reservedStock": 0,
+      "lowStockThreshold": 5,
+      "costPrice": 1924,
+      "status": "active",
+      "collectionIds": [
+        "best-sellers"
+      ],
+      "attributes": {
+        "material": "Solid 925 Sterling Silver",
+        "purity": "925",
+        "weight": "24.2g",
+        "hallmark": "BIS 925 Hallmarked",
+        "plating": "18K White Rhodium"
+      },
+      "createdAt": "2026-09-28T15:30:33.980Z",
+      "updatedAt": "2026-09-30T15:30:33.980Z"
+    },
+    {
+      "id": "prod-03",
+      "slug": "ruby-drop-pendant",
+      "name": "Ruby Drop Pendant",
+      "category": "pendants",
+      "categoryLabel": "Pendants",
+      "price": 2999,
+      "compareAtPrice": 3999,
+      "discountPercent": 25,
+      "rating": 4.9,
+      "reviewsCount": 210,
+      "weight": "9.6g",
+      "purity": "925 Sterling Silver",
+      "badge": "ENGRAVABLE",
+      "images": [
+        "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1000&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?q=80&w=1000&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "secondaryImage": "https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?q=80&w=1000&auto=format&fit=crop",
+      "description": "A regal lab-grown pigeon blood ruby teardrop enveloped by a halo of brilliant pavé stones set in high-polish 925 sterling silver. Includes customizable complimentary back engraving.",
+      "shortDescription": "Meaningful Designs",
+      "details": {
+        "material": "Solid 925 Sterling Silver",
+        "plating": "Anti-Tarnish Rhodium",
+        "dimensions": "22mm pendant drop, 18-inch cable chain",
+        "gemstone": "Synthetic Ruby (Grade AAA) & Zirconia",
+        "claspType": "Lobster Clasp",
+        "hallmark": "BIS 925 Hallmarked"
+      },
+      "occasion": [
+        "festive",
+        "gifting",
+        "everyday"
+      ],
+      "style": [
+        "classic",
+        "statement"
+      ],
+      "inStock": true,
+      "isNewArrival": true,
+      "featured": true,
+      "sku": "MK-PEN-103",
+      "stock": 5,
+      "reservedStock": 0,
+      "lowStockThreshold": 5,
+      "costPrice": 1649,
+      "status": "active",
+      "collectionIds": [
+        "new-arrivals"
+      ],
+      "attributes": {
+        "material": "Solid 925 Sterling Silver",
+        "purity": "925",
+        "weight": "9.6g",
+        "hallmark": "BIS 925 Hallmarked",
+        "plating": "Anti-Tarnish Rhodium"
+      },
+      "createdAt": "2026-09-26T15:30:33.980Z",
+      "updatedAt": "2026-09-30T15:30:33.980Z"
+    },
+    {
+      "id": "prod-04",
+      "slug": "golden-leaf-ring",
+      "name": "Golden Leaf Ring",
+      "category": "rings",
+      "categoryLabel": "Rings",
+      "price": 1899,
+      "compareAtPrice": 2499,
+      "discountPercent": 24,
+      "rating": 4.6,
+      "reviewsCount": 76,
+      "weight": "4.8g",
+      "purity": "925 Sterling Silver",
+      "badge": "NEW ARRIVAL",
+      "images": [
+        "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?q=80&w=1000&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "secondaryImage": "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1000&auto=format&fit=crop",
+      "description": "A tribute to nature’s symmetry, featuring a hand-chiseled lotus petal motif cast in solid 925 sterling silver with micro-layer 18K yellow gold accents. Ergonomic comfort band.",
+      "shortDescription": "For Every Occasion",
+      "details": {
+        "material": "Solid 925 Sterling Silver",
+        "plating": "Dual-Tone 18K Gold & Rhodium",
+        "dimensions": "Adjustable size (Fits US 6 to 9)",
+        "gemstone": "None (Pure sculpted silver metalwork)",
+        "claspType": "Open adjustable band",
+        "hallmark": "BIS 925 Hallmarked"
+      },
+      "occasion": [
+        "everyday",
+        "office",
+        "gifting"
+      ],
+      "style": [
+        "minimal",
+        "classic"
+      ],
+      "inStock": true,
+      "isNewArrival": true,
+      "featured": true,
+      "sku": "MK-RIN-104",
+      "stock": 15,
+      "reservedStock": 0,
+      "lowStockThreshold": 5,
+      "costPrice": 1044,
+      "status": "active",
+      "collectionIds": [
+        "new-arrivals"
+      ],
+      "attributes": {
+        "material": "Solid 925 Sterling Silver",
+        "purity": "925",
+        "weight": "4.8g",
+        "hallmark": "BIS 925 Hallmarked",
+        "plating": "Dual-Tone 18K Gold & Rhodium"
+      },
+      "createdAt": "2026-09-24T15:30:33.980Z",
+      "updatedAt": "2026-09-30T15:30:33.980Z"
+    },
+    {
+      "id": "prod-05",
+      "slug": "kundan-chandbali-earrings",
+      "name": "Lotus Bloom Ruby & Polki Choker Set",
+      "category": "necklaces",
+      "categoryLabel": "Necklaces",
+      "price": 5499,
+      "compareAtPrice": 7299,
+      "discountPercent": 25,
+      "rating": 5,
+      "reviewsCount": 188,
+      "weight": "32.5g",
+      "purity": "925 Sterling Silver",
+      "badge": "BEST SELLER",
+      "images": [
+        "/images/products/necklaces-festive-lotus-ruby-necklace-01.jpg",
+        "/images/products/necklaces-emerald-polki-bridal-set-01.png",
+        "https://images.unsplash.com/photo-1630019852942-f89202989a59?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "secondaryImage": "/images/products/necklaces-festive-lotus-ruby-necklace-01.jpg",
+      "description": "A resplendent heritage necklace ensemble sculpted in solid 925 sterling silver with cabochon rubies, hand-carved mint jade beads, and diamond-cut polki florets. Accompanied by matching statement chandbali earrings.",
+      "shortDescription": "Festive Grandeur & Heritage",
+      "details": {
+        "material": "Solid 925 Sterling Silver",
+        "plating": "22K Antique Gold & Rhodium Micron Foil",
+        "dimensions": "Choker width 38mm, 52mm earring drop",
+        "gemstone": "Carved Mint Jade, Natural Rubies & Uncut Polki",
+        "claspType": "Handcrafted Adjustable Silk Zari Dori",
+        "hallmark": "BIS 925 Hallmarked"
+      },
+      "occasion": [
+        "festive",
+        "gifting"
+      ],
+      "style": [
+        "festive",
+        "statement"
+      ],
+      "inStock": true,
+      "isBestSeller": true,
+      "featured": true,
+      "sku": "MK-NEC-105",
+      "stock": 20,
+      "reservedStock": 0,
+      "lowStockThreshold": 5,
+      "costPrice": 3024,
+      "status": "active",
+      "collectionIds": [
+        "best-sellers"
+      ],
+      "attributes": {
+        "material": "Solid 925 Sterling Silver",
+        "purity": "925",
+        "weight": "32.5g",
+        "hallmark": "BIS 925 Hallmarked",
+        "plating": "22K Antique Gold & Rhodium Micron Foil"
+      },
+      "createdAt": "2026-09-22T15:30:33.980Z",
+      "updatedAt": "2026-09-30T15:30:33.980Z"
+    },
+    {
+      "id": "prod-06",
+      "slug": "minimal-silver-chain-necklace",
+      "name": "Sculpted Baroque Pearl Layered Chain",
+      "category": "necklaces",
+      "categoryLabel": "Necklaces",
+      "price": 3299,
+      "compareAtPrice": 4299,
+      "discountPercent": 23,
+      "rating": 4.8,
+      "reviewsCount": 94,
+      "weight": "18.8g",
+      "purity": "925 Sterling Silver",
+      "badge": "NEW ARRIVAL",
+      "images": [
+        "/images/products/necklaces-modern-baroque-pearl-chain-01.png",
+        "/images/products/necklaces-pearl-blossom-collar-01.png",
+        "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "secondaryImage": "/images/products/necklaces-modern-baroque-pearl-chain-01.png",
+      "description": "Modern editorial layering at its finest. Natural irregular baroque pearls interlinked with sculptured floral drops and toggle charms in 18K yellow gold plated 925 sterling silver.",
+      "shortDescription": "Contemporary Editorial Luxe",
+      "details": {
+        "material": "Solid 925 Sterling Silver",
+        "plating": "18K Yellow Gold & Anti-Tarnish Rhodium",
+        "dimensions": "Layer 1: 38cm, Layer 2: 44cm with T-bar toggle",
+        "gemstone": "Natural Grade-AA Baroque Freshwater Pearls",
+        "claspType": "Artisan T-Bar Toggle & Ring",
+        "hallmark": "BIS 925 Hallmarked"
+      },
+      "occasion": [
+        "everyday",
+        "office",
+        "festive"
+      ],
+      "style": [
+        "minimal",
+        "statement"
+      ],
+      "inStock": true,
+      "isBestSeller": true,
+      "featured": true,
+      "sku": "MK-NEC-106",
+      "stock": 7,
+      "reservedStock": 0,
+      "lowStockThreshold": 5,
+      "costPrice": 1814,
+      "status": "draft",
+      "collectionIds": [
+        "best-sellers"
+      ],
+      "attributes": {
+        "material": "Solid 925 Sterling Silver",
+        "purity": "925",
+        "weight": "18.8g",
+        "hallmark": "BIS 925 Hallmarked",
+        "plating": "18K Yellow Gold & Anti-Tarnish Rhodium"
+      },
+      "createdAt": "2026-09-20T15:30:33.980Z",
+      "updatedAt": "2026-09-30T15:30:33.980Z"
+    },
+    {
+      "id": "prod-07",
+      "slug": "pink-stone-pendant",
+      "name": "Pink Stone Floral Pendant",
+      "category": "pendants",
+      "categoryLabel": "Pendants",
+      "price": 3499,
+      "compareAtPrice": 4599,
+      "discountPercent": 24,
+      "rating": 4.9,
+      "reviewsCount": 115,
+      "weight": "11.2g",
+      "purity": "925 Sterling Silver",
+      "badge": "BEST SELLER",
+      "images": [
+        "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1000&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "secondaryImage": "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=1000&auto=format&fit=crop",
+      "description": "A cluster of faceted blush-pink morganite zirconia blooms flanked by pavé crystal leaves, hanging from an Italian fine box chain.",
+      "shortDescription": "Meaningful Designs",
+      "details": {
+        "material": "Solid 925 Sterling Silver",
+        "plating": "Anti-Tarnish Rhodium",
+        "dimensions": "28mm x 15mm",
+        "gemstone": "Blush Pink Morganite Zirconia",
+        "claspType": "Spring Ring",
+        "hallmark": "BIS 925 Hallmarked"
+      },
+      "occasion": [
+        "festive",
+        "gifting",
+        "everyday"
+      ],
+      "style": [
+        "classic",
+        "festive"
+      ],
+      "inStock": true,
+      "isBestSeller": true,
+      "featured": true,
+      "sku": "MK-PEN-107",
+      "stock": 0,
+      "reservedStock": 0,
+      "lowStockThreshold": 5,
+      "costPrice": 1924,
+      "status": "out_of_stock",
+      "collectionIds": [
+        "best-sellers"
+      ],
+      "attributes": {
+        "material": "Solid 925 Sterling Silver",
+        "purity": "925",
+        "weight": "11.2g",
+        "hallmark": "BIS 925 Hallmarked",
+        "plating": "Anti-Tarnish Rhodium"
+      },
+      "createdAt": "2026-09-18T15:30:33.980Z",
+      "updatedAt": "2026-09-30T15:30:33.980Z"
+    },
+    {
+      "id": "prod-08",
+      "slug": "classic-bangles-set",
+      "name": "Classic Silver Bangles Set",
+      "category": "bracelets",
+      "categoryLabel": "Bracelets",
+      "price": 2999,
+      "compareAtPrice": 3999,
+      "discountPercent": 25,
+      "rating": 4.8,
+      "reviewsCount": 142,
+      "weight": "28.5g",
+      "purity": "925 Sterling Silver",
+      "badge": "BEST SELLER",
+      "images": [
+        "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1000&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "secondaryImage": "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1000&auto=format&fit=crop",
+      "description": "Pair of solid sterling silver textured kada bangles featuring subtle diamond-cut facets that catch ambient light with every gesture.",
+      "shortDescription": "Elegant & Timeless",
+      "details": {
+        "material": "Solid 925 Sterling Silver",
+        "plating": "Pure Sterling Silver Polish",
+        "dimensions": "Size 2.4, 2.6, 2.8 available",
+        "gemstone": "None",
+        "claspType": "Slip-on / Openable hinge with safety pin",
+        "hallmark": "BIS 925 Hallmarked"
+      },
+      "occasion": [
+        "everyday",
+        "festive"
+      ],
+      "style": [
+        "classic",
+        "statement"
+      ],
+      "inStock": true,
+      "isBestSeller": true,
+      "featured": true,
+      "sku": "MK-BRA-108",
+      "stock": 3,
+      "reservedStock": 0,
+      "lowStockThreshold": 5,
+      "costPrice": 1649,
+      "status": "active",
+      "collectionIds": [
+        "best-sellers"
+      ],
+      "attributes": {
+        "material": "Solid 925 Sterling Silver",
+        "purity": "925",
+        "weight": "28.5g",
+        "hallmark": "BIS 925 Hallmarked",
+        "plating": "Pure Sterling Silver Polish"
+      },
+      "createdAt": "2026-09-16T15:30:33.980Z",
+      "updatedAt": "2026-09-30T15:30:33.980Z"
+    },
+    {
+      "id": "prod-09",
+      "slug": "ornate-polki-silver-choker",
+      "name": "Royal Emerald & Polki Bridal Set",
+      "category": "necklaces",
+      "categoryLabel": "Necklaces",
+      "price": 7499,
+      "compareAtPrice": 9999,
+      "discountPercent": 25,
+      "rating": 5,
+      "reviewsCount": 72,
+      "weight": "48.0g",
+      "purity": "925 Sterling Silver",
+      "badge": "BEST SELLER",
+      "images": [
+        "/images/products/necklaces-emerald-polki-bridal-set-01.png",
+        "/images/products/necklaces-royal-heritage-polki-choker-01.jpg",
+        "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "secondaryImage": "/images/products/necklaces-emerald-polki-bridal-set-01.png",
+      "description": "A regal Rajputana bridal necklace set sculpted in 925 sterling silver with 22K gold vermeil polish. Features double-tiered uncut polki diamond clusters with Colombian emerald teardrops, matching maang tikka, statement earrings, and openable kada bangles.",
+      "shortDescription": "Regal Bridal Masterpiece",
+      "details": {
+        "material": "Solid 925 Sterling Silver",
+        "plating": "22K Antique Gold Micron Polish",
+        "dimensions": "Necklace drop 64mm, Tikka 12cm, Earrings 48mm",
+        "gemstone": "Grade-AAA Uncut Polki & Hydrothermal Emeralds",
+        "claspType": "Handmade Silk Zari Dori with Pearl Bead Tassels",
+        "hallmark": "BIS 925 Hallmarked"
+      },
+      "occasion": [
+        "festive",
+        "gifting"
+      ],
+      "style": [
+        "statement",
+        "festive"
+      ],
+      "inStock": true,
+      "isBestSeller": true,
+      "featured": true,
+      "sku": "MK-NEC-109",
+      "stock": 3,
+      "reservedStock": 0,
+      "lowStockThreshold": 5,
+      "costPrice": 4124,
+      "status": "active",
+      "collectionIds": [
+        "best-sellers"
+      ],
+      "attributes": {
+        "material": "Solid 925 Sterling Silver",
+        "purity": "925",
+        "weight": "48.0g",
+        "hallmark": "BIS 925 Hallmarked",
+        "plating": "22K Antique Gold Micron Polish"
+      },
+      "createdAt": "2026-09-14T15:30:33.980Z",
+      "updatedAt": "2026-09-30T15:30:33.980Z"
+    },
+    {
+      "id": "prod-10",
+      "slug": "filigree-silver-kada-bracelet",
+      "name": "Filigree Silver Kada Bracelet",
+      "category": "bracelets",
+      "categoryLabel": "Bracelets",
+      "price": 2699,
+      "compareAtPrice": 3499,
+      "discountPercent": 23,
+      "rating": 4.7,
+      "reviewsCount": 67,
+      "weight": "18.4g",
+      "purity": "925 Sterling Silver",
+      "images": [
+        "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1000&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "secondaryImage": "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?q=80&w=1000&auto=format&fit=crop",
+      "description": "Intricate silver wire filigree lace handcrafted into a structured cuff that gently contours the wrist. Features an invisible side clasp for seamless wear.",
+      "shortDescription": "Elegant & Timeless",
+      "details": {
+        "material": "Solid 925 Sterling Silver",
+        "plating": "Anti-Tarnish Rhodium",
+        "dimensions": "Inner Diameter 58mm",
+        "gemstone": "None",
+        "claspType": "Concealed Click Lock",
+        "hallmark": "BIS 925 Hallmarked"
+      },
+      "occasion": [
+        "office",
+        "festive",
+        "everyday"
+      ],
+      "style": [
+        "classic",
+        "minimal"
+      ],
+      "inStock": true,
+      "featured": true,
+      "sku": "MK-BRA-110",
+      "stock": 3,
+      "reservedStock": 0,
+      "lowStockThreshold": 5,
+      "costPrice": 1484,
+      "status": "active",
+      "collectionIds": [
+        "everyday-essentials"
+      ],
+      "attributes": {
+        "material": "Solid 925 Sterling Silver",
+        "purity": "925",
+        "weight": "18.4g",
+        "hallmark": "BIS 925 Hallmarked",
+        "plating": "Anti-Tarnish Rhodium"
+      },
+      "createdAt": "2026-09-12T15:30:33.980Z",
+      "updatedAt": "2026-09-30T15:30:33.980Z"
+    },
+    {
+      "id": "prod-11",
+      "slug": "solitaire-halo-silver-ring",
+      "name": "Solitaire Halo Silver Ring",
+      "category": "rings",
+      "categoryLabel": "Rings",
+      "price": 1699,
+      "compareAtPrice": 2299,
+      "discountPercent": 26,
+      "rating": 4.8,
+      "reviewsCount": 190,
+      "weight": "3.9g",
+      "purity": "925 Sterling Silver",
+      "badge": "ENGRAVABLE",
+      "images": [
+        "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1000&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "secondaryImage": "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?q=80&w=1000&auto=format&fit=crop",
+      "description": "A round brilliant solitaire surrounded by a micro-pavé halo, set in high polish 925 silver. Radiates diamond-like brilliance with every movement.",
+      "shortDescription": "For Every Occasion",
+      "details": {
+        "material": "Solid 925 Sterling Silver",
+        "plating": "Platinum Rhodium Plated",
+        "dimensions": "Available sizes 10, 12, 14, 16",
+        "gemstone": "1.5 Carat Equivalent Hearts & Arrows Zirconia",
+        "claspType": "Solid Cast Band",
+        "hallmark": "BIS 925 Hallmarked"
+      },
+      "occasion": [
+        "everyday",
+        "office",
+        "gifting"
+      ],
+      "style": [
+        "minimal",
+        "classic"
+      ],
+      "inStock": true,
+      "isBestSeller": true,
+      "featured": true,
+      "sku": "MK-RIN-111",
+      "stock": 3,
+      "reservedStock": 0,
+      "lowStockThreshold": 5,
+      "costPrice": 934,
+      "status": "active",
+      "collectionIds": [
+        "best-sellers"
+      ],
+      "attributes": {
+        "material": "Solid 925 Sterling Silver",
+        "purity": "925",
+        "weight": "3.9g",
+        "hallmark": "BIS 925 Hallmarked",
+        "plating": "Platinum Rhodium Plated"
+      },
+      "createdAt": "2026-09-10T15:30:33.980Z",
+      "updatedAt": "2026-09-30T15:30:33.980Z"
+    },
+    {
+      "id": "prod-12",
+      "slug": "traditional-payal-anklet-pair",
+      "name": "Traditional Payal Anklet Pair",
+      "category": "anklets",
+      "categoryLabel": "Anklets",
+      "price": 2899,
+      "compareAtPrice": 3799,
+      "discountPercent": 24,
+      "rating": 4.9,
+      "reviewsCount": 89,
+      "weight": "22.4g",
+      "purity": "925 Sterling Silver",
+      "badge": "NEW ARRIVAL",
+      "images": [
+        "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1000&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "secondaryImage": "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1000&auto=format&fit=crop",
+      "description": "Hand-linked pure silver chain anklets adorned with tiny melodic ghungroo bells and sparkling stones. Lightweight and skin-friendly for all-day comfort.",
+      "shortDescription": "Subtle & Stylish",
+      "details": {
+        "material": "Solid 925 Sterling Silver",
+        "plating": "Anti-Oxidation Seal",
+        "dimensions": "10.5 inches length with adjustable links",
+        "gemstone": "Faceted Zirconia Accents",
+        "claspType": "S-Hook with Safety Loop",
+        "hallmark": "BIS 925 Hallmarked"
+      },
+      "occasion": [
+        "everyday",
+        "festive",
+        "gifting"
+      ],
+      "style": [
+        "classic",
+        "festive"
+      ],
+      "inStock": true,
+      "isNewArrival": true,
+      "featured": true,
+      "sku": "MK-ANK-112",
+      "stock": 3,
+      "reservedStock": 0,
+      "lowStockThreshold": 5,
+      "costPrice": 1594,
+      "status": "active",
+      "collectionIds": [
+        "new-arrivals"
+      ],
+      "attributes": {
+        "material": "Solid 925 Sterling Silver",
+        "purity": "925",
+        "weight": "22.4g",
+        "hallmark": "BIS 925 Hallmarked",
+        "plating": "Anti-Oxidation Seal"
+      },
+      "createdAt": "2026-09-08T15:30:33.980Z",
+      "updatedAt": "2026-09-30T15:30:33.980Z"
+    },
+    {
+      "id": "prod-13",
+      "slug": "heritage-royal-polki-choker",
+      "name": "Heritage Royal Polki Choker",
+      "category": "necklaces",
+      "categoryLabel": "Necklaces",
+      "price": 8999,
+      "compareAtPrice": 11999,
+      "discountPercent": 25,
+      "rating": 5,
+      "reviewsCount": 56,
+      "weight": "52.0g",
+      "purity": "925 Sterling Silver",
+      "badge": "BEST SELLER",
+      "images": [
+        "/images/products/necklaces-royal-heritage-polki-choker-01.jpg",
+        "/images/products/necklaces-emerald-polki-bridal-set-01.png",
+        "/images/products/necklaces-festive-lotus-ruby-necklace-01.jpg"
+      ],
+      "secondaryImage": "/images/products/necklaces-royal-heritage-polki-choker-01.jpg",
+      "description": "An architectural heirloom choker crafted in pure 925 sterling silver with uncut jadau polki medallions and cascading seed pearl tassels. Designed for bridal couture and royal festivities.",
+      "shortDescription": "Imperial Heritage Masterpiece",
+      "details": {
+        "material": "Solid 925 Sterling Silver",
+        "plating": "Antique Vintage Finish with 22K Gold accents",
+        "dimensions": "Width 42mm, Adjustable dori cord",
+        "gemstone": "Uncut Jadau Polki, Seed Pearls & Tourmaline",
+        "claspType": "Handmade Silk Dori Tie",
+        "hallmark": "BIS 925 Hallmarked"
+      },
+      "occasion": [
+        "festive",
+        "gifting"
+      ],
+      "style": [
+        "statement",
+        "festive"
+      ],
+      "inStock": true,
+      "isBestSeller": true,
+      "featured": true,
+      "sku": "MK-NEC-113",
+      "stock": 3,
+      "reservedStock": 0,
+      "lowStockThreshold": 5,
+      "costPrice": 4949,
+      "status": "active",
+      "collectionIds": [
+        "best-sellers"
+      ],
+      "attributes": {
+        "material": "Solid 925 Sterling Silver",
+        "purity": "925",
+        "weight": "52.0g",
+        "hallmark": "BIS 925 Hallmarked",
+        "plating": "Antique Vintage Finish with 22K Gold accents"
+      },
+      "createdAt": "2026-09-06T15:30:33.980Z",
+      "updatedAt": "2026-09-30T15:30:33.980Z"
+    }
+  ],
+  "categories": [
+    {
+      "id": "cat-necklaces",
+      "name": "Necklaces",
+      "slug": "necklaces",
+      "description": "Handcrafted Jaipur 925 sterling silver necklaces, royal polki chokers and chains.",
+      "image": "/images/collection-necklaces.jpg",
+      "productCount": 42,
+      "status": "active",
+      "sortOrder": 1,
+      "seoTitle": "Silver Necklaces & Chokers | MK Silver Hub",
+      "seoDescription": "Shop authentic 925 sterling silver necklaces crafted by master Jaipur silversmiths."
+    },
+    {
+      "id": "cat-earrings",
+      "name": "Earrings",
+      "slug": "earrings",
+      "description": "Everyday studs to statement royal chandbalis in pure 925 silver.",
+      "image": "/images/collection-earrings.jpg",
+      "productCount": 36,
+      "status": "active",
+      "sortOrder": 2,
+      "seoTitle": "925 Silver Earrings | MK Silver Hub",
+      "seoDescription": "Handcrafted silver earrings, chandbalis, and studs hallmarked BIS 925."
+    },
+    {
+      "id": "cat-rings",
+      "name": "Rings",
+      "slug": "rings",
+      "description": "Solitaire bands, floral halo rings, and adjustable gemstone rings.",
+      "image": "/images/collection-rings.jpg",
+      "productCount": 18,
+      "status": "active",
+      "sortOrder": 3,
+      "seoTitle": "Sterling Silver Rings | MK Silver Hub",
+      "seoDescription": "Discover timeless 925 silver rings sculpted for every modern celebration."
+    },
+    {
+      "id": "cat-bracelets",
+      "name": "Bracelets",
+      "slug": "bracelets",
+      "description": "Sleek tennis bracelets, silver cuffs, and floral daily charms.",
+      "image": "https://images.unsplash.com/photo-1611591475155-426c04a29c61?q=80&w=1000&auto=format&fit=crop",
+      "productCount": 16,
+      "status": "active",
+      "sortOrder": 4,
+      "seoTitle": "Silver Bracelets & Bangles | MK Silver Hub",
+      "seoDescription": "Shop modern essentials and minimal 925 sterling silver bracelets."
+    },
+    {
+      "id": "cat-pendants",
+      "name": "Pendants",
+      "slug": "pendants",
+      "description": "Delicate solitaire and deity pendants with certified silver chains.",
+      "image": "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=1000&auto=format&fit=crop",
+      "productCount": 16,
+      "status": "active",
+      "sortOrder": 5,
+      "seoTitle": "Silver Pendants & Charms | MK Silver Hub",
+      "seoDescription": "Meaningful pure 925 silver pendants with anti-tarnish rhodium sheen."
+    },
+    {
+      "id": "cat-mangalsutra",
+      "name": "Mangalsutra",
+      "slug": "mangalsutra",
+      "description": "Contemporary sterling silver sacred black bead mangalsutras.",
+      "image": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=1000&auto=format&fit=crop",
+      "productCount": 8,
+      "status": "active",
+      "sortOrder": 6
+    }
+  ],
+  "collections": [
+    {
+      "id": "col-new-arrivals",
+      "name": "New Arrivals",
+      "slug": "new-arrivals",
+      "description": "The latest contemporary additions sculpted in pure 925 sterling silver.",
+      "thumbnail": "/images/products/necklaces-modern-baroque-pearl-chain-01.png",
+      "heroImage": "/images/editorial/bridal-banner-clean-hd.jpg",
+      "productCount": 24,
+      "type": "automatic",
+      "rules": [
+        {
+          "field": "isNewArrival",
+          "operator": "equals",
+          "value": "true"
+        }
+      ],
+      "productIds": [
+        "prod-01",
+        "prod-03",
+        "prod-04",
+        "prod-12"
+      ],
+      "status": "active",
+      "sortOrder": 1
+    },
+    {
+      "id": "col-best-sellers",
+      "name": "Best Sellers",
+      "slug": "best-sellers",
+      "description": "Our most loved and cherished handcrafted Jaipur creations.",
+      "thumbnail": "/images/products/necklaces-royal-heritage-polki-choker-01.jpg",
+      "heroImage": "/images/editorial/bridal-banner-clean-hd.jpg",
+      "productCount": 18,
+      "type": "automatic",
+      "rules": [
+        {
+          "field": "isBestSeller",
+          "operator": "equals",
+          "value": "true"
+        }
+      ],
+      "productIds": [
+        "prod-02",
+        "prod-05",
+        "prod-06",
+        "prod-07",
+        "prod-08",
+        "prod-09",
+        "prod-11",
+        "prod-13"
+      ],
+      "status": "active",
+      "sortOrder": 2
+    },
+    {
+      "id": "col-everyday",
+      "name": "Everyday Essentials",
+      "slug": "everyday-essentials",
+      "description": "Understated, featherlight 925 silver pieces for your daily routine.",
+      "thumbnail": "/images/occasions/everyday-elegance.jpg",
+      "productCount": 32,
+      "type": "manual",
+      "productIds": [
+        "prod-01",
+        "prod-02",
+        "prod-03",
+        "prod-04"
+      ],
+      "status": "active",
+      "sortOrder": 3
+    },
+    {
+      "id": "col-festive",
+      "name": "Festive Collection",
+      "slug": "festive-collection",
+      "description": "Opulent chandbalis, temple necklaces, and royal polki heirlooms.",
+      "thumbnail": "/images/products/necklaces-festive-lotus-ruby-necklace-01.jpg",
+      "productCount": 16,
+      "type": "manual",
+      "productIds": [
+        "prod-02",
+        "prod-03",
+        "prod-04",
+        "prod-05"
+      ],
+      "status": "active",
+      "sortOrder": 4
+    },
+    {
+      "id": "col-bridal",
+      "name": "Bridal Collection",
+      "slug": "bridal-collection",
+      "description": "Couture Jaipur bridal chokers, jhumkas, and sets for your big day.",
+      "thumbnail": "/images/occasions/bridal-collection.jpg",
+      "productCount": 12,
+      "type": "manual",
+      "productIds": [
+        "prod-01",
+        "prod-02",
+        "prod-03"
+      ],
+      "status": "active",
+      "sortOrder": 5
+    },
+    {
+      "id": "col-gifts",
+      "name": "Gifts Collection",
+      "slug": "gifts-collection",
+      "description": "Thoughtfully packaged timeless expressions in hallmarked silver.",
+      "thumbnail": "/images/occasions/gifting-collection.jpg",
+      "productCount": 20,
+      "type": "manual",
+      "productIds": [
+        "prod-03",
+        "prod-04",
+        "prod-05",
+        "prod-06"
+      ],
+      "status": "active",
+      "sortOrder": 6
+    }
+  ],
+  "inventory": [
+    {
+      "id": "inv-prod-01",
+      "sku": "MK-EAR-101",
+      "productId": "prod-01",
+      "productName": "Floral Silver Earrings",
+      "productImage": "https://images.unsplash.com/photo-1630019852942-f89202989a59?q=80&w=1000&auto=format&fit=crop",
+      "currentStock": 22,
+      "reservedStock": 0,
+      "availableStock": 22,
+      "lowStockThreshold": 5,
+      "status": "in_stock",
+      "history": [
+        {
+          "id": "hist-1790784312403",
+          "previous": 17,
+          "change": 5,
+          "new": 22,
+          "reason": "Automated warehouse restock QA check",
+          "admin": "Rachit Sharma",
+          "timestamp": "2026-09-30T16:05:12.403Z"
+        },
+        {
+          "id": "hist-1790784291138",
+          "previous": 12,
+          "change": 5,
+          "new": 17,
+          "reason": "Automated warehouse restock QA check",
+          "admin": "Rachit Sharma",
+          "timestamp": "2026-09-30T16:04:51.138Z"
+        },
+        {
+          "id": "hist-1790782233981-prod-01",
+          "previous": 0,
+          "change": 12,
+          "new": 12,
+          "reason": "Initial Inventory Stocking",
+          "admin": "Rachit Sharma",
+          "timestamp": "2026-09-30T15:30:33.981Z"
+        }
+      ],
+      "updatedAt": "2026-09-30T16:05:12.403Z"
+    },
+    {
+      "id": "inv-prod-02",
+      "sku": "MK-NEC-102",
+      "productId": "prod-02",
+      "productName": "Pearl Blossom Choker Necklace",
+      "productImage": "/images/products/necklaces-pearl-blossom-collar-01.png",
+      "currentStock": 8,
+      "reservedStock": 0,
+      "availableStock": 8,
+      "lowStockThreshold": 5,
+      "status": "in_stock",
+      "history": [
+        {
+          "id": "hist-1790782233981-prod-02",
+          "previous": 0,
+          "change": 8,
+          "new": 8,
+          "reason": "Initial Inventory Stocking",
+          "admin": "Rachit Sharma",
+          "timestamp": "2026-09-30T15:30:33.981Z"
+        }
+      ],
+      "updatedAt": "2026-09-30T15:30:33.981Z"
+    },
+    {
+      "id": "inv-prod-03",
+      "sku": "MK-PEN-103",
+      "productId": "prod-03",
+      "productName": "Ruby Drop Pendant",
+      "productImage": "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1000&auto=format&fit=crop",
+      "currentStock": 5,
+      "reservedStock": 0,
+      "availableStock": 5,
+      "lowStockThreshold": 5,
+      "status": "low_stock",
+      "history": [
+        {
+          "id": "hist-1790782233981-prod-03",
+          "previous": 0,
+          "change": 5,
+          "new": 5,
+          "reason": "Initial Inventory Stocking",
+          "admin": "Rachit Sharma",
+          "timestamp": "2026-09-30T15:30:33.981Z"
+        }
+      ],
+      "updatedAt": "2026-09-30T15:30:33.981Z"
+    },
+    {
+      "id": "inv-prod-04",
+      "sku": "MK-RIN-104",
+      "productId": "prod-04",
+      "productName": "Golden Leaf Ring",
+      "productImage": "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?q=80&w=1000&auto=format&fit=crop",
+      "currentStock": 15,
+      "reservedStock": 0,
+      "availableStock": 15,
+      "lowStockThreshold": 5,
+      "status": "in_stock",
+      "history": [
+        {
+          "id": "hist-1790782233981-prod-04",
+          "previous": 0,
+          "change": 15,
+          "new": 15,
+          "reason": "Initial Inventory Stocking",
+          "admin": "Rachit Sharma",
+          "timestamp": "2026-09-30T15:30:33.981Z"
+        }
+      ],
+      "updatedAt": "2026-09-30T15:30:33.981Z"
+    },
+    {
+      "id": "inv-prod-05",
+      "sku": "MK-NEC-105",
+      "productId": "prod-05",
+      "productName": "Lotus Bloom Ruby & Polki Choker Set",
+      "productImage": "/images/products/necklaces-festive-lotus-ruby-necklace-01.jpg",
+      "currentStock": 20,
+      "reservedStock": 0,
+      "availableStock": 20,
+      "lowStockThreshold": 5,
+      "status": "in_stock",
+      "history": [
+        {
+          "id": "hist-1790782233981-prod-05",
+          "previous": 0,
+          "change": 20,
+          "new": 20,
+          "reason": "Initial Inventory Stocking",
+          "admin": "Rachit Sharma",
+          "timestamp": "2026-09-30T15:30:33.981Z"
+        }
+      ],
+      "updatedAt": "2026-09-30T15:30:33.981Z"
+    },
+    {
+      "id": "inv-prod-06",
+      "sku": "MK-NEC-106",
+      "productId": "prod-06",
+      "productName": "Sculpted Baroque Pearl Layered Chain",
+      "productImage": "/images/products/necklaces-modern-baroque-pearl-chain-01.png",
+      "currentStock": 7,
+      "reservedStock": 0,
+      "availableStock": 7,
+      "lowStockThreshold": 5,
+      "status": "in_stock",
+      "history": [
+        {
+          "id": "hist-1790782233981-prod-06",
+          "previous": 0,
+          "change": 7,
+          "new": 7,
+          "reason": "Initial Inventory Stocking",
+          "admin": "Rachit Sharma",
+          "timestamp": "2026-09-30T15:30:33.981Z"
+        }
+      ],
+      "updatedAt": "2026-09-30T15:30:33.981Z"
+    },
+    {
+      "id": "inv-prod-07",
+      "sku": "MK-PEN-107",
+      "productId": "prod-07",
+      "productName": "Pink Stone Floral Pendant",
+      "productImage": "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1000&auto=format&fit=crop",
+      "currentStock": 0,
+      "reservedStock": 0,
+      "availableStock": 0,
+      "lowStockThreshold": 5,
+      "status": "out_of_stock",
+      "history": [
+        {
+          "id": "hist-1790782233981-prod-07",
+          "previous": 0,
+          "change": 0,
+          "new": 0,
+          "reason": "Initial Inventory Stocking",
+          "admin": "Rachit Sharma",
+          "timestamp": "2026-09-30T15:30:33.981Z"
+        }
+      ],
+      "updatedAt": "2026-09-30T15:30:33.981Z"
+    },
+    {
+      "id": "inv-prod-08",
+      "sku": "MK-BRA-108",
+      "productId": "prod-08",
+      "productName": "Classic Silver Bangles Set",
+      "productImage": "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1000&auto=format&fit=crop",
+      "currentStock": 3,
+      "reservedStock": 0,
+      "availableStock": 3,
+      "lowStockThreshold": 5,
+      "status": "low_stock",
+      "history": [
+        {
+          "id": "hist-1790782233981-prod-08",
+          "previous": 0,
+          "change": 3,
+          "new": 3,
+          "reason": "Initial Inventory Stocking",
+          "admin": "Rachit Sharma",
+          "timestamp": "2026-09-30T15:30:33.981Z"
+        }
+      ],
+      "updatedAt": "2026-09-30T15:30:33.981Z"
+    },
+    {
+      "id": "inv-prod-09",
+      "sku": "MK-NEC-109",
+      "productId": "prod-09",
+      "productName": "Royal Emerald & Polki Bridal Set",
+      "productImage": "/images/products/necklaces-emerald-polki-bridal-set-01.png",
+      "currentStock": 3,
+      "reservedStock": 0,
+      "availableStock": 3,
+      "lowStockThreshold": 5,
+      "status": "low_stock",
+      "history": [
+        {
+          "id": "hist-1790782233981-prod-09",
+          "previous": 0,
+          "change": 3,
+          "new": 3,
+          "reason": "Initial Inventory Stocking",
+          "admin": "Rachit Sharma",
+          "timestamp": "2026-09-30T15:30:33.981Z"
+        }
+      ],
+      "updatedAt": "2026-09-30T15:30:33.981Z"
+    },
+    {
+      "id": "inv-prod-10",
+      "sku": "MK-BRA-110",
+      "productId": "prod-10",
+      "productName": "Filigree Silver Kada Bracelet",
+      "productImage": "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1000&auto=format&fit=crop",
+      "currentStock": 3,
+      "reservedStock": 0,
+      "availableStock": 3,
+      "lowStockThreshold": 5,
+      "status": "low_stock",
+      "history": [
+        {
+          "id": "hist-1790782233981-prod-10",
+          "previous": 0,
+          "change": 3,
+          "new": 3,
+          "reason": "Initial Inventory Stocking",
+          "admin": "Rachit Sharma",
+          "timestamp": "2026-09-30T15:30:33.981Z"
+        }
+      ],
+      "updatedAt": "2026-09-30T15:30:33.981Z"
+    },
+    {
+      "id": "inv-prod-11",
+      "sku": "MK-RIN-111",
+      "productId": "prod-11",
+      "productName": "Solitaire Halo Silver Ring",
+      "productImage": "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1000&auto=format&fit=crop",
+      "currentStock": 3,
+      "reservedStock": 0,
+      "availableStock": 3,
+      "lowStockThreshold": 5,
+      "status": "low_stock",
+      "history": [
+        {
+          "id": "hist-1790782233981-prod-11",
+          "previous": 0,
+          "change": 3,
+          "new": 3,
+          "reason": "Initial Inventory Stocking",
+          "admin": "Rachit Sharma",
+          "timestamp": "2026-09-30T15:30:33.981Z"
+        }
+      ],
+      "updatedAt": "2026-09-30T15:30:33.981Z"
+    },
+    {
+      "id": "inv-prod-12",
+      "sku": "MK-ANK-112",
+      "productId": "prod-12",
+      "productName": "Traditional Payal Anklet Pair",
+      "productImage": "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1000&auto=format&fit=crop",
+      "currentStock": 3,
+      "reservedStock": 0,
+      "availableStock": 3,
+      "lowStockThreshold": 5,
+      "status": "low_stock",
+      "history": [
+        {
+          "id": "hist-1790782233981-prod-12",
+          "previous": 0,
+          "change": 3,
+          "new": 3,
+          "reason": "Initial Inventory Stocking",
+          "admin": "Rachit Sharma",
+          "timestamp": "2026-09-30T15:30:33.981Z"
+        }
+      ],
+      "updatedAt": "2026-09-30T15:30:33.981Z"
+    },
+    {
+      "id": "inv-prod-13",
+      "sku": "MK-NEC-113",
+      "productId": "prod-13",
+      "productName": "Heritage Royal Polki Choker",
+      "productImage": "/images/products/necklaces-royal-heritage-polki-choker-01.jpg",
+      "currentStock": 3,
+      "reservedStock": 0,
+      "availableStock": 3,
+      "lowStockThreshold": 5,
+      "status": "low_stock",
+      "history": [
+        {
+          "id": "hist-1790782233981-prod-13",
+          "previous": 0,
+          "change": 3,
+          "new": 3,
+          "reason": "Initial Inventory Stocking",
+          "admin": "Rachit Sharma",
+          "timestamp": "2026-09-30T15:30:33.981Z"
+        }
+      ],
+      "updatedAt": "2026-09-30T15:30:33.981Z"
+    }
+  ],
+  "orders": [
+    {
+      "id": "#MKT12345",
+      "customerName": "Priya Sharma",
+      "email": "priya.sharma@example.com",
+      "phone": "+91 98201 44521",
+      "items": [
+        {
+          "productId": "prod-01",
+          "name": "Floral Silver Earrings",
+          "image": "/images/collection-earrings.jpg",
+          "price": 2499,
+          "quantity": 1,
+          "total": 2499
+        },
+        {
+          "productId": "prod-05",
+          "name": "Minimal Silver Ring",
+          "image": "/images/collection-rings.jpg",
+          "price": 1799,
+          "quantity": 1,
+          "total": 1799
+        }
+      ],
+      "subtotal": 4298,
+      "discount": 0,
+      "tax": 128,
+      "shipping": 0,
+      "amount": 4298,
+      "paymentStatus": "paid",
+      "paymentMethod": "Razorpay UPI",
+      "status": "delivered",
+      "shippingAddress": {
+        "addressLine": "A-402, Oberoi Splendor, JVLR",
+        "city": "Mumbai",
+        "state": "Maharashtra",
+        "postalCode": "400060",
+        "country": "India"
+      },
+      "timeline": [
+        {
+          "status": "Delivered",
+          "note": "Package handed over to customer",
+          "timestamp": "2026-09-30 14:20"
+        },
+        {
+          "status": "Shipped",
+          "note": "Dispatched via BlueDart AWB #8491203",
+          "timestamp": "2026-09-29 11:00"
+        },
+        {
+          "status": "Confirmed",
+          "note": "Order placed & payment verified",
+          "timestamp": "2026-09-28 16:30"
+        }
+      ],
+      "date": "Sep 30, 2026",
+      "createdAt": "2026-09-28T16:30:00Z",
+      "updatedAt": "2026-09-30T14:20:00Z"
+    },
+    {
+      "id": "#MKT12344",
+      "customerName": "Ananya Singh",
+      "email": "ananya.s@example.com",
+      "phone": "+91 98112 55902",
+      "items": [
+        {
+          "productId": "prod-01",
+          "name": "Floral Silver Earrings",
+          "image": "/images/collection-earrings.jpg",
+          "price": 2499,
+          "quantity": 1,
+          "total": 2499
+        }
+      ],
+      "subtotal": 2499,
+      "discount": 0,
+      "tax": 75,
+      "shipping": 0,
+      "amount": 2499,
+      "paymentStatus": "paid",
+      "paymentMethod": "Credit Card (Visa)",
+      "status": "shipped",
+      "shippingAddress": {
+        "addressLine": "B-12, Sector 44",
+        "city": "Noida",
+        "state": "Uttar Pradesh",
+        "postalCode": "201301",
+        "country": "India"
+      },
+      "timeline": [
+        {
+          "status": "Shipped",
+          "note": "Handed over to courier partner Delhivery",
+          "timestamp": "2026-09-30 09:15"
+        },
+        {
+          "status": "Confirmed",
+          "note": "Payment verified",
+          "timestamp": "2026-09-29 18:45"
+        }
+      ],
+      "date": "Sep 30, 2026",
+      "createdAt": "2026-09-29T18:45:00Z",
+      "updatedAt": "2026-09-30T09:15:00Z"
+    },
+    {
+      "id": "#MKT12343",
+      "customerName": "Rohan Mehta",
+      "email": "rohan.mehta@example.com",
+      "phone": "+91 97693 88123",
+      "items": [
+        {
+          "productId": "prod-02",
+          "name": "Pearl Blossom Choker Necklace",
+          "image": "/images/products/necklaces-pearl-blossom-collar-01.png",
+          "price": 3499,
+          "quantity": 1,
+          "total": 3499
+        },
+        {
+          "productId": "prod-03",
+          "name": "Royal Polki Choker",
+          "image": "/images/products/necklaces-royal-heritage-polki-choker-01.jpg",
+          "price": 3500,
+          "quantity": 1,
+          "total": 3500
+        }
+      ],
+      "subtotal": 6999,
+      "discount": 0,
+      "tax": 210,
+      "shipping": 0,
+      "amount": 6999,
+      "paymentStatus": "paid",
+      "paymentMethod": "NetBanking (HDFC)",
+      "status": "processing",
+      "shippingAddress": {
+        "addressLine": "Flat 101, Palm Court, Koregaon Park",
+        "city": "Pune",
+        "state": "Maharashtra",
+        "postalCode": "411001",
+        "country": "India"
+      },
+      "timeline": [
+        {
+          "status": "Processing",
+          "note": "Item undergoing final quality polish & hallmark verification",
+          "timestamp": "2026-09-29 12:00"
+        },
+        {
+          "status": "Confirmed",
+          "note": "Payment verified",
+          "timestamp": "2026-09-29 11:30"
+        }
+      ],
+      "date": "Sep 29, 2026",
+      "createdAt": "2026-09-29T11:30:00Z",
+      "updatedAt": "2026-09-29T12:00:00Z"
+    },
+    {
+      "id": "#MKT12342",
+      "customerName": "Neha Gupta",
+      "email": "neha.gupta@example.com",
+      "phone": "+91 99304 12890",
+      "items": [
+        {
+          "productId": "prod-04",
+          "name": "Lotus Pendant with Silver Chain",
+          "image": "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=1000&auto=format&fit=crop",
+          "price": 1999,
+          "quantity": 1,
+          "total": 1999
+        }
+      ],
+      "subtotal": 1999,
+      "discount": 0,
+      "tax": 60,
+      "shipping": 0,
+      "amount": 1999,
+      "paymentStatus": "paid",
+      "paymentMethod": "UPI",
+      "status": "delivered",
+      "shippingAddress": {
+        "addressLine": "Plot 45, Vasant Vihar",
+        "city": "New Delhi",
+        "state": "Delhi",
+        "postalCode": "110057",
+        "country": "India"
+      },
+      "timeline": [
+        {
+          "status": "Delivered",
+          "note": "Delivered to resident",
+          "timestamp": "2026-09-29 17:00"
+        }
+      ],
+      "date": "Sep 29, 2026",
+      "createdAt": "2026-09-27T10:15:00Z",
+      "updatedAt": "2026-09-29T17:00:00Z"
+    },
+    {
+      "id": "#MKT12341",
+      "customerName": "Karan Verma",
+      "email": "karan.verma@example.com",
+      "phone": "+91 98402 77341",
+      "items": [
+        {
+          "productId": "prod-02",
+          "name": "Kundan Chandbali Necklace",
+          "image": "/images/collection-necklaces.jpg",
+          "price": 3998,
+          "quantity": 1,
+          "total": 3998
+        }
+      ],
+      "subtotal": 3998,
+      "discount": 0,
+      "tax": 120,
+      "shipping": 0,
+      "amount": 3998,
+      "paymentStatus": "refunded",
+      "paymentMethod": "Credit Card",
+      "status": "cancelled",
+      "shippingAddress": {
+        "addressLine": "7th Cross, Indiranagar",
+        "city": "Bengaluru",
+        "state": "Karnataka",
+        "postalCode": "560038",
+        "country": "India"
+      },
+      "timeline": [
+        {
+          "status": "Cancelled",
+          "note": "Customer requested cancellation before dispatch. Refund issued.",
+          "timestamp": "2026-09-28 15:00"
+        }
+      ],
+      "date": "Sep 28, 2026",
+      "createdAt": "2026-09-28T14:10:00Z",
+      "updatedAt": "2026-09-28T15:00:00Z"
+    }
+  ],
+  "customers": [
+    {
+      "id": "cust-01",
+      "name": "Priya Sharma",
+      "email": "priya.sharma@example.com",
+      "phone": "+91 98201 44521",
+      "ordersCount": 4,
+      "totalSpend": 16890,
+      "lastOrderDate": "2026-09-30",
+      "status": "active",
+      "addresses": [
+        {
+          "id": "addr-01",
+          "type": "home",
+          "addressLine": "A-402, Oberoi Splendor, JVLR",
+          "city": "Mumbai",
+          "state": "Maharashtra",
+          "postalCode": "400060",
+          "country": "India",
+          "isDefault": true
+        }
+      ],
+      "wishlist": [
+        "prod-01",
+        "prod-02"
+      ],
+      "createdAt": "2026-01-15T10:00:00Z"
+    },
+    {
+      "id": "cust-02",
+      "name": "Ananya Singh",
+      "email": "ananya.s@example.com",
+      "phone": "+91 98112 55902",
+      "ordersCount": 2,
+      "totalSpend": 7498,
+      "lastOrderDate": "2026-09-30",
+      "status": "active",
+      "addresses": [
+        {
+          "id": "addr-02",
+          "type": "home",
+          "addressLine": "B-12, Sector 44",
+          "city": "Noida",
+          "state": "Uttar Pradesh",
+          "postalCode": "201301",
+          "country": "India",
+          "isDefault": true
+        }
+      ],
+      "wishlist": [
+        "prod-03"
+      ],
+      "createdAt": "2026-03-22T14:30:00Z"
+    },
+    {
+      "id": "cust-03",
+      "name": "Rohan Mehta",
+      "email": "rohan.mehta@example.com",
+      "phone": "+91 97693 88123",
+      "ordersCount": 3,
+      "totalSpend": 18450,
+      "lastOrderDate": "2026-09-29",
+      "status": "active",
+      "addresses": [],
+      "wishlist": [],
+      "createdAt": "2026-04-10T09:15:00Z"
+    },
+    {
+      "id": "cust-04",
+      "name": "Neha Gupta",
+      "email": "neha.gupta@example.com",
+      "phone": "+91 99304 12890",
+      "ordersCount": 1,
+      "totalSpend": 1999,
+      "lastOrderDate": "2026-09-29",
+      "status": "active",
+      "addresses": [],
+      "wishlist": [],
+      "createdAt": "2026-09-25T11:00:00Z"
+    }
+  ],
+  "reviews": [
+    {
+      "id": "rev-01",
+      "customerName": "Priya S.",
+      "rating": 5,
+      "title": "Exquisite Craftsmanship",
+      "comment": "Absolutely stunning designs and amazing quality! The jewellery looks even more beautiful in person. The weight of 925 silver is tangible and the polish is pure luxury.",
+      "date": "September 2026",
+      "verified": true,
+      "location": "Jaipur, India",
+      "purchasedProduct": "Floral Silver Earrings",
+      "avatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop",
+      "status": "approved",
+      "featured": true
+    },
+    {
+      "id": "rev-02",
+      "customerName": "Ananya Sharma",
+      "rating": 5,
+      "title": "Perfect Anniversary Gift",
+      "comment": "My husband surprised me with the Pearl Blossom necklace and earrings set from MK Silver Hub. The packaging with hallmark certificate and anti-tarnish pouch is so thoughtful.",
+      "date": "August 2026",
+      "verified": true,
+      "location": "Mumbai, India",
+      "purchasedProduct": "Pearl Blossom Necklace",
+      "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop",
+      "status": "approved",
+      "featured": true
+    },
+    {
+      "id": "rev-03",
+      "customerName": "Meera Rajput",
+      "rating": 5,
+      "title": "Authentic 925 Silver",
+      "comment": "Being someone with sensitive skin, pure 925 silver without nickel is essential. I have worn my Kundan Chandbalis all festive week with zero irritation. Exceptional service on WhatsApp too!",
+      "date": "July 2026",
+      "verified": true,
+      "location": "New Delhi, India",
+      "purchasedProduct": "Kundan Chandbali Earrings",
+      "avatarUrl": "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=200&auto=format&fit=crop",
+      "status": "approved",
+      "featured": true
+    }
+  ],
+  "coupons": [
+    {
+      "id": "coup-01",
+      "code": "FIRST10",
+      "type": "percentage",
+      "value": 10,
+      "minOrder": 1999,
+      "maxDiscount": 1000,
+      "startDate": "2026-01-01",
+      "endDate": "2026-12-31",
+      "usageLimit": 5000,
+      "usageCount": 842,
+      "status": "active"
+    },
+    {
+      "id": "coup-02",
+      "code": "FESTIVE500",
+      "type": "fixed",
+      "value": 500,
+      "minOrder": 3999,
+      "startDate": "2026-09-01",
+      "endDate": "2026-11-15",
+      "usageLimit": 1000,
+      "usageCount": 154,
+      "status": "active"
+    }
+  ],
+  "media": [
+    {
+      "id": "img-1790792850645-rrhio7",
+      "filename": "img-1790792850645-rrhio7-1200w.webp",
+      "originalName": "806496245814950264.jpg",
+      "url": "/uploads/optimized/img-1790792850645-rrhio7-806496245814950264-jpg-1200w.webp",
+      "type": "image",
+      "mimeType": "image/webp",
+      "sizeBytes": 66898,
+      "originalSizeBytes": 69057,
+      "savingsPercent": 3,
+      "dimensions": {
+        "width": 736,
+        "height": 981
+      },
+      "formats": [
+        "original",
+        "webp",
+        "avif"
+      ],
+      "sizes": {
+        "original": "/uploads/optimized/img-1790792850645-rrhio7-806496245814950264-jpg.jpeg",
+        "thumbnail": "/uploads/optimized/img-1790792850645-rrhio7-806496245814950264-jpg-thumb.webp",
+        "sm": "/uploads/optimized/img-1790792850645-rrhio7-806496245814950264-jpg-400w.webp",
+        "md": "/uploads/optimized/img-1790792850645-rrhio7-806496245814950264-jpg-800w.webp",
+        "lg": "/uploads/optimized/img-1790792850645-rrhio7-806496245814950264-jpg-1200w.webp",
+        "xl": "/uploads/optimized/img-1790792850645-rrhio7-806496245814950264-jpg-1600w.webp",
+        "avif": "/uploads/optimized/img-1790792850645-rrhio7-806496245814950264-jpg-1200w.avif"
+      },
+      "folder": "products",
+      "tags": [
+        "upload",
+        "products"
+      ],
+      "usedBy": [],
+      "createdAt": "2026-09-30T18:27:31.469Z"
+    },
+    {
+      "id": "img-1790784107172-ia8zsr",
+      "filename": "img-1790784107172-ia8zsr-1200w.webp",
+      "originalName": "806496245814950264.jpg",
+      "url": "/uploads/optimized/img-1790784107172-ia8zsr-806496245814950264-jpg-1200w.webp",
+      "type": "image",
+      "mimeType": "image/webp",
+      "sizeBytes": 66898,
+      "originalSizeBytes": 69057,
+      "savingsPercent": 3,
+      "dimensions": {
+        "width": 736,
+        "height": 981
+      },
+      "formats": [
+        "original",
+        "webp",
+        "avif"
+      ],
+      "sizes": {
+        "original": "/uploads/optimized/img-1790784107172-ia8zsr-806496245814950264-jpg.jpeg",
+        "thumbnail": "/uploads/optimized/img-1790784107172-ia8zsr-806496245814950264-jpg-thumb.webp",
+        "sm": "/uploads/optimized/img-1790784107172-ia8zsr-806496245814950264-jpg-400w.webp",
+        "md": "/uploads/optimized/img-1790784107172-ia8zsr-806496245814950264-jpg-800w.webp",
+        "lg": "/uploads/optimized/img-1790784107172-ia8zsr-806496245814950264-jpg-1200w.webp",
+        "xl": "/uploads/optimized/img-1790784107172-ia8zsr-806496245814950264-jpg-1600w.webp",
+        "avif": "/uploads/optimized/img-1790784107172-ia8zsr-806496245814950264-jpg-1200w.avif"
+      },
+      "folder": "products",
+      "tags": [
+        "upload",
+        "products"
+      ],
+      "usedBy": [],
+      "createdAt": "2026-09-30T16:01:47.933Z"
+    },
+    {
+      "id": "media-01",
+      "filename": "bridal-banner-clean-hd.webp",
+      "originalName": "bridal-banner-clean-hd.jpg",
+      "url": "/images/editorial/bridal-banner-clean-hd.jpg",
+      "type": "image",
+      "mimeType": "image/webp",
+      "sizeBytes": 266933,
+      "originalSizeBytes": 1824000,
+      "savingsPercent": 85,
+      "dimensions": {
+        "width": 1920,
+        "height": 1080
+      },
+      "formats": [
+        "original",
+        "webp",
+        "avif"
+      ],
+      "sizes": {
+        "thumbnail": "/images/editorial/bridal-banner-clean-hd.jpg",
+        "sm": "/images/editorial/bridal-banner-clean-hd.jpg",
+        "md": "/images/editorial/bridal-banner-clean-hd.jpg",
+        "lg": "/images/editorial/bridal-banner-clean-hd.jpg",
+        "xl": "/images/editorial/bridal-banner-clean-hd.jpg"
+      },
+      "folder": "banners",
+      "tags": [
+        "hero",
+        "editorial",
+        "bridal",
+        "jaipur"
+      ],
+      "usedBy": [
+        "Homepage Hero",
+        "Collections Hero"
+      ],
+      "createdAt": "2026-09-29T12:00:00Z"
+    },
+    {
+      "id": "media-02",
+      "filename": "collection-necklaces.webp",
+      "originalName": "collection-necklaces.jpg",
+      "url": "/images/collection-necklaces.jpg",
+      "type": "image",
+      "mimeType": "image/webp",
+      "sizeBytes": 79448,
+      "originalSizeBytes": 640000,
+      "savingsPercent": 88,
+      "dimensions": {
+        "width": 1200,
+        "height": 1200
+      },
+      "formats": [
+        "original",
+        "webp",
+        "avif"
+      ],
+      "sizes": {
+        "thumbnail": "/images/collection-necklaces.jpg",
+        "md": "/images/collection-necklaces.jpg"
+      },
+      "folder": "categories",
+      "tags": [
+        "necklaces",
+        "category",
+        "silver"
+      ],
+      "usedBy": [
+        "Shop The Collections",
+        "Category: Necklaces"
+      ],
+      "createdAt": "2026-09-29T12:00:00Z"
+    },
+    {
+      "id": "media-03",
+      "filename": "collection-earrings.webp",
+      "originalName": "collection-earrings.jpg",
+      "url": "/images/collection-earrings.jpg",
+      "type": "image",
+      "mimeType": "image/webp",
+      "sizeBytes": 74354,
+      "originalSizeBytes": 580000,
+      "savingsPercent": 87,
+      "dimensions": {
+        "width": 1200,
+        "height": 1200
+      },
+      "formats": [
+        "original",
+        "webp",
+        "avif"
+      ],
+      "sizes": {
+        "thumbnail": "/images/collection-earrings.jpg",
+        "md": "/images/collection-earrings.jpg"
+      },
+      "folder": "categories",
+      "tags": [
+        "earrings",
+        "category"
+      ],
+      "usedBy": [
+        "Shop The Collections",
+        "Category: Earrings"
+      ],
+      "createdAt": "2026-09-29T12:00:00Z"
+    },
+    {
+      "id": "media-04",
+      "filename": "collection-rings.webp",
+      "originalName": "collection-rings.jpg",
+      "url": "/images/collection-rings.jpg",
+      "type": "image",
+      "mimeType": "image/webp",
+      "sizeBytes": 67153,
+      "originalSizeBytes": 520000,
+      "savingsPercent": 87,
+      "dimensions": {
+        "width": 1200,
+        "height": 1200
+      },
+      "formats": [
+        "original",
+        "webp",
+        "avif"
+      ],
+      "sizes": {
+        "thumbnail": "/images/collection-rings.jpg",
+        "md": "/images/collection-rings.jpg"
+      },
+      "folder": "categories",
+      "tags": [
+        "rings",
+        "category"
+      ],
+      "usedBy": [
+        "Shop The Collections",
+        "Category: Rings"
+      ],
+      "createdAt": "2026-09-29T12:00:00Z"
+    }
+  ],
+  "banners": [
+    {
+      "id": "ban-01",
+      "title": "Timeless Jaipur 925 Silver",
+      "subtitle": "Pure Sterling Silver Handcrafted for Royal Moments",
+      "desktopImage": "/images/editorial/bridal-banner-clean-hd.jpg",
+      "ctaText": "Explore Collections",
+      "ctaUrl": "/shop",
+      "placement": "homepage_hero",
+      "sortOrder": 1,
+      "status": "active"
+    }
+  ],
+  "navigation": [
+    {
+      "id": "nav-01",
+      "label": "Shop",
+      "url": "/shop",
+      "placement": "header",
+      "sortOrder": 1,
+      "status": "active"
+    },
+    {
+      "id": "nav-02",
+      "label": "Collections",
+      "url": "/collections",
+      "placement": "header",
+      "sortOrder": 2,
+      "status": "active"
+    },
+    {
+      "id": "nav-03",
+      "label": "Gifts",
+      "url": "/shop?category=gifts",
+      "placement": "header",
+      "sortOrder": 3,
+      "status": "active"
+    },
+    {
+      "id": "nav-04",
+      "label": "About",
+      "url": "/about",
+      "placement": "header",
+      "sortOrder": 4,
+      "status": "active"
+    }
+  ],
+  "homepage": [
+    {
+      "id": "sec-announcement",
+      "type": "announcement",
+      "name": "Announcement Bar",
+      "enabled": true,
+      "sortOrder": 1
+    },
+    {
+      "id": "sec-hero",
+      "type": "hero",
+      "name": "Full-screen Hero Slider",
+      "enabled": true,
+      "sortOrder": 2
+    },
+    {
+      "id": "sec-trust",
+      "type": "trust_strip",
+      "name": "Trust Brand Promise Strip",
+      "enabled": true,
+      "sortOrder": 3
+    },
+    {
+      "id": "sec-categories",
+      "type": "categories",
+      "name": "Shop By Category",
+      "enabled": true,
+      "sortOrder": 4
+    },
+    {
+      "id": "sec-bestsellers",
+      "type": "best_sellers",
+      "name": "Best Sellers Slider",
+      "enabled": true,
+      "sortOrder": 5
+    },
+    {
+      "id": "sec-newarrivals",
+      "type": "new_arrivals",
+      "name": "New Arrivals Slider",
+      "enabled": true,
+      "sortOrder": 6
+    },
+    {
+      "id": "sec-occasions",
+      "type": "occasions",
+      "name": "Curated Occasions",
+      "enabled": true,
+      "sortOrder": 7
+    },
+    {
+      "id": "sec-editorial",
+      "type": "editorial",
+      "name": "Jaipur Heritage Campaign",
+      "enabled": true,
+      "sortOrder": 8
+    },
+    {
+      "id": "sec-whychoose",
+      "type": "why_choose",
+      "name": "Why Choose MK Silver Hub",
+      "enabled": true,
+      "sortOrder": 9
+    },
+    {
+      "id": "sec-testimonials",
+      "type": "testimonials",
+      "name": "Customer Testimonials",
+      "enabled": true,
+      "sortOrder": 10
+    },
+    {
+      "id": "sec-newsletter",
+      "type": "newsletter",
+      "name": "Newsletter Signup",
+      "enabled": true,
+      "sortOrder": 11
+    }
+  ],
+  "users": [
+    {
+      "id": "user-01",
+      "name": "Rachit Sharma",
+      "email": "admin@mksilverhub.com",
+      "passwordHash": "$2b$10$23tFlB00XzGS8kSCF3ZUMeOHz4IbHnjEcrN1vVFfM0Zd8oQsPYSqC",
+      "role": "super_admin",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop",
+      "status": "active",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "lastLogin": "2026-09-30T17:03:04.375Z"
+    },
+    {
+      "id": "user-02",
+      "name": "Priya Sharma",
+      "email": "customer@mksilverhub.com",
+      "passwordHash": "$2b$10$qpdTbtOT.076tA0oTY.uz.yb.17QB/H6dc7J4esFNO3LGpWV5/h7C",
+      "role": "USER",
+      "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop",
+      "status": "active",
+      "createdAt": "2026-01-15T00:00:00Z",
+      "lastLogin": "2026-09-30T17:03:04.377Z"
+    },
+    {
+      "id": "usr_1790789241126_6rtmn",
+      "name": "rachit",
+      "email": "rachit@gmail.com",
+      "passwordHash": "$2b$10$EVcQ2M35kcUj7f1qg1px6en76o.WJ3SwX9CF7XmVVHLxLznq4OD3u",
+      "role": "USER",
+      "avatar": "/images/avatars/customer.jpg",
+      "status": "active",
+      "createdAt": "2026-09-30T17:27:21.126Z",
+      "lastLogin": "2026-09-30T17:27:21.126Z"
+    },
+    {
+      "id": "usr_1790791503613_jurw7",
+      "name": "Aditi Deshmukh",
+      "email": "patron.1790791503465@example.com",
+      "passwordHash": "$2b$10$zYiWmSckUMa4GjofVkoN6uc9Opie9Tn0OCeKV9Nw76Jw1kaqA9Ci2",
+      "role": "USER",
+      "avatar": "/images/avatars/customer.jpg",
+      "status": "active",
+      "createdAt": "2026-09-30T18:05:03.613Z",
+      "lastLogin": "2026-09-30T18:05:03.613Z"
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "log-1790795322195-jvd9g",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "usr_super_admin",
+      "details": "Admin logged in",
+      "timestamp": "2026-09-30T19:08:42.195Z"
+    },
+    {
+      "id": "log-1790795228271-kyyz8",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "usr_super_admin",
+      "details": "Admin logged in",
+      "timestamp": "2026-09-30T19:07:08.271Z"
+    },
+    {
+      "id": "log-1790794595439-3drrb",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "usr_super_admin",
+      "details": "Admin logged in",
+      "timestamp": "2026-09-30T18:56:35.439Z"
+    },
+    {
+      "id": "log-1790794273620-7r7re",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "usr_super_admin",
+      "details": "Admin logged in",
+      "timestamp": "2026-09-30T18:51:13.620Z"
+    },
+    {
+      "id": "log-1790792851470-8dx4b",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "MEDIA_UPLOADED",
+      "resource": "Media",
+      "resourceId": "img-1790792850645-rrhio7",
+      "details": "Uploaded & optimized \"806496245814950264.jpg\" (0.1MB → 65KB, 3% savings)",
+      "timestamp": "2026-09-30T18:27:31.470Z"
+    },
+    {
+      "id": "log-1790792694889-mejju",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "usr_super_admin",
+      "details": "Admin logged in",
+      "timestamp": "2026-09-30T18:24:54.889Z"
+    },
+    {
+      "id": "log-1790792679153-ij280",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "usr_super_admin",
+      "details": "Admin logged in",
+      "timestamp": "2026-09-30T18:24:39.153Z"
+    },
+    {
+      "id": "log-1790791705461-rekos",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "usr_super_admin",
+      "details": "Admin logged in",
+      "timestamp": "2026-09-30T18:08:25.461Z"
+    },
+    {
+      "id": "log-1790791502046-o2ewi",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "usr_super_admin",
+      "details": "Admin logged in",
+      "timestamp": "2026-09-30T18:05:02.046Z"
+    },
+    {
+      "id": "log-1790791438268-85ltf",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "user-01",
+      "details": "Admin logged in",
+      "timestamp": "2026-09-30T18:03:58.268Z"
+    },
+    {
+      "id": "log-1790791303962-unwx3",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "user-01",
+      "details": "Admin logged in",
+      "timestamp": "2026-09-30T18:01:43.962Z"
+    },
+    {
+      "id": "log-1790791297323-2tawj",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "user-01",
+      "details": "Admin logged in",
+      "timestamp": "2026-09-30T18:01:37.324Z"
+    },
+    {
+      "id": "log-1790788947553-7f47n",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "user-01",
+      "details": "Admin logged in",
+      "timestamp": "2026-09-30T17:22:27.553Z"
+    },
+    {
+      "id": "log-1790788542828-669yj",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "user-01",
+      "details": "Admin logged in",
+      "timestamp": "2026-09-30T17:15:42.828Z"
+    },
+    {
+      "id": "log-1790787826215-u90d3",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "user-01",
+      "details": "Admin logged in",
+      "timestamp": "2026-09-30T17:03:46.215Z"
+    },
+    {
+      "id": "log-1790785668827-rsnap",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "usr_super_admin",
+      "details": "Admin logged in",
+      "timestamp": "2026-09-30T16:27:48.827Z"
+    },
+    {
+      "id": "log-1790785583953-d3l4i",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "usr_super_admin",
+      "details": "Admin logged in",
+      "timestamp": "2026-09-30T16:26:23.953Z"
+    },
+    {
+      "id": "log-1790785411987-pnhj4",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "usr_super_admin",
+      "details": "Admin logged in",
+      "timestamp": "2026-09-30T16:23:31.987Z"
+    },
+    {
+      "id": "log-1790784928432-rcfye",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "usr_super_admin",
+      "details": "Admin logged in",
+      "timestamp": "2026-09-30T16:15:28.432Z"
+    },
+    {
+      "id": "log-1790784312404-9icy7",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "STOCK_CHANGED",
+      "resource": "Inventory",
+      "resourceId": "prod-01",
+      "details": "Adjusted stock for \"Floral Silver Earrings\" from 17 to 22 (+5) — Automated warehouse restock QA check",
+      "timestamp": "2026-09-30T16:05:12.404Z"
+    },
+    {
+      "id": "log-1790784312383-baywh",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "PRODUCT_EDITED",
+      "resource": "Product",
+      "resourceId": "prod-01",
+      "details": "Updated product details for \"Floral Silver Earrings\"",
+      "timestamp": "2026-09-30T16:05:12.383Z"
+    },
+    {
+      "id": "log-1790784312381-fqyyw",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "PRICE_CHANGED",
+      "resource": "Product",
+      "resourceId": "prod-01",
+      "details": "Changed price of \"Floral Silver Earrings\" from ₹4499 to ₹3999",
+      "timestamp": "2026-09-30T16:05:12.381Z"
+    },
+    {
+      "id": "log-1790784312344-4965t",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "user-01",
+      "details": "Logged in to Admin Panel",
+      "timestamp": "2026-09-30T16:05:12.344Z"
+    },
+    {
+      "id": "log-1790784291139-dpytm",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "STOCK_CHANGED",
+      "resource": "Inventory",
+      "resourceId": "prod-01",
+      "details": "Adjusted stock for \"Floral Silver Earrings\" from 12 to 17 (+5) — Automated warehouse restock QA check",
+      "timestamp": "2026-09-30T16:04:51.139Z"
+    },
+    {
+      "id": "log-1790784291124-uwhop",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "PRODUCT_EDITED",
+      "resource": "Product",
+      "resourceId": "prod-01",
+      "details": "Updated product details for \"Floral Silver Earrings\"",
+      "timestamp": "2026-09-30T16:04:51.124Z"
+    },
+    {
+      "id": "log-1790784291123-bwsg0",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "PRICE_CHANGED",
+      "resource": "Product",
+      "resourceId": "prod-01",
+      "details": "Changed price of \"Floral Silver Earrings\" from ₹3999 to ₹4499",
+      "timestamp": "2026-09-30T16:04:51.123Z"
+    },
+    {
+      "id": "log-1790784291087-8xu0w",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "user-01",
+      "details": "Logged in to Admin Panel",
+      "timestamp": "2026-09-30T16:04:51.087Z"
+    },
+    {
+      "id": "log-1790784266832-aembx",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "PRODUCT_EDITED",
+      "resource": "Product",
+      "resourceId": "prod-01",
+      "details": "Updated product details for \"Floral Silver Earrings\"",
+      "timestamp": "2026-09-30T16:04:26.832Z"
+    },
+    {
+      "id": "log-1790784266831-95ef5",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "PRICE_CHANGED",
+      "resource": "Product",
+      "resourceId": "prod-01",
+      "details": "Changed price of \"Floral Silver Earrings\" from ₹2499 to ₹3999",
+      "timestamp": "2026-09-30T16:04:26.831Z"
+    },
+    {
+      "id": "log-1790784266769-t5vft",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "user-01",
+      "details": "Logged in to Admin Panel",
+      "timestamp": "2026-09-30T16:04:26.769Z"
+    },
+    {
+      "id": "log-1790784239393-4v99l",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "user-01",
+      "details": "Logged in to Admin Panel",
+      "timestamp": "2026-09-30T16:03:59.393Z"
+    },
+    {
+      "id": "log-1790784217938-642vv",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "user-01",
+      "details": "Logged in to Admin Panel",
+      "timestamp": "2026-09-30T16:03:37.938Z"
+    },
+    {
+      "id": "log-1790784107933-xfl65",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "MEDIA_UPLOADED",
+      "resource": "Media",
+      "resourceId": "img-1790784107172-ia8zsr",
+      "details": "Uploaded & optimized \"806496245814950264.jpg\" (0.1MB → 65KB, 3% savings)",
+      "timestamp": "2026-09-30T16:01:47.933Z"
+    },
+    {
+      "id": "log-1790782233987-fy7a5",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "ADMIN_LOGIN",
+      "resource": "Auth",
+      "resourceId": "user-01",
+      "details": "Logged in to Admin Panel",
+      "timestamp": "2026-09-30T15:30:33.987Z"
+    },
+    {
+      "id": "log-01",
+      "adminName": "Rachit Sharma",
+      "adminEmail": "admin@mksilverhub.com",
+      "action": "SYSTEM_INITIALIZED",
+      "resource": "Store",
+      "resourceId": "mk-silver-hub",
+      "details": "Enterprise dynamic e-commerce CMS database initialized successfully",
+      "timestamp": "2026-09-30T15:30:33.981Z"
+    }
+  ],
+  "settings": {
+    "storeName": "MK Silver Hub",
+    "tagline": "Fine 925 Sterling Jewellery",
+    "contactEmail": "support@mksilverhub.com",
+    "contactPhone": "+91 74250 58118",
+    "currency": "INR",
+    "currencySymbol": "₹",
+    "taxRate": 3,
+    "freeShippingThreshold": 1999,
+    "defaultLowStockThreshold": 5,
+    "supportWhatsApp": "+917425058118",
+    "address": "Johari Bazaar, Jaipur, Rajasthan 302003, India",
+    "instagramUrl": "https://instagram.com/mksilverhub",
+    "facebookUrl": "https://facebook.com/mksilverhub",
+    "youtubeUrl": "https://youtube.com",
+    "maintenanceMode": false
+  },
+  "version": 1
+}

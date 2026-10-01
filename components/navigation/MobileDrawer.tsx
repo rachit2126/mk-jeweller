@@ -12,20 +12,21 @@ interface MobileDrawerProps {
 }
 
 const SHOP_CATEGORIES = [
-  { label: 'Earrings', href: '/collections/earrings' },
-  { label: 'Necklaces', href: '/collections/necklaces' },
-  { label: 'Rings', href: '/collections/rings' },
-  { label: 'Bracelets', href: '/collections/bracelets' },
-  { label: 'Pendants', href: '/collections/pendants' },
-  { label: 'Mangalsutra', href: '/collections?category=mangalsutra' },
+  { label: 'Earrings', href: '/shop?category=earrings' },
+  { label: 'Necklaces', href: '/shop?category=necklaces' },
+  { label: 'Rings', href: '/shop?category=rings' },
+  { label: 'Bracelets', href: '/shop?category=bracelets' },
+  { label: 'Pendants', href: '/shop?category=pendants' },
+  { label: 'Anklets', href: '/shop?category=anklets' },
 ];
 
 const COLLECTION_LINKS = [
-  { label: 'New Arrivals', href: '/shop?badge=NEW%20ARRIVAL' },
-  { label: 'Best Sellers', href: '/collections/best-sellers' },
-  { label: 'Everyday Essentials', href: '/collections' },
-  { label: 'Festive Collection', href: '/collections?theme=festive' },
-  { label: 'Bridal Collection', href: '/collections?theme=bridal' },
+  { label: 'New Arrivals', href: '/shop?collection=new-arrivals' },
+  { label: 'Best Sellers', href: '/shop?collection=best-sellers' },
+  { label: 'Curated Suites', href: '/collections' },
+  { label: 'Everyday Essentials', href: '/shop?occasion=everyday' },
+  { label: 'Festive Collection', href: '/shop?occasion=festive' },
+  { label: 'Bridal Collection', href: '/shop?occasion=bridal' },
 ];
 
 export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {

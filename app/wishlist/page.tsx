@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Heart, ShoppingBag, Trash2, Sparkles, ArrowRight } from 'lucide-react';
 import { useCommerce } from '@/components/commerce/CommerceContext';
-import { formatPrice } from '@/lib/api';
+import { formatPrice } from '@/lib/format';
 
 export default function WishlistPage() {
   const { wishlist, toggleWishlist, addToCart } = useCommerce();

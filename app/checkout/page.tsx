@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ShieldCheck, CheckCircle2, Lock, ArrowRight, MessageCircle, Truck, Sparkles } from 'lucide-react';
 import { useCommerce } from '@/components/commerce/CommerceContext';
-import { formatPrice } from '@/lib/api';
+import { formatPrice } from '@/lib/format';
 
 type CheckoutStep = 'info' | 'delivery' | 'payment' | 'success';
 
@@ -29,6 +29,8 @@ export default function CheckoutPage() {
   });
 
   const [orderNumber, setOrderNumber] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -46,12 +48,64 @@ export default function CheckoutPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handlePlaceOrder = () => {
-    const generatedId = `MK-${Math.floor(100000 + Math.random() * 900000)}`;
-    setOrderNumber(generatedId);
-    setStep('success');
-    clearCart();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handlePlaceOrder = async () => {
+    if (cart.length === 0) {
+      setSubmitError('Your bag is currently empty.');
+      return;
+    }
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const payload = {
+        customerName: `${formData.firstName} ${formData.lastName}`.trim() || 'Patron',
+        email: formData.email,
+        phone: formData.phone,
+        items: cart.map(item => ({
+          productId: item.product.id,
+          name: item.product.name,
+          sku: (item.product as any).sku || `MK-${(item.product.category || 'JEW').toUpperCase().slice(0, 3)}`,
+          image: item.product.images?.[0] || '/images/products/placeholder.jpg',
+          price: item.product.price,
+          quantity: item.quantity,
+          total: item.product.price * item.quantity,
+        })),
+        subtotal: cartSubtotal,
+        discount: 0,
+        tax: 0,
+        shipping: shippingFee,
+        amount: cartTotal,
+        paymentStatus: 'paid',
+        paymentMethod: formData.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online / UPI',
+        shippingAddress: {
+          addressLine: `${formData.address}${formData.apartment ? ', ' + formData.apartment : ''}`,
+          city: formData.city,
+          state: formData.state,
+          postalCode: formData.pincode,
+          country: 'India',
+        },
+      };
+
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Failed to place order in database.');
+      }
+
+      setOrderNumber(data.order.id);
+      setStep('success');
+      clearCart();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err: any) {
+      setSubmitError(err.message || 'Unable to place order. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (step === 'success') {
@@ -192,7 +246,7 @@ export default function CheckoutPage() {
                       type="tel"
                       required
                       name="phone"
-                      placeholder="+91 98765 43210"
+                      placeholder="Enter your phone number"
                       value={formData.phone}
                       onChange={handleInputChange}
                       style={{ width: '100%', padding: '12px 16px', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: '#FFFFFF' }}
@@ -446,13 +500,18 @@ export default function CheckoutPage() {
                   </label>
                 </div>
 
+                {submitError && (
+                  <div style={{ color: '#E53E3E', fontSize: '0.85rem', marginBottom: '12px', padding: '10px 14px', backgroundColor: '#FFF5F5', borderRadius: '8px', border: '1px solid #FED7D7' }}>
+                    {submitError}
+                  </div>
+                )}
                 <div style={{ display: 'flex', gap: '12px' }}>
-                  <button onClick={() => setStep('delivery')} className="btn-secondary" style={{ padding: '14px 24px' }}>
+                  <button onClick={() => setStep('delivery')} disabled={isSubmitting} className="btn-secondary" style={{ padding: '14px 24px' }}>
                     Back
                   </button>
-                  <button onClick={handlePlaceOrder} className="btn-primary" style={{ flex: 1, padding: '14px' }}>
+                  <button onClick={handlePlaceOrder} disabled={isSubmitting} className="btn-primary" style={{ flex: 1, padding: '14px', opacity: isSubmitting ? 0.7 : 1 }}>
                     <Lock size={16} />
-                    <span>Pay Securely {formatPrice(cartTotal)}</span>
+                    <span>{isSubmitting ? 'Securing Order in Atelier...' : `Pay Securely ${formatPrice(cartTotal)}`}</span>
                   </button>
                 </div>
               </div>

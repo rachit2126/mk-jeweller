@@ -1,9 +1,17 @@
 import { Product, Review } from './types';
-import { PRODUCTS, CATEGORIES_DATA, REVIEWS_DATA } from '@/data/products';
+import { connectDB } from '@/lib/db/mongodb';
 
-// Mock API Abstraction Layer for MK Silver Hub
-// This allows seamless connection to headless Shopify, Medusa, custom Node/Express, or MongoDB backend later.
+function normalizeProduct(doc: any): Product {
+  const { _id, ...rest } = doc;
+  return {
+    ...rest,
+    id: rest.id || _id?.toString(),
+  };
+}
 
+/**
+ * Dynamically queries products directly from MongoDB.
+ */
 export async function getProducts(options?: {
   category?: string;
   occasion?: string;
@@ -11,68 +19,108 @@ export async function getProducts(options?: {
   search?: string;
   isBestSeller?: boolean;
   isNewArrival?: boolean;
+  collection?: string;
   limit?: number;
 }): Promise<Product[]> {
-  // Simulate network latency if needed, or return immediate
-  let filtered = [...PRODUCTS];
+  const db = await connectDB();
+  const query: any = {
+    status: { $in: ['active', 'out_of_stock'] },
+    isDeleted: { $ne: true },
+  };
 
   if (options?.category) {
-    filtered = filtered.filter(p => p.category.toLowerCase() === options.category?.toLowerCase());
+    query.category = options.category.toLowerCase().trim();
   }
-
   if (options?.occasion) {
-    filtered = filtered.filter(p => p.occasion.includes(options.occasion as any));
+    query.occasion = options.occasion.toLowerCase().trim();
   }
-
   if (options?.style) {
-    filtered = filtered.filter(p => p.style.includes(options.style as any));
+    query.style = options.style.toLowerCase().trim();
   }
-
   if (options?.isBestSeller) {
-    filtered = filtered.filter(p => p.isBestSeller);
+    query.isBestSeller = true;
   }
-
   if (options?.isNewArrival) {
-    filtered = filtered.filter(p => p.isNewArrival);
+    query.isNewArrival = true;
   }
-
   if (options?.search) {
-    const q = options.search.toLowerCase();
-    filtered = filtered.filter(
-      p =>
-        p.name.toLowerCase().includes(q) ||
-        p.categoryLabel.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q)
-    );
+    const q = options.search.trim();
+    query.$or = [
+      { name: { $regex: q, $options: 'i' } },
+      { categoryLabel: { $regex: q, $options: 'i' } },
+      { description: { $regex: q, $options: 'i' } },
+      { sku: { $regex: q, $options: 'i' } },
+    ];
   }
 
+  let cursor = db.collection('products').find(query);
   if (options?.limit) {
-    filtered = filtered.slice(0, options.limit);
+    cursor = cursor.limit(options.limit);
   }
 
-  return filtered;
+  const docs = await cursor.toArray();
+  return docs.map(normalizeProduct);
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
-  const found = PRODUCTS.find(p => p.slug === slug);
-  return found || null;
+  const db = await connectDB();
+  const cleanSlug = slug.toLowerCase().trim();
+  const doc = await db.collection('products').findOne({
+    $or: [{ slug: cleanSlug }, { id: cleanSlug }],
+    status: { $ne: 'archived' },
+    isDeleted: { $ne: true },
+  });
+  return doc ? normalizeProduct(doc) : null;
+}
+
+export async function getProductById(id: string): Promise<Product | null> {
+  const db = await connectDB();
+  const doc = await db.collection('products').findOne({
+    $or: [{ id }, { _id: (id && id.length === 24 ? new (require('mongodb').ObjectId)(id) : undefined) }],
+    isDeleted: { $ne: true },
+  });
+  return doc ? normalizeProduct(doc) : null;
 }
 
 export async function getCategories() {
-  return CATEGORIES_DATA;
+  const db = await connectDB();
+  const docs = await db.collection('categories').find({ status: 'active' }).sort({ sortOrder: 1 }).toArray();
+  return docs.map((d: any) => {
+    const { _id, ...rest } = d;
+    return { ...rest, id: rest.id || _id?.toString() };
+  });
+}
+
+export async function getCollections() {
+  const db = await connectDB();
+  const docs = await db.collection('collections').find({ status: 'active' }).sort({ sortOrder: 1 }).toArray();
+  return docs.map((d: any) => {
+    const { _id, ...rest } = d;
+    return { ...rest, id: rest.id || _id?.toString() };
+  });
 }
 
 export async function getReviews(productId?: string): Promise<Review[]> {
+  const db = await connectDB();
+  const query: any = { status: 'approved' };
   if (productId) {
-    return REVIEWS_DATA.filter(r => r.productId === productId);
+    query.productId = productId;
   }
-  return REVIEWS_DATA;
+  const reviews = await db.collection('reviews').find(query).toArray();
+  return reviews.map((r: any) => ({
+    id: r.id || r._id?.toString(),
+    productId: r.productId,
+    customerName: r.customerName,
+    rating: r.rating,
+    title: r.title,
+    comment: r.comment,
+    date: r.date,
+    verified: r.verified,
+    location: r.location,
+    purchasedProduct: r.purchasedProduct || r.productName || '925 Sterling Jewellery',
+  }));
 }
 
-export function formatPrice(amount: number): string {
-  return new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
+export { formatPrice } from './format';
+
+

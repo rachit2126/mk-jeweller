@@ -6,8 +6,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Search, X, TrendingUp, ArrowRight } from 'lucide-react';
-import { PRODUCTS } from '@/data/products';
-import { formatPrice } from '@/lib/api';
+import { Product } from '@/lib/types';
+import { formatPrice } from '@/lib/format';
 
 interface SearchOverlayProps {
   isOpen?: boolean;
@@ -27,7 +27,17 @@ export default function SearchOverlay({ isOpen = true, onClose }: SearchOverlayP
   const router = useRouter();
   const shouldReduceMotion = useReducedMotion();
   const [query, setQuery] = useState('');
+  const [trendingProducts, setTrendingProducts] = useState<Product[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    fetch('/api/products?limit=4&isBestSeller=true')
+      .then(res => res.json())
+      .then(data => {
+        if (data.products) setTrendingProducts(data.products);
+      })
+      .catch(err => console.error(err));
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -51,9 +61,6 @@ export default function SearchOverlay({ isOpen = true, onClose }: SearchOverlayP
     router.push(`/search?q=${encodeURIComponent(tag)}`);
     onClose();
   };
-
-  // Trending items from real catalog
-  const trendingProducts = PRODUCTS.slice(0, 4);
 
   return (
     <motion.div

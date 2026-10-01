@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { Heart, ShoppingBag, Eye, Star } from 'lucide-react';
 import { Product } from '@/lib/types';
 import { useCommerce } from '@/components/commerce/CommerceContext';
-import { formatPrice } from '@/lib/api';
+import { formatPrice } from '@/lib/format';
 
 interface ProductCardProps {
   product: Product;
@@ -188,15 +188,15 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
             href={`/product/${product.slug}`}
             style={{
               fontFamily: 'var(--font-ui), "Jost", sans-serif',
-              fontSize: '0.98rem',
+              fontSize: '0.96rem',
               fontWeight: 500,
-              color: '#3B2B2B',
-              lineHeight: 1.35,
+              color: '#342727',
+              lineHeight: 1.3,
               display: '-webkit-box',
               WebkitLineClamp: 1,
               WebkitBoxOrient: 'vertical',
               overflow: 'hidden',
-              marginBottom: '6px',
+              marginBottom: '3px',
               textDecoration: 'none',
               transition: 'color 0.2s ease',
             }}
@@ -205,9 +205,25 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
             {product.name}
           </Link>
 
+          {/* Material */}
+          <span style={{ fontSize: '0.74rem', color: '#806D68', display: 'block', marginBottom: '6px' }}>
+            925 Sterling Silver
+          </span>
+
+          {/* Rating */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '8px' }}>
+            <Star size={11} fill="#B76E79" color="#B76E79" />
+            <span style={{ fontSize: '0.76rem', color: '#B76E79', fontWeight: 600 }}>
+              {product.rating}
+            </span>
+            <span style={{ fontSize: '0.72rem', color: '#806D68' }}>
+              ({product.reviewsCount})
+            </span>
+          </div>
+
           {/* Pricing */}
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '8px' }}>
-            <span style={{ fontSize: '1.05rem', fontWeight: 600, color: '#3B2B2B', fontFamily: 'var(--font-ui), "Jost", sans-serif' }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '12px' }}>
+            <span style={{ fontSize: '1.04rem', fontWeight: 600, color: '#342727', fontFamily: 'var(--font-ui), "Jost", sans-serif' }}>
               {formatPrice(product.price)}
             </span>
             {product.compareAtPrice && (
@@ -215,23 +231,6 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
                 {formatPrice(product.compareAtPrice)}
               </span>
             )}
-          </div>
-
-          {/* Rating */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '14px' }}>
-            <div style={{ display: 'flex', color: '#D9B98A' }}>
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  size={12}
-                  fill={i < Math.floor(product.rating) ? '#D9B98A' : 'none'}
-                  color="#D9B98A"
-                />
-              ))}
-            </div>
-            <span style={{ fontSize: '0.72rem', color: '#6F5A58', fontWeight: 500 }}>
-              ({product.reviewsCount})
-            </span>
           </div>
         </div>
 

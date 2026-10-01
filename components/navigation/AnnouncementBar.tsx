@@ -2,9 +2,13 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Phone, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export default function AnnouncementBar() {
+  const pathname = usePathname();
+  const isAuthOrAdmin = pathname?.startsWith('/admin') || pathname === '/login' || pathname === '/register' || pathname === '/forgot-password';
+  if (isAuthOrAdmin) return null;
   return (
     <div
       style={{

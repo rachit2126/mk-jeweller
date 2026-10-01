@@ -3,17 +3,19 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Compass, Layers, Heart, ShoppingBag } from 'lucide-react';
+import { Home, Compass, Search, Heart, ShoppingBag } from 'lucide-react';
 import { useCommerce } from '@/components/commerce/CommerceContext';
 
 export default function MobileBottomNav() {
   const pathname = usePathname();
-  const { cartCount, wishlistCount, openCart } = useCommerce();
+  const { cartCount, wishlistCount, openCart, openSearch } = useCommerce();
 
   const isHome = pathname === '/';
   const isShop = pathname.startsWith('/shop');
-  const isCollections = pathname.startsWith('/collections');
   const isWishlist = pathname === '/wishlist';
+  const isAuthOrAdmin = pathname?.startsWith('/admin') || pathname === '/login' || pathname === '/register' || pathname === '/forgot-password';
+
+  if (isAuthOrAdmin) return null;
 
   return (
     <div
@@ -79,26 +81,29 @@ export default function MobileBottomNav() {
         <span>Shop</span>
       </Link>
 
-      {/* 3. Collections */}
-      <Link
-        href="/collections"
+      {/* 3. Search */}
+      <button
+        onClick={openSearch}
         className="bottom-nav-item"
         style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           gap: '3px',
-          color: isCollections ? '#B76E79' : '#806D68',
+          color: '#806D68',
           textDecoration: 'none',
           fontSize: '0.68rem',
-          fontWeight: isCollections ? 600 : 400,
+          fontWeight: 400,
           flex: 1,
           padding: '4px 0',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
         }}
       >
-        <Layers size={20} strokeWidth={isCollections ? 1.9 : 1.4} />
-        <span>Collections</span>
-      </Link>
+        <Search size={20} strokeWidth={1.4} />
+        <span>Search</span>
+      </button>
 
       {/* 4. Wishlist */}
       <Link

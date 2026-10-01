@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
-import { PRODUCTS, CATEGORIES_DATA } from '@/data/products';
+import { connectDB } from '@/lib/db/mongodb';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://mksilverhub.com';
 
   const staticRoutes = [
@@ -17,6 +17,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/returns',
     '/faq',
     '/contact',
+    '/login',
+    '/register',
+    '/forgot-password',
     '/privacy',
     '/terms',
   ].map((route) => ({
@@ -26,19 +29,33 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: route === '' ? 1.0 : 0.8,
   }));
 
-  const categoryRoutes = CATEGORIES_DATA.map((cat) => ({
-    url: `${baseUrl}/collections/${cat.id}`,
-    lastModified: new Date(),
-    changeFrequency: 'daily' as const,
-    priority: 0.85,
-  }));
+  let categoryRoutes: MetadataRoute.Sitemap = [];
+  let productRoutes: MetadataRoute.Sitemap = [];
 
-  const productRoutes = PRODUCTS.map((prod) => ({
-    url: `${baseUrl}/product/${prod.slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'daily' as const,
-    priority: 0.9,
-  }));
+  try {
+    const db = await connectDB();
+    const [categories, products] = await Promise.all([
+      db.collection('categories').find({ status: 'active' }, { projection: { slug: 1, id: 1 } }).toArray(),
+      db.collection('products').find({ status: 'active' }, { projection: { slug: 1 } }).toArray(),
+    ]);
+
+    categoryRoutes = categories.map((cat) => ({
+      url: `${baseUrl}/shop?category=${cat.slug || cat.id}`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.85,
+    }));
+
+    productRoutes = products.map((prod) => ({
+      url: `${baseUrl}/product/${prod.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.9,
+    }));
+  } catch (err) {
+    console.error('[Sitemap MongoDB error]:', err);
+  }
 
   return [...staticRoutes, ...categoryRoutes, ...productRoutes];
 }
+

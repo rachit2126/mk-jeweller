@@ -18,9 +18,9 @@ import {
   RotateCw,
   Maximize2
 } from 'lucide-react';
-import { PRODUCTS } from '@/data/products';
+import { Product } from '@/lib/types';
 import { useCommerce } from '@/components/commerce/CommerceContext';
-import { formatPrice } from '@/lib/api';
+import { formatPrice } from '@/lib/format';
 import ProductCard from '@/components/products/ProductCard';
 import { useRecentlyViewedStore } from '@/stores/recently-viewed';
 
@@ -29,7 +29,9 @@ export default function ProductDetailPage() {
   const router = useRouter();
   const slug = params?.slug as string;
 
-  const product = PRODUCTS.find(p => p.slug === slug);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const addRecentlyViewed = useRecentlyViewedStore(state => state.addSlug);
 
   const { addToCart, toggleWishlist, isInWishlist } = useCommerce();
@@ -43,14 +45,48 @@ export default function ProductDetailPage() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (slug) {
-      addRecentlyViewed(slug);
-    }
+    if (!slug) return;
+    addRecentlyViewed(slug);
+
+    let isMounted = true;
+    setLoading(true);
+
+    fetch(`/api/products/${slug}`)
+      .then(res => {
+        if (!res.ok) throw new Error('Not found');
+        return res.json();
+      })
+      .then(data => {
+        if (isMounted) {
+          setProduct(data.product || null);
+          setRelatedProducts(data.relatedProducts || []);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setProduct(null);
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, [slug, addRecentlyViewed]);
+
+  if (loading) {
+    return (
+      <div style={{ textAlign: 'center', padding: '140px 20px', minHeight: '60vh', backgroundColor: 'var(--bg-main)' }}>
+        <div style={{ width: '48px', height: '48px', border: '3px solid rgba(183, 110, 121, 0.2)', borderTopColor: '#B76E79', borderRadius: '50%', margin: '0 auto 16px', animation: 'spin 0.8s linear infinite' }} />
+        <p style={{ fontFamily: 'var(--font-ui)', color: 'var(--color-muted-text)', fontSize: '0.9rem', letterSpacing: '0.05em' }}>Loading Jaipur Hallmarked Silver...</p>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
-      <div style={{ textAlign: 'center', padding: '120px 20px', minHeight: '60vh' }}>
+      <div style={{ textAlign: 'center', padding: '120px 20px', minHeight: '60vh', backgroundColor: 'var(--bg-main)' }}>
         <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '2rem' }}>Product Not Found</h2>
         <p style={{ color: 'var(--color-muted-text)', margin: '12px 0 24px' }}>The jewellery piece you are seeking does not exist or has been archived.</p>
         <Link href="/shop" className="btn-primary">Browse All Jewellery</Link>
@@ -59,7 +95,6 @@ export default function ProductDetailPage() {
   }
 
   const isFavorited = isInWishlist(product.id);
-  const relatedProducts = PRODUCTS.filter(p => p.id !== product.id && p.category === product.category).slice(0, 4);
 
   const whatsappMessage = `Hi MK Silver Hub, I'm interested in ${product.name} (${formatPrice(product.price)}). Can you help me with more details?`;
   const whatsappUrl = `https://wa.me/917425058118?text=${encodeURIComponent(whatsappMessage)}`;

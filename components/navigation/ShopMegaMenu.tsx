@@ -73,37 +73,37 @@ function MangalsutraIcon({ size = 16, color = 'currentColor' }: { size?: number;
 }
 
 const CATEGORIES = [
-  { label: 'Earrings', href: '/collections/earrings', icon: EarringsIcon },
-  { label: 'Necklaces', href: '/collections/necklaces', icon: NecklaceIcon },
-  { label: 'Rings', href: '/collections/rings', icon: RingIcon },
-  { label: 'Bracelets', href: '/collections/bracelets', icon: BraceletIcon },
-  { label: 'Pendants', href: '/collections/pendants', icon: PendantIcon },
-  { label: 'Mangalsutra', href: '/shop?category=mangalsutra', icon: MangalsutraIcon },
+  { label: 'Earrings', href: '/shop?category=earrings', icon: EarringsIcon },
+  { label: 'Necklaces', href: '/shop?category=necklaces', icon: NecklaceIcon },
+  { label: 'Rings', href: '/shop?category=rings', icon: RingIcon },
+  { label: 'Bracelets', href: '/shop?category=bracelets', icon: BraceletIcon },
+  { label: 'Pendants', href: '/shop?category=pendants', icon: PendantIcon },
+  { label: 'Anklets', href: '/shop?category=anklets', icon: MangalsutraIcon },
 ];
 
 const POPULAR_CARDS = [
   {
     title: 'Earrings',
     subtitle: 'Everyday to statement',
-    href: '/collections/earrings',
+    href: '/shop?category=earrings',
     image: '/images/collection-earrings.jpg',
   },
   {
     title: 'Necklaces',
     subtitle: 'Elegant & timeless',
-    href: '/collections/necklaces',
+    href: '/shop?category=necklaces',
     image: '/images/collection-necklaces.jpg',
   },
   {
     title: 'Rings',
     subtitle: 'Symbols of love',
-    href: '/collections/rings',
+    href: '/shop?category=rings',
     image: '/images/collection-rings.jpg',
   },
   {
     title: 'Bracelets',
     subtitle: 'Modern essentials',
-    href: '/collections/bracelets',
+    href: '/shop?category=bracelets',
     image: '/images/occasions/everyday-elegance.jpg',
   },
 ];

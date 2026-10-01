@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Trash2, Plus, Minus, ArrowRight, ShoppingBag } from 'lucide-react';
 import { useCommerce } from '@/components/commerce/CommerceContext';
-import { formatPrice } from '@/lib/api';
+import { formatPrice } from '@/lib/format';
 
 interface CartPreviewProps {
   isOpen?: boolean;

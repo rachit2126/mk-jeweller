@@ -5,8 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Search, X, ArrowRight, Sparkles, Clock, ArrowLeft } from 'lucide-react';
 import { useCommerce } from './CommerceContext';
-import { PRODUCTS } from '@/data/products';
-import { formatPrice } from '@/lib/api';
+import { Product } from '@/lib/types';
+import { formatPrice } from '@/lib/format';
 import { useRecentSearchesStore } from '@/stores/recent-searches';
 import BrandLogo from '@/components/ui/BrandLogo';
 
@@ -16,8 +16,18 @@ export default function SearchModal() {
   const { isSearchOpen, closeSearch, openQuickView } = useCommerce();
   const [query, setQuery] = useState('');
   const { searches: recentSearches, addSearch } = useRecentSearchesStore();
+  const [trendingProducts, setTrendingProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
 
-  const trendingProducts = useMemo(() => PRODUCTS.slice(0, 4), []);
+  useEffect(() => {
+    fetch('/api/products?limit=4&isBestSeller=true')
+      .then(res => res.json())
+      .then(data => {
+        if (data.products) setTrendingProducts(data.products);
+      })
+      .catch(err => console.error(err));
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -35,16 +45,28 @@ export default function SearchModal() {
     };
   }, [isSearchOpen, closeSearch]);
 
-  const filteredProducts = useMemo(() => {
-    if (!query.trim()) return [];
-    const q = query.toLowerCase();
-    return PRODUCTS.filter(
-      p =>
-        p.name.toLowerCase().includes(q) ||
-        p.categoryLabel.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q) ||
-        p.style.some(s => s.toLowerCase().includes(q))
-    );
+  useEffect(() => {
+    if (!query.trim()) {
+      setFilteredProducts([]);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const res = await fetch(`/api/products?search=${encodeURIComponent(query.trim())}&limit=8`);
+        if (res.ok) {
+          const data = await res.json();
+          setFilteredProducts(data.products || []);
+        }
+      } catch (err) {
+        console.error('Search error:', err);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 200);
+
+    return () => clearTimeout(timer);
   }, [query]);
 
   if (!isSearchOpen) return null;

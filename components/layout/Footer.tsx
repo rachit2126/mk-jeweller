@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Mail, ArrowRight, ArrowUp, CheckCircle2, ChevronDown } from 'lucide-react';
 import { InstagramIcon, FacebookIcon, YoutubeIcon } from '@/components/ui/Icons';
 import BrandLogo from '@/components/ui/BrandLogo';
@@ -26,6 +27,7 @@ function PinterestIcon({ size = 16, color = 'currentColor' }: { size?: number; c
 }
 
 export default function Footer() {
+  const pathname = usePathname();
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [quickLinksOpen, setQuickLinksOpen] = useState(false);
@@ -44,6 +46,9 @@ export default function Footer() {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const isAuthOrAdmin = pathname?.startsWith('/admin') || pathname === '/login' || pathname === '/register' || pathname === '/forgot-password';
+  if (isAuthOrAdmin) return null;
 
   return (
     <footer className="footer-root" aria-label="MK Silver Hub Footer">

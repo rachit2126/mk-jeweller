@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Trash2, ArrowRight, Heart } from 'lucide-react';
 import { useCommerce } from '@/components/commerce/CommerceContext';
-import { formatPrice } from '@/lib/api';
+import { formatPrice } from '@/lib/format';
 
 import { Product } from '@/lib/types';
 

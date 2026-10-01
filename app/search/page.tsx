@@ -1,28 +1,40 @@
 'use client';
 
-import React, { useState, useMemo, Suspense } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Search, X, Sparkles } from 'lucide-react';
-import { PRODUCTS } from '@/data/products';
+import { Product } from '@/lib/types';
 import ProductCard from '@/components/products/ProductCard';
 
 function SearchInner() {
   const searchParams = useSearchParams();
   const qParam = searchParams.get('q') || '';
   const [query, setQuery] = useState(qParam);
+  const [results, setResults] = useState<Product[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   const popular = ['Chandbali', 'Polki Choker', 'Silver Ring', 'Freshwater Pearls', 'Ruby Pendant', 'Kada Bangles'];
 
-  const results = useMemo(() => {
-    if (!query.trim()) return [];
-    const q = query.toLowerCase();
-    return PRODUCTS.filter(
-      p =>
-        p.name.toLowerCase().includes(q) ||
-        p.categoryLabel.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q) ||
-        p.style.some(s => s.toLowerCase().includes(q))
-    );
+  useEffect(() => {
+    if (!query.trim()) {
+      setResults([]);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const res = await fetch(`/api/products?search=${encodeURIComponent(query.trim())}`);
+        if (res.ok) {
+          const data = await res.json();
+          setResults(data.products || []);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 250);
+    return () => clearTimeout(timer);
   }, [query]);
 
   return (

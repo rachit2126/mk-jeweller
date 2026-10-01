@@ -12,12 +12,12 @@ interface CollectionsMegaMenuProps {
 }
 
 const COLLECTIONS_LIST = [
-  { label: 'Best Sellers', href: '/shop?badge=BEST%20SELLER', icon: Flame, tag: 'Most Loved' },
-  { label: 'New Arrivals', href: '/shop?badge=NEW%20ARRIVAL', icon: Sparkles, tag: 'Fresh Drop' },
-  { label: 'Everyday Essentials', href: '/collections', icon: Gem, tag: 'Daily Silver' },
-  { label: 'Festive Collection', href: '/collections', icon: Flower2, tag: 'Celebrations' },
-  { label: 'Bridal Collection', href: '/collections', icon: Crown, tag: 'Royal Heirloom' },
-  { label: 'Gifts Collection', href: '/gifts', icon: Gift, tag: 'Curated Sets' },
+  { label: 'Best Sellers', href: '/shop?collection=best-sellers', icon: Flame, tag: 'Most Loved' },
+  { label: 'New Arrivals', href: '/shop?collection=new-arrivals', icon: Sparkles, tag: 'Fresh Drop' },
+  { label: 'Everyday Essentials', href: '/shop?occasion=everyday', icon: Gem, tag: 'Daily Silver' },
+  { label: 'Festive Collection', href: '/shop?occasion=festive', icon: Flower2, tag: 'Celebrations' },
+  { label: 'Bridal Collection', href: '/shop?occasion=bridal', icon: Crown, tag: 'Royal Heirloom' },
+  { label: 'Gifts Collection', href: '/shop?category=gifts', icon: Gift, tag: 'Curated Sets' },
 ];
 
 const FEATURED_MINI_CARDS = [

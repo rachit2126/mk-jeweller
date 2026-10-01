@@ -443,8 +443,8 @@ export default function TrustStrip() {
         /* RESPONSIVE: MOBILE (768px and below) */
         @media (max-width: 768px) {
           .trust-strip-section {
-            margin-top: 16px;
-            margin-bottom: 24px;
+            margin-top: -24px;
+            margin-bottom: 12px;
             padding: 0 14px;
             position: relative;
             z-index: 10;

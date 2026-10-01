@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
-import { User, Package, Heart, MapPin, Settings, LogOut, ChevronRight } from 'lucide-react';
+import { User, Package, Heart, MapPin, LogOut, ChevronRight, LogIn, UserPlus, Shield } from 'lucide-react';
 import { useCommerce } from '@/components/commerce/CommerceContext';
 
 interface AccountDropdownProps {
@@ -14,8 +14,29 @@ interface AccountDropdownProps {
 export default function AccountDropdown({ isOpen = true, onClose }: AccountDropdownProps) {
   const shouldReduceMotion = useReducedMotion();
   const { wishlistCount } = useCommerce();
+  const [session, setSession] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.authenticated && data.user) {
+          setSession(data.user);
+        } else {
+          setSession(null);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setSession(null);
+        setLoading(false);
+      });
+  }, []);
 
   if (!isOpen) return null;
+
+  const isAdmin = session?.role === 'SUPER_ADMIN' || session?.role === 'ADMIN' || session?.role === 'manager';
 
   return (
     <motion.div
@@ -32,73 +53,125 @@ export default function AccountDropdown({ isOpen = true, onClose }: AccountDropd
           <div className="account-avatar">
             <User size={18} color="#B76E79" />
           </div>
-          <div>
-            <h4 className="account-title">My Account</h4>
-            <p className="account-subtitle">Welcome to MK Silver Hub</p>
+          <div className="header-info">
+            <h4 className="account-title">
+              {session ? session.name : 'Patron Portal'}
+            </h4>
+            <p className="account-subtitle">
+              {session ? session.email : 'Welcome to MK Silver Hub'}
+            </p>
           </div>
         </div>
 
         {/* Links list */}
         <div className="account-menu-list">
-          <Link href="/account" onClick={onClose} className="account-menu-item">
-            <div className="item-left">
-              <User size={16} className="menu-icon" />
-              <span>My Account</span>
-            </div>
-            <ChevronRight size={13} className="menu-arrow" />
-          </Link>
-
-          <Link href="/account?tab=orders" onClick={onClose} className="account-menu-item">
-            <div className="item-left">
-              <Package size={16} className="menu-icon" />
-              <span>My Orders</span>
-            </div>
-            <ChevronRight size={13} className="menu-arrow" />
-          </Link>
-
-          <Link href="/wishlist" onClick={onClose} className="account-menu-item">
-            <div className="item-left">
-              <Heart size={16} className="menu-icon" />
-              <span>Wishlist</span>
-            </div>
-            <div className="item-right">
-              {wishlistCount > 0 && (
-                <span className="wishlist-badge">{wishlistCount}</span>
+          {session ? (
+            <>
+              {isAdmin && (
+                <Link href="/admin" onClick={onClose} className="account-menu-item admin-item">
+                  <div className="item-left">
+                    <Shield size={16} className="menu-icon" />
+                    <span className="font-semibold text-[#B76E79]">Admin Dashboard</span>
+                  </div>
+                  <ChevronRight size={13} className="menu-arrow" />
+                </Link>
               )}
-              <ChevronRight size={13} className="menu-arrow" />
-            </div>
-          </Link>
 
-          <Link href="/account?tab=addresses" onClick={onClose} className="account-menu-item">
-            <div className="item-left">
-              <MapPin size={16} className="menu-icon" />
-              <span>Addresses</span>
-            </div>
-            <ChevronRight size={13} className="menu-arrow" />
-          </Link>
+              <Link href="/account" onClick={onClose} className="account-menu-item">
+                <div className="item-left">
+                  <User size={16} className="menu-icon" />
+                  <span>My Account</span>
+                </div>
+                <ChevronRight size={13} className="menu-arrow" />
+              </Link>
 
-          <Link href="/account?tab=settings" onClick={onClose} className="account-menu-item">
-            <div className="item-left">
-              <Settings size={16} className="menu-icon" />
-              <span>Account Settings</span>
-            </div>
-            <ChevronRight size={13} className="menu-arrow" />
-          </Link>
+              <Link href="/account?tab=orders" onClick={onClose} className="account-menu-item">
+                <div className="item-left">
+                  <Package size={16} className="menu-icon" />
+                  <span>My Orders</span>
+                </div>
+                <ChevronRight size={13} className="menu-arrow" />
+              </Link>
+
+              <Link href="/wishlist" onClick={onClose} className="account-menu-item">
+                <div className="item-left">
+                  <Heart size={16} className="menu-icon" />
+                  <span>Wishlist</span>
+                </div>
+                <div className="item-right">
+                  {wishlistCount > 0 && (
+                    <span className="wishlist-badge">{wishlistCount}</span>
+                  )}
+                  <ChevronRight size={13} className="menu-arrow" />
+                </div>
+              </Link>
+
+              <Link href="/account?tab=addresses" onClick={onClose} className="account-menu-item">
+                <div className="item-left">
+                  <MapPin size={16} className="menu-icon" />
+                  <span>Addresses</span>
+                </div>
+                <ChevronRight size={13} className="menu-arrow" />
+              </Link>
+
+              <div className="account-divider" />
+
+              <button
+                onClick={async () => {
+                  onClose();
+                  try {
+                    await fetch('/api/auth/logout', { method: 'POST' });
+                  } finally {
+                    window.location.href = '/login';
+                  }
+                }}
+                className="account-logout-btn"
+              >
+                <LogOut size={15} />
+                <span>Sign Out</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/login" onClick={onClose} className="account-menu-item primary-action">
+                <div className="item-left">
+                  <LogIn size={16} className="menu-icon" />
+                  <span>Sign In</span>
+                </div>
+                <ChevronRight size={13} className="menu-arrow" />
+              </Link>
+
+              <Link href="/register" onClick={onClose} className="account-menu-item">
+                <div className="item-left">
+                  <UserPlus size={16} className="menu-icon" />
+                  <span>Create Account</span>
+                </div>
+                <ChevronRight size={13} className="menu-arrow" />
+              </Link>
+
+              <Link href="/account?tab=orders" onClick={onClose} className="account-menu-item">
+                <div className="item-left">
+                  <Package size={16} className="menu-icon" />
+                  <span>Track Orders</span>
+                </div>
+                <ChevronRight size={13} className="menu-arrow" />
+              </Link>
+
+              <Link href="/wishlist" onClick={onClose} className="account-menu-item">
+                <div className="item-left">
+                  <Heart size={16} className="menu-icon" />
+                  <span>Wishlist</span>
+                </div>
+                <div className="item-right">
+                  {wishlistCount > 0 && (
+                    <span className="wishlist-badge">{wishlistCount}</span>
+                  )}
+                  <ChevronRight size={13} className="menu-arrow" />
+                </div>
+              </Link>
+            </>
+          )}
         </div>
-
-        {/* Divider */}
-        <div className="account-divider" />
-
-        {/* Logout */}
-        <button
-          onClick={() => {
-            onClose();
-          }}
-          className="account-logout-btn"
-        >
-          <LogOut size={15} />
-          <span>Logout</span>
-        </button>
       </div>
 
       <style jsx>{`
@@ -109,7 +182,7 @@ export default function AccountDropdown({ isOpen = true, onClose }: AccountDropd
         }
 
         .account-dropdown-card {
-          width: 285px;
+          width: 290px;
           background: rgba(255, 249, 243, 0.98);
           backdrop-filter: blur(24px);
           -webkit-backdrop-filter: blur(24px);
@@ -129,8 +202,8 @@ export default function AccountDropdown({ isOpen = true, onClose }: AccountDropd
         }
 
         .account-avatar {
-          width: 36px;
-          height: 36px;
+          width: 38px;
+          height: 38px;
           border-radius: 50%;
           background: #FCECE9;
           display: flex;
@@ -140,6 +213,11 @@ export default function AccountDropdown({ isOpen = true, onClose }: AccountDropd
           flex-shrink: 0;
         }
 
+        .header-info {
+          min-width: 0;
+          flex: 1;
+        }
+
         .account-title {
           font-family: var(--font-display), 'Cormorant Garamond', Georgia, serif;
           font-size: 1.15rem;
@@ -147,6 +225,9 @@ export default function AccountDropdown({ isOpen = true, onClose }: AccountDropd
           color: #2D201E;
           margin: 0;
           line-height: 1.2;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .account-subtitle {
@@ -154,6 +235,9 @@ export default function AccountDropdown({ isOpen = true, onClose }: AccountDropd
           font-size: 0.72rem;
           color: #806D68;
           margin: 0;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .account-menu-list {
@@ -176,6 +260,17 @@ export default function AccountDropdown({ isOpen = true, onClose }: AccountDropd
           white-space: nowrap !important;
           flex-wrap: nowrap !important;
           transition: all 180ms ease !important;
+        }
+
+        :global(.account-menu-item.primary-action) {
+          background-color: #FCE8DE !important;
+          color: #B76E79 !important;
+          font-weight: 600 !important;
+        }
+
+        :global(.account-menu-item.admin-item) {
+          background-color: #FFF5F0 !important;
+          border: 1px solid #F0D9D0 !important;
         }
 
         .item-left {

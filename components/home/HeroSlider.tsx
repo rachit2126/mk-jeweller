@@ -722,9 +722,12 @@ export default function HeroSlider() {
         }
         @media (max-width: 768px) {
           .hero-slider-section {
-            height: 78vh !important;
-            min-height: 520px !important;
-            max-height: 680px !important;
+            height: 76vh !important;
+            min-height: 500px !important;
+            max-height: 660px !important;
+          }
+          .hero-thumbnail-strip {
+            display: none !important;
           }
         }
         @media (max-width: 640px) {

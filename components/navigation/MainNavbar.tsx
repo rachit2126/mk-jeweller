@@ -93,6 +93,9 @@ export default function MainNavbar() {
   };
 
   const isHomePage = pathname === '/';
+  const isAuthOrAdmin = pathname?.startsWith('/admin') || pathname === '/login' || pathname === '/register' || pathname === '/forgot-password';
+
+  if (isAuthOrAdmin) return null;
 
   return (
     <>

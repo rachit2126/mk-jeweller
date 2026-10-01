@@ -13,35 +13,41 @@ import NewsletterSection from '@/components/home/NewsletterSection';
 export default function HomePage() {
   return (
     <>
-      {/* 01 Hero Slider */}
+      {/* 01 Floating Mobile Navbar is in layout.tsx */}
+
+      {/* 02 Hero Slider */}
       <HeroSlider />
 
-      {/* 02 Shop By Category / Collections */}
+      {/* 03 Shop By Category / Collections */}
       <CategorySection />
 
-      {/* 03 Trust Strip (Floating overlap between Collections & Best Sellers) */}
+      {/* 04 Trust Strip (Floating overlap bridge between Collections & Best Sellers) */}
       <TrustStrip />
 
-      {/* 04 Best Sellers */}
+      {/* 05 Best Sellers */}
       <BestSellersSection />
 
-      {/* 05 New Arrivals */}
+      {/* 06 New Arrivals */}
       <NewArrivalsSection />
 
-      {/* 06 Editorial Campaign */}
+      {/* 07 Editorial Campaign */}
       <EditorialBanner />
 
-      {/* 07 Curated Occasions */}
+      {/* 08 Curated Occasions */}
       <OccasionSection />
 
-      {/* 08 Why Choose MK Silver Hub */}
+      {/* 09 Why Choose MK Silver Hub */}
       <BrandStorySection />
 
-      {/* 09 Testimonials */}
+      {/* 10 Testimonials */}
       <ReviewsSection />
 
-      {/* 10 Newsletter */}
+      {/* 11 Newsletter */}
       <NewsletterSection />
+
+      {/* 12 Compact Mobile Footer is in layout.tsx */}
+      {/* 13 Floating WhatsApp is in layout.tsx */}
+      {/* 14 Fixed Bottom Navigation is in layout.tsx */}
     </>
   );
 }

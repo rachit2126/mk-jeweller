@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Gift, ArrowRight } from 'lucide-react';
 import ProductCard from '@/components/products/ProductCard';
-import { PRODUCTS } from '@/data/products';
+import { getProductsFromDb } from '@/lib/services/products';
 
 const GIFT_CATEGORIES = [
   { title: 'For Her', desc: 'Delicate floral halos & pearls', link: '/shop?occasion=gifting', count: '24 Designs' },
@@ -13,8 +13,11 @@ const GIFT_CATEGORIES = [
   { title: 'Under ₹2,999', desc: 'Festive statement pieces with hallmark', link: '/shop', count: '45 Designs' }
 ];
 
-export default function GiftsPage() {
-  const giftingProducts = PRODUCTS.filter(p => p.occasion.includes('gifting') || p.badge === 'ENGRAVABLE');
+export default async function GiftsPage() {
+  const result = await getProductsFromDb({ occasion: 'gifting', limit: 12 });
+  const giftingProducts = result.products.length > 0
+    ? result.products
+    : (await getProductsFromDb({ limit: 12 })).products;
 
   return (
     <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '100vh', padding: '50px 0 100px' }}>

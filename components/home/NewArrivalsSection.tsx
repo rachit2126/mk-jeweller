@@ -1,14 +1,24 @@
 'use client';
-
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import ProductCard from '@/components/products/ProductCard';
-import { PRODUCTS } from '@/data/products';
+import { Product } from '@/lib/types';
 
 export default function NewArrivalsSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const newArrivals = PRODUCTS.filter((p) => p.isNewArrival || p.badge === 'NEW ARRIVAL' || p.featured).slice(0, 8);
+  const [newArrivals, setNewArrivals] = useState<Product[]>([]);
+
+  useEffect(() => {
+    fetch('/api/products?isNewArrival=true&limit=8')
+      .then(res => res.json())
+      .then(data => {
+        if (data.products && data.products.length > 0) {
+          setNewArrivals(data.products);
+        }
+      })
+      .catch(err => console.error('Failed to load new arrivals:', err));
+  }, []);
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {

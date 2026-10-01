@@ -467,44 +467,44 @@ export const CATEGORIES_DATA = [
   {
     id: 'earrings',
     name: 'Earrings',
-    tagline: 'Everyday to Extraordinary',
-    image: 'https://images.unsplash.com/photo-1630019852942-f89202989a59?q=80&w=800&auto=format&fit=crop',
-    href: '/collections/earrings'
+    tagline: 'Everyday to statement',
+    image: '/images/collection-earrings.jpg',
+    href: '/shop?category=earrings'
   },
   {
     id: 'necklaces',
     name: 'Necklaces',
-    tagline: 'Statement Pieces',
-    image: '/images/products/necklaces-emerald-polki-bridal-set-01.png',
-    href: '/collections/necklaces'
+    tagline: 'Elegant & timeless',
+    image: '/images/collection-necklaces.jpg',
+    href: '/shop?category=necklaces'
   },
   {
     id: 'rings',
     name: 'Rings',
-    tagline: 'For Every Occasion',
-    image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=800&auto=format&fit=crop',
-    href: '/collections/rings'
+    tagline: 'Symbols of love',
+    image: '/images/collection-rings.jpg',
+    href: '/shop?category=rings'
   },
   {
     id: 'bracelets',
     name: 'Bracelets',
-    tagline: 'Elegant & Timeless',
-    image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=800&auto=format&fit=crop',
-    href: '/collections/bracelets'
+    tagline: 'Modern essentials',
+    image: '/images/occasions/everyday-elegance.jpg',
+    href: '/shop?category=bracelets'
   },
   {
     id: 'pendants',
     name: 'Pendants',
-    tagline: 'Meaningful Designs',
-    image: 'https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?q=80&w=800&auto=format&fit=crop',
-    href: '/collections/pendants'
+    tagline: 'Meaningful pieces',
+    image: '/images/why-choose/ethically-sourced-necklace.jpg',
+    href: '/shop?category=pendants'
   },
   {
     id: 'anklets',
     name: 'Anklets',
-    tagline: 'Subtle & Stylish',
+    tagline: 'Subtle & stylish',
     image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=800&auto=format&fit=crop',
-    href: '/collections/anklets'
+    href: '/shop?category=anklets'
   }
 ];
 

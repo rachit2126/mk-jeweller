@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Trash2, Plus, Minus, ArrowRight, ShieldCheck, Sparkles, MessageSquare } from 'lucide-react';
 import { useCommerce } from '@/components/commerce/CommerceContext';
-import { formatPrice } from '@/lib/api';
+import { formatPrice } from '@/lib/format';
 
 export default function CartPage() {
   const {

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { X, Heart, ShoppingBag, ShieldCheck, Star, MessageCircle, ArrowRight, Sparkles } from 'lucide-react';
 import { useCommerce } from './CommerceContext';
-import { formatPrice } from '@/lib/api';
+import { formatPrice } from '@/lib/format';
 
 export default function QuickViewModal() {
   const { quickViewProduct, closeQuickView, addToCart, toggleWishlist, isInWishlist } = useCommerce();
