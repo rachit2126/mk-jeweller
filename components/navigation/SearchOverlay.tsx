@@ -210,8 +210,8 @@ export default function SearchOverlay({ isOpen = true, onClose }: SearchOverlayP
         }
 
         .close-btn:hover {
-          background-color: #FCECE9;
-          color: #B76E79;
+          background-color: #F8F7F3;
+          color: #111111;
         }
 
         .search-input-form {
@@ -223,20 +223,20 @@ export default function SearchOverlay({ isOpen = true, onClose }: SearchOverlayP
           display: flex;
           align-items: center;
           background: #FFFFFF;
-          border: 1.5px solid rgba(232, 216, 208, 0.85);
-          border-radius: 999px;
+          border: 1.5px solid #111111;
+          border-radius: 0px;
           padding: 4px 6px 4px 18px;
-          box-shadow: 0 4px 14px rgba(65, 40, 35, 0.04);
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
           transition: border-color 200ms ease, box-shadow 200ms ease;
         }
 
         .search-input-box:focus-within {
-          border-color: #B76E79;
-          box-shadow: 0 6px 20px rgba(183, 110, 121, 0.15);
+          border-color: #111111;
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
         }
 
         :global(.search-icon) {
-          color: #B76E79;
+          color: #111111;
           flex-shrink: 0;
           margin-right: 12px;
         }
@@ -247,19 +247,19 @@ export default function SearchOverlay({ isOpen = true, onClose }: SearchOverlayP
           background: transparent;
           font-family: var(--font-ui), 'Jost', sans-serif;
           font-size: 0.94rem;
-          color: #2D201E;
+          color: #111111;
           outline: none;
           padding: 8px 0;
         }
 
         .search-text-input::placeholder {
-          color: #A3928E;
+          color: #6F6F6A;
         }
 
         .clear-query-btn {
           background: transparent;
           border: none;
-          color: #806D68;
+          color: #6F6F6A;
           padding: 6px;
           cursor: pointer;
           display: flex;
@@ -271,21 +271,22 @@ export default function SearchOverlay({ isOpen = true, onClose }: SearchOverlayP
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          background: #B76E79;
+          background: #111111;
           color: #FFFFFF;
           padding: 8px 18px;
-          border-radius: 999px;
+          border-radius: 0px;
           border: none;
           font-family: var(--font-ui), 'Jost', sans-serif;
-          font-size: 0.8rem;
+          fontSize: 0.8rem;
           font-weight: 600;
-          letter-spacing: 0.04em;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
           cursor: pointer;
           transition: background-color 180ms ease;
         }
 
         .search-submit-btn:hover {
-          background: #9C5762;
+          background: #252525;
         }
 
         /* POPULAR SEARCHES */
@@ -306,7 +307,7 @@ export default function SearchOverlay({ isOpen = true, onClose }: SearchOverlayP
           font-weight: 600;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          color: #9C5762;
+          color: #111111;
         }
 
         .tags-row {
@@ -318,26 +319,26 @@ export default function SearchOverlay({ isOpen = true, onClose }: SearchOverlayP
 
         .search-tag-pill {
           background: #FFFFFF;
-          border: 1px solid rgba(232, 216, 208, 0.75);
-          color: #3B2B2B;
+          border: 1px solid #E8E7E2;
+          color: #111111;
           font-family: var(--font-ui), 'Jost', sans-serif;
           font-size: 0.76rem;
           font-weight: 500;
           padding: 4px 12px;
-          border-radius: 999px;
+          border-radius: 0px;
           cursor: pointer;
           transition: all 180ms ease;
         }
 
         .search-tag-pill:hover {
-          background: #FCECE9;
-          border-color: #B76E79;
-          color: #B76E79;
+          background: #F8F7F3;
+          border-color: #111111;
+          color: #111111;
         }
 
         /* TRENDING PRODUCTS */
         .trending-section {
-          border-top: 1px solid rgba(232, 216, 208, 0.6);
+          border-top: 1px solid #E8E7E2;
           padding-top: 16px;
         }
 
@@ -347,7 +348,7 @@ export default function SearchOverlay({ isOpen = true, onClose }: SearchOverlayP
           font-weight: 600;
           letter-spacing: 0.1em;
           text-transform: uppercase;
-          color: #9C5762;
+          color: #111111;
           margin-bottom: 12px;
         }
 
@@ -362,8 +363,8 @@ export default function SearchOverlay({ isOpen = true, onClose }: SearchOverlayP
           align-items: center;
           gap: 10px;
           background: #FFFFFF;
-          border: 1px solid rgba(232, 216, 208, 0.6);
-          border-radius: 12px;
+          border: 1px solid #E8E7E2;
+          border-radius: 0px;
           padding: 8px 10px;
           text-decoration: none;
           transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;

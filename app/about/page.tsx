@@ -1,144 +1,309 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ShieldCheck, Award, Heart, Sparkles, Scale, ArrowRight } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Sparkles, Award, Heart } from 'lucide-react';
 
 export default function AboutPage() {
   return (
-    <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '100vh', padding: '50px 0 100px' }}>
-      <div className="container" style={{ maxWidth: '1000px' }}>
-        {/* Hero Section */}
-        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-          <span className="eyebrow">OUR HERITAGE</span>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem, 5vw, 4rem)', color: 'var(--color-espresso)', marginBottom: '16px', lineHeight: 1.15 }}>
-            The Story Behind<br />MK Silver Hub
-          </h1>
-          <p style={{ fontSize: '1.15rem', color: 'var(--color-muted-text)', maxWidth: '720px', margin: '0 auto', lineHeight: 1.7 }}>
-            Rooted in the timeless silversmithing capital of Jaipur, MK Silver Hub is dedicated to crafting fine 925 sterling silver jewellery that celebrates your unique journey with grace and integrity.
-          </p>
-        </div>
-
-        {/* Feature Hero Image */}
-        <div
+    <div
+      style={{
+        backgroundColor: '#FFFFFF',
+        color: '#111111',
+        minHeight: '100vh',
+        padding: '0 0 100px',
+      }}
+    >
+      <div
+        style={{
+          maxWidth: '1440px',
+          margin: '0 auto',
+          padding: '0 clamp(16px, 3.5vw, 40px)',
+          boxSizing: 'border-box',
+        }}
+      >
+        {/* Breadcrumb */}
+        <nav
+          aria-label="Breadcrumb"
           style={{
-            position: 'relative',
-            width: '100%',
-            height: '480px',
-            borderRadius: 'var(--radius-editorial)',
-            overflow: 'hidden',
-            marginBottom: '64px',
-            boxShadow: 'var(--shadow-card)',
-            border: '1px solid var(--color-border)'
+            padding: '24px 0 32px',
+            fontSize: '0.74rem',
+            fontFamily: 'var(--font-ui), "Jost", sans-serif',
+            color: '#6F6F6A',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
           }}
         >
-          <Image
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1600&auto=format&fit=crop"
-            alt="MK Silver Hub jewelry heritage"
-            fill
-            sizes="1000px"
-            style={{ objectFit: 'cover' }}
-          />
-        </div>
+          <Link href="/" style={{ color: '#6F6F6A', textDecoration: 'none' }}>
+            Home
+          </Link>
+          <span>/</span>
+          <span style={{ color: '#111111', fontWeight: 600 }}>Our Story</span>
+        </nav>
 
-        {/* Story Section */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '48px', alignItems: 'center', marginBottom: '72px' }}>
+        {/* HERO EDITORIAL STORY (Screen 10 in Mockup) */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'minmax(0, 1.15fr) minmax(0, 1fr)',
+            gap: 'clamp(32px, 5vw, 64px)',
+            alignItems: 'center',
+            marginBottom: '80px',
+          }}
+          className="about-hero-grid"
+        >
+          {/* Left Text */}
           <div>
-            <span className="eyebrow">OUR ORIGINS</span>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '2.4rem', color: 'var(--color-espresso)', marginBottom: '16px' }}>
-              Born in Johari Bazaar, Jaipur
-            </h2>
-            <p style={{ color: 'var(--color-muted-text)', lineHeight: 1.7, marginBottom: '16px' }}>
-              For generations, Jaipur&apos;s Johari Bazaar has been the epicenter of royal gemstone cutting and delicate metal filigree. MK Silver Hub was conceived with a clear vision: to free sterling silver from traditional rigidity and transform it into an everyday luxury statement.
+            <span
+              style={{
+                fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                fontSize: '0.72rem',
+                fontWeight: 600,
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                color: '#6F6F6A',
+                display: 'block',
+                marginBottom: '14px',
+              }}
+            >
+              ORIGIN & ETHOS
+            </span>
+            <h1
+              style={{
+                fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+                fontSize: 'clamp(2.4rem, 4.2vw, 3.8rem)',
+                fontWeight: 500,
+                lineHeight: 1.12,
+                margin: '0 0 20px',
+                color: '#111111',
+                textTransform: 'uppercase',
+              }}
+            >
+              MADE IN JAIPUR.<br />DESIGNED FOR NOW.
+            </h1>
+            <p
+              style={{
+                fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                fontSize: '1rem',
+                lineHeight: 1.7,
+                color: '#4A4A46',
+                margin: '0 0 20px',
+              }}
+            >
+              At MK Silver Hub, we craft contemporary 925 sterling silver jewellery inspired by the rich silversmithing traditions of Jaipur. Our pieces blend timeless artisanal techniques with modern silhouettes, sculpted for your everyday expressions.
             </p>
-            <p style={{ color: 'var(--color-muted-text)', lineHeight: 1.7 }}>
-              Every jewel starts with certified 92.5% pure bullion silver, hand-sculpted by hereditary karigars whose ancestral techniques have been refined over centuries.
+            <p
+              style={{
+                fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                fontSize: '0.92rem',
+                lineHeight: 1.65,
+                color: '#6F6F6A',
+                margin: '0 0 32px',
+              }}
+            >
+              Every jewel is hand-cast in pure 92.5% elemental silver, stamped with certified BIS hallmarks and finished with anti-tarnish rhodium to ensure lifelong brilliance and hypoallergenic comfort.
             </p>
+            <Link
+              href="/shop"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: '14px 32px',
+                backgroundColor: '#111111',
+                color: '#FFFFFF',
+                fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                fontSize: '0.74rem',
+                fontWeight: 600,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+              }}
+            >
+              <span>EXPLORE COLLECTION</span>
+              <ArrowRight size={14} />
+            </Link>
           </div>
-          <div style={{ position: 'relative', height: '360px', borderRadius: 'var(--radius-card)', overflow: 'hidden', border: '1px solid var(--color-border)' }}>
+
+          {/* Right Craftsman Image (Screen 10 in Mockup) */}
+          <div
+            style={{
+              position: 'relative',
+              width: '100%',
+              paddingTop: '110%',
+              backgroundColor: '#F8F7F3',
+              border: '1px solid #E8E7E2',
+              overflow: 'hidden',
+            }}
+          >
             <Image
-              src="https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=800&auto=format&fit=crop"
-              alt="Jaipur silversmith detail"
+              src="/images/why-choose/master-craftsmanship-detail.jpg"
+              alt="Artisan sculpting 925 silver jewellery in Jaipur"
               fill
-              sizes="500px"
+              priority
+              sizes="(max-width: 1024px) 100vw, 50vw"
               style={{ objectFit: 'cover' }}
             />
           </div>
         </div>
 
-        {/* 4 Pillars of Excellence */}
-        <div style={{ backgroundColor: 'var(--bg-cream)', borderRadius: 'var(--radius-editorial)', padding: '54px 40px', border: '1px solid var(--color-border)', marginBottom: '72px' }}>
-          <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-            <span className="eyebrow">OUR PILLARS</span>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '2.2rem', color: 'var(--color-espresso)' }}>
-              The Four Cornerstones of MK Silver Hub
+        {/* 4 CORNERSTONES SECTION */}
+        <div
+          style={{
+            backgroundColor: '#F8F7F3',
+            border: '1px solid #E8E7E2',
+            padding: 'clamp(44px, 5.5vw, 68px) clamp(24px, 4vw, 56px)',
+            marginBottom: '80px',
+          }}
+        >
+          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+            <span
+              style={{
+                fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                fontSize: '0.72rem',
+                fontWeight: 600,
+                letterSpacing: '0.16em',
+                textTransform: 'uppercase',
+                color: '#6F6F6A',
+                display: 'block',
+                marginBottom: '8px',
+              }}
+            >
+              OUR PROMISE
+            </span>
+            <h2
+              style={{
+                fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+                fontSize: 'clamp(2rem, 3.2vw, 2.6rem)',
+                fontWeight: 500,
+                color: '#111111',
+                margin: 0,
+              }}
+            >
+              Four Pillars of MK Silver Hub
             </h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '32px' }}>
-            <div style={{ display: 'flex', gap: '16px' }}>
-              <div style={{ width: '44px', height: '44px', borderRadius: '50%', backgroundColor: 'rgba(201, 163, 90, 0.15)', color: 'var(--color-champagne)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <ShieldCheck size={22} />
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+              gap: '36px',
+            }}
+          >
+            <div>
+              <div style={{ marginBottom: '14px' }}>
+                <ShieldCheck size={24} color="#111111" />
               </div>
-              <div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--color-espresso)', marginBottom: '6px' }}>100% BIS Hallmarked Purity</h3>
-                <p style={{ fontSize: '0.88rem', color: 'var(--color-muted-text)', lineHeight: 1.5 }}>
-                  Every piece carries the official Bureau of Indian Standards 925 hallmark stamp, guaranteeing 92.5% pure elemental silver content.
-                </p>
-              </div>
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 600, margin: '0 0 8px' }}>
+                925 Sterling Silver
+              </h3>
+              <p style={{ fontFamily: 'var(--font-ui)', fontSize: '0.84rem', color: '#6F6F6A', lineHeight: 1.6, margin: 0 }}>
+                Every single piece is BIS hallmarked to certify 92.5% elemental bullion purity. No compromises, no synthetic shortcuts.
+              </p>
             </div>
 
-            <div style={{ display: 'flex', gap: '16px' }}>
-              <div style={{ width: '44px', height: '44px', borderRadius: '50%', backgroundColor: 'rgba(201, 163, 90, 0.15)', color: 'var(--color-champagne)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Sparkles size={22} />
+            <div>
+              <div style={{ marginBottom: '14px' }}>
+                <Award size={24} color="#111111" />
               </div>
-              <div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--color-espresso)', marginBottom: '6px' }}>Anti-Tarnish Rhodium Seal</h3>
-                <p style={{ fontSize: '0.88rem', color: 'var(--color-muted-text)', lineHeight: 1.5 }}>
-                  Triple-dipped in rare platinum-group rhodium to prevent natural oxidation and ensure skin-friendly, hypoallergenic wear.
-                </p>
-              </div>
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 600, margin: '0 0 8px' }}>
+                Crafted in Jaipur
+              </h3>
+              <p style={{ fontFamily: 'var(--font-ui)', fontSize: '0.84rem', color: '#6F6F6A', lineHeight: 1.6, margin: 0 }}>
+                Sculpted by master silversmiths whose families have perfected jewelry metalwork in the Pink City for generations.
+              </p>
             </div>
 
-            <div style={{ display: 'flex', gap: '16px' }}>
-              <div style={{ width: '44px', height: '44px', borderRadius: '50%', backgroundColor: 'rgba(201, 163, 90, 0.15)', color: 'var(--color-champagne)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Scale size={22} />
+            <div>
+              <div style={{ marginBottom: '14px' }}>
+                <Sparkles size={24} color="#111111" />
               </div>
-              <div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--color-espresso)', marginBottom: '6px' }}>Ethical Bullion Pricing</h3>
-                <p style={{ fontSize: '0.88rem', color: 'var(--color-muted-text)', lineHeight: 1.5 }}>
-                  We believe in radical transparency. Pricing reflects certified metal weight and fair artisanal wages without inflated brand markups.
-                </p>
-              </div>
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 600, margin: '0 0 8px' }}>
+                Skin Friendly & Hypoallergenic
+              </h3>
+              <p style={{ fontFamily: 'var(--font-ui)', fontSize: '0.84rem', color: '#6F6F6A', lineHeight: 1.6, margin: 0 }}>
+                100% nickel-free and lead-free. Sealed with high-grade rhodium to ensure soothing everyday contact with even sensitive skin.
+              </p>
             </div>
 
-            <div style={{ display: 'flex', gap: '16px' }}>
-              <div style={{ width: '44px', height: '44px', borderRadius: '50%', backgroundColor: 'rgba(201, 163, 90, 0.15)', color: 'var(--color-champagne)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Heart size={22} />
+            <div>
+              <div style={{ marginBottom: '14px' }}>
+                <Heart size={24} color="#111111" />
               </div>
-              <div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--color-espresso)', marginBottom: '6px' }}>Direct Concierge Support</h3>
-                <p style={{ fontSize: '0.88rem', color: 'var(--color-muted-text)', lineHeight: 1.5 }}>
-                  Reach our jewellery advisors directly over WhatsApp or phone for personalised sizing, gift advice, and bespoke styling consultations.
-                </p>
-              </div>
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 600, margin: '0 0 8px' }}>
+                Made to Last
+              </h3>
+              <p style={{ fontFamily: 'var(--font-ui)', fontSize: '0.84rem', color: '#6F6F6A', lineHeight: 1.6, margin: 0 }}>
+                Engineered for daily resilience, reinforced clasps, and scratch-resistant luster designed to be worn and loved for years.
+              </p>
             </div>
           </div>
         </div>
 
-        {/* CTA Banner */}
-        <div style={{ textAlign: 'center', padding: '48px 24px', backgroundColor: 'var(--color-espresso)', borderRadius: 'var(--radius-editorial)', color: '#FFFFFF' }}>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '2.2rem', marginBottom: '12px' }}>
-            Experience Jaipur Silversmithing
+        {/* BOTTOM FULL-WIDTH BLACK EDITORIAL CALL TO ACTION */}
+        <div
+          style={{
+            backgroundColor: '#111111',
+            color: '#FFFFFF',
+            padding: ' clamp(48px, 6vw, 72px) clamp(24px, 4vw, 56px)',
+            textAlign: 'center',
+          }}
+        >
+          <h2
+            style={{
+              fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+              fontSize: 'clamp(2rem, 3.4vw, 2.8rem)',
+              fontWeight: 500,
+              margin: '0 0 12px',
+            }}
+          >
+            Fine 925 Sterling Silver For Your Story
           </h2>
-          <p style={{ color: '#D8D1C7', maxWidth: '540px', margin: '0 auto 24px', fontSize: '0.95rem' }}>
-            Discover our latest suites crafted in pure 925 silver with complimentary insured delivery across India.
+          <p
+            style={{
+              fontFamily: 'var(--font-ui), "Jost", sans-serif',
+              color: '#BFC1C4',
+              maxWidth: '520px',
+              margin: '0 auto 28px',
+              fontSize: '0.9rem',
+              lineHeight: 1.6,
+            }}
+          >
+            Enjoy complimentary insured shipping across India and an unconditional 7-day exchange promise on every creation.
           </p>
-          <Link href="/shop" className="btn-primary" style={{ backgroundColor: '#FCFAF6', color: 'var(--color-espresso)', border: 'none' }}>
-            <span>Explore The Collection</span>
-            <ArrowRight size={16} />
+          <Link
+            href="/shop"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '14px 34px',
+              backgroundColor: '#FFFFFF',
+              color: '#111111',
+              fontFamily: 'var(--font-ui), "Jost", sans-serif',
+              fontSize: '0.74rem',
+              fontWeight: 600,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              textDecoration: 'none',
+            }}
+          >
+            <span>SHOP ALL JEWELLERY</span>
+            <ArrowRight size={14} />
           </Link>
         </div>
       </div>
+
+      <style jsx>{`
+        @media (max-width: 900px) {
+          .about-hero-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }

@@ -2,14 +2,27 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { User, Package, MapPin, Heart, LogOut, CheckCircle2, Clock, MessageCircle, ArrowRight, Shield, Sparkles } from 'lucide-react';
+import {
+  User,
+  Package,
+  MapPin,
+  Heart,
+  Settings,
+  LogOut,
+  ChevronRight,
+  Shield,
+  ArrowRight,
+} from 'lucide-react';
 import { formatPrice } from '@/lib/format';
+
+type Tab = 'orders' | 'profile' | 'addresses' | 'settings';
+type OrderStatusFilter = 'all' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
 
 export default function AccountPage() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<'orders' | 'profile' | 'addresses'>('orders');
+  const [activeTab, setActiveTab] = useState<Tab>('orders');
+  const [statusFilter, setStatusFilter] = useState<OrderStatusFilter>('all');
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -18,14 +31,14 @@ export default function AccountPage() {
 
   useEffect(() => {
     fetch('/api/auth/me')
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data.authenticated && data.user) {
           setSession(data.user);
-          // Fetch authenticated patron's real MongoDB orders
+          // Fetch real customer orders from MongoDB
           fetch('/api/orders/my-orders')
-            .then(r => r.json())
-            .then(ordData => {
+            .then((r) => r.json())
+            .then((ordData) => {
               setOrders(ordData.orders || []);
               setOrdersLoading(false);
             })
@@ -53,61 +66,112 @@ export default function AccountPage() {
     name: session?.name || 'Patron',
     email: session?.email || '',
     phone: session?.phone || 'Not provided',
-    memberSince: session?.createdAt ? new Date(session.createdAt).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' }) : 'September 2026',
     role: session?.role || 'USER',
   };
 
   const isAdmin = user.role === 'SUPER_ADMIN' || user.role === 'ADMIN' || user.role === 'manager';
 
-  const getOrderSteps = (status: string = 'processing') => {
-    const s = status.toLowerCase();
-    const isDelivered = s === 'delivered';
-    const isShipped = isDelivered || s === 'shipped';
-    const isPacked = isShipped || s === 'packed';
-    const isConfirmed = isPacked || s === 'processing' || s === 'confirmed' || s === 'paid';
-
-    return [
-      { label: 'Confirmed', done: isConfirmed, current: s === 'processing' || s === 'confirmed', time: 'Order verified' },
-      { label: 'Packed', done: isPacked, current: s === 'packed', time: isPacked ? 'Jaipur Atelier' : 'In preparation' },
-      { label: 'Shipped', done: isShipped, current: s === 'shipped', time: isShipped ? 'In transit' : 'Pending dispatch' },
-      { label: 'Out for Delivery', done: isDelivered, current: s === 'out_for_delivery', time: isDelivered ? 'Completed' : 'Expected soon' },
-      { label: 'Delivered', done: isDelivered, current: isDelivered, time: isDelivered ? 'Handed over' : 'Pending' },
-    ];
-  };
-
   if (loading) {
     return (
-      <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <p style={{ color: 'var(--color-muted-text)', fontSize: '0.9rem', fontFamily: 'var(--font-ui)' }}>
-          Loading patron account...
+      <div
+        style={{
+          backgroundColor: '#FFFFFF',
+          minHeight: '80vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <p style={{ color: '#6F6F6A', fontSize: '0.85rem', fontFamily: 'var(--font-ui), "Jost", sans-serif' }}>
+          Loading your patron profile...
         </p>
       </div>
     );
   }
 
-  // If not logged in, show luxury invitation to sign in
+  // Not signed in
   if (!session) {
     return (
-      <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '100vh', padding: '80px 16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ maxWidth: '460px', width: '100%', background: '#FFFFFF', border: '1px solid var(--color-border)', borderRadius: '24px', padding: '40px 32px', textAlign: 'center', boxShadow: '0 12px 40px rgba(52,39,39,0.06)' }}>
-          <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'linear-gradient(135deg, #FFE8DE 0%, #F6D6D9 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', border: '1px solid #D9B98A' }}>
-            <User size={24} color="#B76E79" />
+      <div
+        style={{
+          backgroundColor: '#FFFFFF',
+          minHeight: '80vh',
+          padding: '80px 20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div
+          style={{
+            maxWidth: '460px',
+            width: '100%',
+            backgroundColor: '#F8F7F3',
+            border: '1px solid #E8E7E2',
+            padding: '44px 32px',
+            textAlign: 'center',
+          }}
+        >
+          <div
+            style={{
+              width: '48px',
+              height: '48px',
+              borderRadius: '50%',
+              backgroundColor: '#111111',
+              color: '#FFFFFF',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 16px',
+            }}
+          >
+            <User size={20} />
           </div>
-          <span style={{ fontSize: '0.72rem', letterSpacing: '0.16em', fontWeight: 600, color: 'var(--color-rose)' }}>MK SILVER HUB</span>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', color: 'var(--color-espresso)', margin: '8px 0 10px' }}>Patron Portal</h1>
-          <p style={{ fontSize: '0.86rem', color: 'var(--color-muted-text)', lineHeight: 1.5, marginBottom: '24px' }}>
-            Sign in with your registered customer or administrative account to view orders, jewelry care records, and saved addresses.
+          <span
+            style={{
+              fontSize: '0.72rem',
+              letterSpacing: '0.14em',
+              fontWeight: 600,
+              textTransform: 'uppercase',
+              color: '#6F6F6A',
+            }}
+          >
+            MK SILVER HUB
+          </span>
+          <h1
+            style={{
+              fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+              fontSize: '2rem',
+              color: '#111111',
+              margin: '8px 0 12px',
+            }}
+          >
+            Patron Account
+          </h1>
+          <p style={{ fontSize: '0.86rem', color: '#6F6F6A', lineHeight: 1.55, marginBottom: '24px' }}>
+            Sign in to review your order history, manage insured deliveries and access saved wishlist pieces.
           </p>
           <Link
             href="/login?redirect=/account"
-            style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', padding: '13px', backgroundColor: 'var(--color-rose)', color: '#FFFFFF', borderRadius: '12px', fontSize: '0.9rem', fontWeight: 600, textDecoration: 'none', boxShadow: '0 4px 14px rgba(183,110,121,0.25)' }}
+            style={{
+              display: 'block',
+              width: '100%',
+              padding: '13px 0',
+              backgroundColor: '#111111',
+              color: '#FFFFFF',
+              fontSize: '0.78rem',
+              fontWeight: 600,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              textDecoration: 'none',
+              marginBottom: '16px',
+            }}
           >
-            <span>Sign In to Your Account</span>
-            <ArrowRight size={16} />
+            SIGN IN TO ACCOUNT
           </Link>
-          <div style={{ marginTop: '16px', fontSize: '0.82rem', color: 'var(--color-muted-text)' }}>
-            New patron?{' '}
-            <Link href="/register" style={{ color: 'var(--color-rose)', fontWeight: 600, textDecoration: 'none' }}>
+          <div style={{ fontSize: '0.8rem', color: '#6F6F6A' }}>
+            New to MK Silver Hub?{' '}
+            <Link href="/register" style={{ color: '#111111', fontWeight: 600, textDecoration: 'underline' }}>
               Create Account
             </Link>
           </div>
@@ -116,262 +180,411 @@ export default function AccountPage() {
     );
   }
 
+  // Filter orders by status tab
+  const filteredOrders = orders.filter((ord) => {
+    if (statusFilter === 'all') return true;
+    return (ord.status || 'processing').toLowerCase() === statusFilter;
+  });
+
   return (
-    <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '100vh', padding: '40px 0 100px' }}>
-      <div className="container">
-        {/* Admin Quick Switch Notice if user is an Administrator */}
+    <div
+      style={{
+        backgroundColor: '#FFFFFF',
+        minHeight: '100vh',
+        padding: '36px 0 100px',
+      }}
+    >
+      <div
+        style={{
+          maxWidth: '1440px',
+          margin: '0 auto',
+          padding: '0 clamp(16px, 3.5vw, 40px)',
+          boxSizing: 'border-box',
+        }}
+      >
+        {/* Admin Banner if applicable */}
         {isAdmin && (
-          <div style={{ backgroundColor: '#FFF5F0', border: '1px solid #F0D9D0', borderRadius: '14px', padding: '12px 20px', marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Shield size={18} color="#B76E79" />
-              <span style={{ fontSize: '0.86rem', color: '#4A3B39', fontWeight: 500 }}>
-                You are currently signed in with an <strong>{user.role}</strong> account.
+          <div
+            style={{
+              backgroundColor: '#F8F7F3',
+              border: '1px solid #E8E7E2',
+              padding: '12px 20px',
+              marginBottom: '28px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '12px',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Shield size={16} color="#111111" />
+              <span style={{ fontSize: '0.82rem', color: '#111111' }}>
+                Signed in with <strong>{user.role}</strong> permissions.
               </span>
             </div>
             <Link
               href="/admin"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', fontWeight: 600, color: '#B76E79', textDecoration: 'none', backgroundColor: '#FFFFFF', padding: '6px 14px', borderRadius: '8px', border: '1px solid #E5DCD5' }}
+              style={{
+                fontSize: '0.74rem',
+                fontWeight: 600,
+                color: '#FFFFFF',
+                backgroundColor: '#111111',
+                padding: '6px 14px',
+                textDecoration: 'none',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+              }}
             >
-              <span>Go to Admin Dashboard</span>
-              <ArrowRight size={14} />
+              Go to Admin ERP
             </Link>
           </div>
         )}
 
-        {/* Header */}
-        <div style={{ marginBottom: '36px' }}>
-          <span className="eyebrow">PATRON PORTAL</span>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.2rem, 4vw, 3rem)', color: 'var(--color-espresso)', marginBottom: '6px' }}>
-            Namaste, {user.name}
-          </h1>
-          <p style={{ color: 'var(--color-muted-text)', fontSize: '0.95rem' }}>
-            {user.email} • {isAdmin ? 'Administrator Privilege' : 'Patron Member'}
-          </p>
-        </div>
+        {/* 2-Column Split: Sidebar | Main Dashboard Panel (Mockup Screen 9) */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '260px minmax(0, 1fr)',
+            gap: 'clamp(28px, 4vw, 56px)',
+            alignItems: 'start',
+          }}
+          className="account-grid"
+        >
+          {/* ======================================================= */}
+          {/* LEFT: CUSTOMER SIDEBAR (Screen 9 in Mockup)             */}
+          {/* ======================================================= */}
+          <aside
+            style={{
+              backgroundColor: '#F8F7F3',
+              border: '1px solid #E8E7E2',
+              padding: '24px 0',
+            }}
+          >
+            {/* Patron Mini Bio */}
+            <div style={{ padding: '0 20px 20px', borderBottom: '1px solid #E8E7E2', marginBottom: '12px' }}>
+              <div
+                style={{
+                  fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+                  fontSize: '1.25rem',
+                  fontWeight: 600,
+                  color: '#111111',
+                }}
+              >
+                {user.name}
+              </div>
+              <div style={{ fontSize: '0.78rem', color: '#6F6F6A' }}>{user.email}</div>
+            </div>
 
-        {/* Account Dashboard Layout */}
-        <div className="account-grid" style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '40px', alignItems: 'start' }}>
-          {/* Sidebar Nav */}
-          <aside style={{ backgroundColor: '#FFFFFF', borderRadius: '16px', border: '1px solid var(--color-border)', padding: '16px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <button
-              onClick={() => setActiveTab('orders')}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                padding: '12px 16px',
-                borderRadius: '8px',
-                border: 'none',
-                background: activeTab === 'orders' ? 'var(--color-secondary)' : 'transparent',
-                color: activeTab === 'orders' ? 'var(--color-espresso)' : 'var(--color-muted-text)',
-                fontWeight: activeTab === 'orders' ? 600 : 500,
-                fontSize: '0.9rem',
-                cursor: 'pointer',
-                textAlign: 'left',
-                width: '100%'
-              }}
-            >
-              <Package size={18} />
-              <span>My Orders</span>
-            </button>
+            {/* Navigation Links List */}
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <button
+                onClick={() => setActiveTab('orders')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '12px 20px',
+                  backgroundColor: activeTab === 'orders' ? '#FFFFFF' : 'transparent',
+                  border: 'none',
+                  borderLeft: activeTab === 'orders' ? '3px solid #111111' : '3px solid transparent',
+                  fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                  fontSize: '0.82rem',
+                  fontWeight: activeTab === 'orders' ? 600 : 500,
+                  color: '#111111',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                }}
+              >
+                <Package size={17} color="#111111" />
+                <span>Orders</span>
+              </button>
 
-            <button
-              onClick={() => setActiveTab('profile')}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                padding: '12px 16px',
-                borderRadius: '8px',
-                border: 'none',
-                background: activeTab === 'profile' ? 'var(--color-secondary)' : 'transparent',
-                color: activeTab === 'profile' ? 'var(--color-espresso)' : 'var(--color-muted-text)',
-                fontWeight: activeTab === 'profile' ? 600 : 500,
-                fontSize: '0.9rem',
-                cursor: 'pointer',
-                textAlign: 'left',
-                width: '100%'
-              }}
-            >
-              <User size={18} />
-              <span>Patron Profile</span>
-            </button>
+              <button
+                onClick={() => setActiveTab('profile')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '12px 20px',
+                  backgroundColor: activeTab === 'profile' ? '#FFFFFF' : 'transparent',
+                  border: 'none',
+                  borderLeft: activeTab === 'profile' ? '3px solid #111111' : '3px solid transparent',
+                  fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                  fontSize: '0.82rem',
+                  fontWeight: activeTab === 'profile' ? 600 : 500,
+                  color: '#111111',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                }}
+              >
+                <User size={17} color="#111111" />
+                <span>My Account</span>
+              </button>
 
-            <button
-              onClick={() => setActiveTab('addresses')}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                padding: '12px 16px',
-                borderRadius: '8px',
-                border: 'none',
-                background: activeTab === 'addresses' ? 'var(--color-secondary)' : 'transparent',
-                color: activeTab === 'addresses' ? 'var(--color-espresso)' : 'var(--color-muted-text)',
-                fontWeight: activeTab === 'addresses' ? 600 : 500,
-                fontSize: '0.9rem',
-                cursor: 'pointer',
-                textAlign: 'left',
-                width: '100%'
-              }}
-            >
-              <MapPin size={18} />
-              <span>Saved Addresses</span>
-            </button>
+              <button
+                onClick={() => setActiveTab('addresses')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '12px 20px',
+                  backgroundColor: activeTab === 'addresses' ? '#FFFFFF' : 'transparent',
+                  border: 'none',
+                  borderLeft: activeTab === 'addresses' ? '3px solid #111111' : '3px solid transparent',
+                  fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                  fontSize: '0.82rem',
+                  fontWeight: activeTab === 'addresses' ? 600 : 500,
+                  color: '#111111',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                }}
+              >
+                <MapPin size={17} color="#111111" />
+                <span>Addresses</span>
+              </button>
 
-            <hr style={{ border: 'none', borderTop: '1px solid var(--color-border)', margin: '8px 0' }} />
+              <Link
+                href="/wishlist"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '12px 20px',
+                  backgroundColor: 'transparent',
+                  fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                  fontSize: '0.82rem',
+                  fontWeight: 500,
+                  color: '#111111',
+                  textDecoration: 'none',
+                }}
+              >
+                <Heart size={17} color="#111111" />
+                <span>Wishlist</span>
+              </Link>
 
-            <Link
-              href="/wishlist"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                padding: '12px 16px',
-                borderRadius: '8px',
-                color: 'var(--color-muted-text)',
-                fontWeight: 500,
-                fontSize: '0.9rem',
-                textDecoration: 'none'
-              }}
-            >
-              <Heart size={18} />
-              <span>My Wishlist</span>
-            </Link>
+              <button
+                onClick={() => setActiveTab('settings')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '12px 20px',
+                  backgroundColor: activeTab === 'settings' ? '#FFFFFF' : 'transparent',
+                  border: 'none',
+                  borderLeft: activeTab === 'settings' ? '3px solid #111111' : '3px solid transparent',
+                  fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                  fontSize: '0.82rem',
+                  fontWeight: activeTab === 'settings' ? 600 : 500,
+                  color: '#111111',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                }}
+              >
+                <Settings size={17} color="#111111" />
+                <span>Account Settings</span>
+              </button>
 
-            <button
-              onClick={handleLogout}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                padding: '12px 16px',
-                borderRadius: '8px',
-                border: 'none',
-                background: 'transparent',
-                color: 'var(--color-rose)',
-                fontWeight: 500,
-                fontSize: '0.9rem',
-                cursor: 'pointer',
-                textAlign: 'left',
-                width: '100%'
-              }}
-            >
-              <LogOut size={18} />
-              <span>Sign Out</span>
-            </button>
+              <button
+                onClick={handleLogout}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '12px 20px',
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                  fontSize: '0.82rem',
+                  fontWeight: 500,
+                  color: '#6F6F6A',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  marginTop: '12px',
+                  borderTop: '1px solid #E8E7E2',
+                  paddingTop: '16px',
+                }}
+              >
+                <LogOut size={17} />
+                <span>Logout</span>
+              </button>
+            </div>
           </aside>
 
-          {/* Main Content Pane */}
-          <div style={{ backgroundColor: '#FFFFFF', borderRadius: '20px', border: '1px solid var(--color-border)', padding: 'clamp(20px, 3vw, 36px)' }}>
+          {/* ======================================================= */}
+          {/* RIGHT: MAIN ORDERS / CONTENT PANEL (Screen 9 in Mockup) */}
+          {/* ======================================================= */}
+          <div>
             {activeTab === 'orders' && (
               <div>
-                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.6rem', marginBottom: '20px' }}>
-                  Order History & Live Tracking
-                </h2>
+                <h1
+                  style={{
+                    fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+                    fontSize: '1.9rem',
+                    fontWeight: 500,
+                    color: '#111111',
+                    margin: '0 0 16px',
+                  }}
+                >
+                  My Orders
+                </h1>
 
+                {/* Status Tabs (All | Processing | Shipped | Delivered | Cancelled) */}
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: '10px',
+                    borderBottom: '1px solid #E8E7E2',
+                    paddingBottom: '12px',
+                    marginBottom: '24px',
+                    overflowX: 'auto',
+                  }}
+                >
+                  {(['all', 'processing', 'shipped', 'delivered', 'cancelled'] as OrderStatusFilter[]).map((tab) => (
+                    <button
+                      key={tab}
+                      onClick={() => setStatusFilter(tab)}
+                      style={{
+                        padding: '6px 14px',
+                        border: 'none',
+                        backgroundColor: statusFilter === tab ? '#111111' : '#F8F7F3',
+                        color: statusFilter === tab ? '#FFFFFF' : '#6F6F6A',
+                        fontSize: '0.74rem',
+                        fontWeight: 600,
+                        letterSpacing: '0.08em',
+                        textTransform: 'uppercase',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Orders List */}
                 {ordersLoading ? (
-                  <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--color-muted-text)' }}>
-                    Loading orders...
-                  </div>
-                ) : orders.length === 0 ? (
-                  <div style={{ textAlign: 'center', padding: '48px 24px', backgroundColor: 'var(--bg-main)', borderRadius: '16px' }}>
-                    <Package size={40} color="#B76E79" style={{ margin: '0 auto 12px' }} />
-                    <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', color: 'var(--color-espresso)', marginBottom: '8px' }}>
-                      No Orders Placed Yet
-                    </h3>
-                    <p style={{ fontSize: '0.86rem', color: 'var(--color-muted-text)', maxWidth: '380px', margin: '0 auto 20px', lineHeight: 1.5 }}>
-                      When you purchase our authentic 925 sterling silver hallmarked heirlooms, your order history and live dispatch tracking will appear here.
+                  <p style={{ color: '#6F6F6A', fontSize: '0.84rem' }}>Fetching patron orders from MongoDB...</p>
+                ) : filteredOrders.length === 0 ? (
+                  <div
+                    style={{
+                      padding: '48px 20px',
+                      textAlign: 'center',
+                      backgroundColor: '#F8F7F3',
+                      border: '1px solid #E8E7E2',
+                    }}
+                  >
+                    <p style={{ color: '#6F6F6A', fontSize: '0.88rem', margin: '0 0 16px' }}>
+                      No orders found in this category.
                     </p>
                     <Link
                       href="/shop"
                       style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        padding: '11px 22px',
-                        backgroundColor: 'var(--color-rose)',
+                        padding: '10px 24px',
+                        backgroundColor: '#111111',
                         color: '#FFFFFF',
-                        borderRadius: '12px',
-                        fontSize: '0.86rem',
+                        fontSize: '0.74rem',
                         fontWeight: 600,
-                        textDecoration: 'none'
+                        letterSpacing: '0.1em',
+                        textTransform: 'uppercase',
+                        textDecoration: 'none',
                       }}
                     >
-                      <span>Explore Collections</span>
-                      <ArrowRight size={15} />
+                      Browse Catalogue
                     </Link>
                   </div>
                 ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                    {orders.map((order) => {
-                      const orderDate = order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Recent';
-                      const items = order.items || [];
-                      const steps = getOrderSteps(order.orderStatus || order.status);
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    {filteredOrders.map((ord) => {
+                      const itemCount = ord.items?.length || 1;
+                      const dateStr = ord.createdAt
+                        ? new Date(ord.createdAt).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                          })
+                        : 'Recent';
+
+                      const status = (ord.status || 'processing').toLowerCase();
+                      const statusBg =
+                        status === 'delivered' ? '#E8F5E9' : status === 'shipped' ? '#E3F2FD' : '#FFF3E0';
+                      const statusColor =
+                        status === 'delivered' ? '#2E7D32' : status === 'shipped' ? '#1565C0' : '#E65100';
 
                       return (
-                        <div key={order.id} style={{ border: '1px solid var(--color-border)', borderRadius: '16px', padding: '20px' }}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--color-border)', paddingBottom: '14px', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
+                        <div
+                          key={ord.id || ord._id}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '18px 24px',
+                            backgroundColor: '#FFFFFF',
+                            border: '1px solid #E8E7E2',
+                            flexWrap: 'wrap',
+                            gap: '16px',
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                            <div
+                              style={{
+                                width: '38px',
+                                height: '38px',
+                                backgroundColor: '#F8F7F3',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                              }}
+                            >
+                              <Package size={18} color="#111111" />
+                            </div>
                             <div>
-                              <strong style={{ fontSize: '1rem', color: 'var(--color-espresso)' }}>Order #{order.orderNumber || order.id}</strong>
-                              <p style={{ fontSize: '0.8rem', color: 'var(--color-muted-text)', margin: '2px 0 0' }}>Placed on {orderDate}</p>
-                            </div>
-                            <div style={{ textAlign: 'right' }}>
-                              <span style={{ fontSize: '0.78rem', backgroundColor: '#EBF5FF', color: '#1E40AF', padding: '4px 10px', borderRadius: '12px', fontWeight: 600, textTransform: 'capitalize' }}>
-                                {order.orderStatus || order.status || 'Processing'}
-                              </span>
-                              <p style={{ fontSize: '0.95rem', fontWeight: 700, margin: '4px 0 0' }}>{formatPrice(order.totalAmount || order.total || 0)}</p>
-                            </div>
-                          </div>
-
-                          {/* Items */}
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
-                            {items.map((item: any, i: number) => (
-                              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                                <div style={{ position: 'relative', width: '56px', height: '56px', borderRadius: '8px', overflow: 'hidden', backgroundColor: 'var(--bg-main)', flexShrink: 0 }}>
-                                  <Image src={item.image || '/images/collection-necklaces.jpg'} alt={item.name || 'Silver Jewelry'} fill style={{ objectFit: 'cover' }} sizes="56px" />
-                                </div>
-                                <div style={{ flex: 1 }}>
-                                  <h4 style={{ fontSize: '0.9rem', margin: 0, fontWeight: 600 }}>{item.name}</h4>
-                                  <p style={{ fontSize: '0.78rem', color: 'var(--color-muted-text)', margin: '2px 0 0' }}>
-                                    {item.purity || '925 Sterling Silver'} • Qty: {item.quantity || 1}
-                                  </p>
-                                </div>
-                                <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{formatPrice(item.price || 0)}</span>
+                              <div style={{ fontWeight: 600, fontSize: '0.84rem', color: '#111111' }}>
+                                #{ord.id || ord._id}
                               </div>
-                            ))}
-                          </div>
-
-                          {/* Timeline */}
-                          <div style={{ backgroundColor: 'var(--bg-main)', borderRadius: '12px', padding: '16px' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', position: 'relative', overflowX: 'auto', paddingBottom: '8px' }}>
-                              {steps.map((st, sIdx) => (
-                                <div key={sIdx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', minWidth: '80px', flex: 1 }}>
-                                  <div style={{
-                                    width: '22px',
-                                    height: '22px',
-                                    borderRadius: '50%',
-                                    backgroundColor: st.done ? 'var(--color-rose)' : '#EAE2DB',
-                                    color: '#FFFFFF',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    fontSize: '11px',
-                                    marginBottom: '6px',
-                                    border: st.current ? '2px solid var(--color-champagne)' : 'none'
-                                  }}>
-                                    {st.done ? '✓' : ''}
-                                  </div>
-                                  <span style={{ fontSize: '0.72rem', fontWeight: st.current ? 700 : 500, color: st.done ? 'var(--color-espresso)' : 'var(--color-muted-text)' }}>
-                                    {st.label}
-                                  </span>
-                                  <span style={{ fontSize: '0.66rem', color: 'var(--color-muted-text)', marginTop: '2px' }}>
-                                    {st.time}
-                                  </span>
-                                </div>
-                              ))}
+                              <div style={{ fontSize: '0.74rem', color: '#6F6F6A' }}>{dateStr}</div>
                             </div>
                           </div>
+
+                          <div style={{ fontSize: '0.8rem', color: '#6F6F6A' }}>
+                            {itemCount} {itemCount === 1 ? 'item' : 'items'}
+                          </div>
+
+                          <div style={{ fontWeight: 600, fontSize: '0.9rem', color: '#111111' }}>
+                            {formatPrice(ord.amount || ord.total || 0)}
+                          </div>
+
+                          <div>
+                            <span
+                              style={{
+                                padding: '4px 10px',
+                                fontSize: '0.7rem',
+                                fontWeight: 600,
+                                letterSpacing: '0.06em',
+                                textTransform: 'uppercase',
+                                backgroundColor: statusBg,
+                                color: statusColor,
+                              }}
+                            >
+                              {ord.status || 'Processing'}
+                            </span>
+                          </div>
+
+                          <button
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              color: '#111111',
+                              fontSize: '0.78rem',
+                              fontWeight: 600,
+                              cursor: 'pointer',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                            }}
+                          >
+                            <span>View</span>
+                            <ArrowRight size={13} />
+                          </button>
                         </div>
                       );
                     })}
@@ -380,48 +593,69 @@ export default function AccountPage() {
               </div>
             )}
 
+            {/* Profile Tab */}
             {activeTab === 'profile' && (
-              <div>
-                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.6rem', marginBottom: '20px' }}>
-                  Patron Details
+              <div style={{ backgroundColor: '#F8F7F3', padding: '32px', border: '1px solid #E8E7E2' }}>
+                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.6rem', margin: '0 0 20px' }}>
+                  Patron Profile Details
                 </h2>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px', fontSize: '0.85rem' }}>
                   <div>
-                    <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '6px' }}>Full Name</label>
-                    <input type="text" readOnly defaultValue={user.name} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: '#FFFFFF' }} />
+                    <label style={{ color: '#6F6F6A', fontSize: '0.75rem', display: 'block', marginBottom: '4px' }}>Full Name</label>
+                    <div style={{ fontWeight: 600 }}>{user.name}</div>
                   </div>
                   <div>
-                    <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '6px' }}>Email</label>
-                    <input type="email" readOnly defaultValue={user.email} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: '#FFFFFF' }} />
+                    <label style={{ color: '#6F6F6A', fontSize: '0.75rem', display: 'block', marginBottom: '4px' }}>Email Address</label>
+                    <div style={{ fontWeight: 600 }}>{user.email}</div>
                   </div>
                   <div>
-                    <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '6px' }}>Phone</label>
-                    <input type="tel" readOnly defaultValue={user.phone} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: '#FFFFFF' }} />
+                    <label style={{ color: '#6F6F6A', fontSize: '0.75rem', display: 'block', marginBottom: '4px' }}>Phone Number</label>
+                    <div style={{ fontWeight: 600 }}>{user.phone}</div>
                   </div>
                   <div>
-                    <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '6px' }}>Access Level</label>
-                    <input type="text" readOnly defaultValue={isAdmin ? 'Administrator (Store Staff)' : 'Verified Customer (BIS Hallmark)'} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: '#FFFFFF', color: 'var(--color-rose)', fontWeight: 600 }} />
+                    <label style={{ color: '#6F6F6A', fontSize: '0.75rem', display: 'block', marginBottom: '4px' }}>Account Purity Tier</label>
+                    <div style={{ fontWeight: 600 }}>BIS 925 Hallmark Verified</div>
                   </div>
                 </div>
               </div>
             )}
 
+            {/* Addresses Tab */}
             {activeTab === 'addresses' && (
-              <div>
-                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.6rem', marginBottom: '20px' }}>
+              <div style={{ backgroundColor: '#F8F7F3', padding: '32px', border: '1px solid #E8E7E2' }}>
+                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.6rem', margin: '0 0 16px' }}>
                   Saved Delivery Addresses
                 </h2>
-                <div style={{ padding: '20px', borderRadius: '12px', border: '1px solid var(--color-border)', backgroundColor: '#FFFFFF', maxWidth: '400px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <strong style={{ fontSize: '0.95rem' }}>Primary Residence</strong>
-                    <span style={{ fontSize: '0.72rem', backgroundColor: 'rgba(201,163,90,0.15)', color: 'var(--color-champagne)', padding: '2px 8px', borderRadius: '4px', fontWeight: 700 }}>DEFAULT</span>
+                <p style={{ fontSize: '0.85rem', color: '#6F6F6A', margin: '0 0 20px' }}>
+                  Your primary shipping address is automatically saved during checkout for seamless reordering.
+                </p>
+                <div style={{ padding: '16px', backgroundColor: '#FFFFFF', border: '1px solid #E8E7E2', maxWidth: '380px' }}>
+                  <div style={{ fontWeight: 600, fontSize: '0.86rem', marginBottom: '4px' }}>{user.name}</div>
+                  <div style={{ fontSize: '0.8rem', color: '#6F6F6A', lineHeight: 1.5 }}>
+                    Jaipur, Rajasthan, India
                   </div>
-                  <p style={{ fontSize: '0.85rem', color: 'var(--color-muted-text)', lineHeight: 1.5 }}>
-                    {user.name}<br />
-                    14/B, Lotus Boulevard, Civil Lines<br />
-                    Jaipur, Rajasthan 302006<br />
-                    Phone: {user.phone}
-                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Settings Tab */}
+            {activeTab === 'settings' && (
+              <div style={{ backgroundColor: '#F8F7F3', padding: '32px', border: '1px solid #E8E7E2' }}>
+                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.6rem', margin: '0 0 16px' }}>
+                  Security & Settings
+                </h2>
+                <p style={{ fontSize: '0.85rem', color: '#6F6F6A', marginBottom: '20px' }}>
+                  Manage notifications and order communication preferences.
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.84rem' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <input type="checkbox" defaultChecked style={{ accentColor: '#111111' }} />
+                    <span>Receive WhatsApp order tracking updates</span>
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <input type="checkbox" defaultChecked style={{ accentColor: '#111111' }} />
+                    <span>Receive new 925 silver collection drops</span>
+                  </label>
                 </div>
               </div>
             )}

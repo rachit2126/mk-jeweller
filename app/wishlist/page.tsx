@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Heart, ShoppingBag, Trash2, Sparkles, ArrowRight } from 'lucide-react';
+import { Heart, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
 import { useCommerce } from '@/components/commerce/CommerceContext';
 import { formatPrice } from '@/lib/format';
 
@@ -12,31 +12,70 @@ export default function WishlistPage() {
 
   if (wishlist.length === 0) {
     return (
-      <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '75vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px 20px' }}>
-        <div style={{ textAlign: 'center', maxWidth: '480px' }}>
+      <div
+        style={{
+          backgroundColor: '#FFFFFF',
+          minHeight: '70vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '80px 20px',
+        }}
+      >
+        <div style={{ textAlign: 'center', maxWidth: '440px' }}>
           <div
             style={{
-              width: '72px',
-              height: '72px',
+              width: '56px',
+              height: '56px',
               borderRadius: '50%',
-              backgroundColor: 'rgba(201, 163, 90, 0.12)',
-              color: 'var(--color-champagne)',
+              backgroundColor: '#F8F7F3',
+              color: '#111111',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              margin: '0 auto 20px'
+              margin: '0 auto 20px',
             }}
           >
-            <Heart size={32} />
+            <Heart size={24} />
           </div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '2.2rem', marginBottom: '10px' }}>
-            Your wishlist is waiting.
+          <h1
+            style={{
+              fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+              fontSize: '2.4rem',
+              fontWeight: 500,
+              color: '#111111',
+              margin: '0 0 12px',
+            }}
+          >
+            Your Wishlist Is Empty
           </h1>
-          <p style={{ color: 'var(--color-muted-text)', fontSize: '0.95rem', marginBottom: '32px' }}>
+          <p
+            style={{
+              fontFamily: 'var(--font-ui), "Jost", sans-serif',
+              color: '#6F6F6A',
+              fontSize: '0.88rem',
+              lineHeight: 1.6,
+              margin: '0 0 28px',
+            }}
+          >
             Save your favourite sterling silver pieces and revisit them whenever you are ready to treat yourself or a loved one.
           </p>
-          <Link href="/shop" className="btn-primary" style={{ padding: '16px 36px' }}>
-            Explore Jewellery
+          <Link
+            href="/shop"
+            style={{
+              display: 'inline-block',
+              padding: '14px 34px',
+              backgroundColor: '#111111',
+              color: '#FFFFFF',
+              fontFamily: 'var(--font-ui), "Jost", sans-serif',
+              fontSize: '0.76rem',
+              fontWeight: 600,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              textDecoration: 'none',
+            }}
+          >
+            EXPLORE JEWELLERY
           </Link>
         </div>
       </div>
@@ -44,23 +83,79 @@ export default function WishlistPage() {
   }
 
   return (
-    <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '100vh', padding: '40px 0 100px' }}>
-      <div className="container">
+    <div
+      style={{
+        backgroundColor: '#FFFFFF',
+        minHeight: '100vh',
+        padding: '36px 0 100px',
+      }}
+    >
+      <div
+        style={{
+          maxWidth: '1440px',
+          margin: '0 auto',
+          padding: '0 clamp(16px, 3.5vw, 40px)',
+          boxSizing: 'border-box',
+        }}
+      >
+        {/* Breadcrumb */}
+        <nav
+          aria-label="Breadcrumb"
+          style={{
+            paddingBottom: '24px',
+            fontSize: '0.74rem',
+            fontFamily: 'var(--font-ui), "Jost", sans-serif',
+            color: '#6F6F6A',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+        >
+          <Link href="/" style={{ color: '#6F6F6A', textDecoration: 'none' }}>
+            Home
+          </Link>
+          <span>/</span>
+          <span style={{ color: '#111111', fontWeight: 600 }}>Wishlist</span>
+        </nav>
+
         {/* Header */}
-        <div style={{ marginBottom: '36px', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'baseline',
+            justifyContent: 'space-between',
+            borderBottom: '1px solid #E8E7E2',
+            paddingBottom: '18px',
+            marginBottom: '36px',
+            flexWrap: 'wrap',
+            gap: '12px',
+          }}
+        >
           <div>
-            <span className="eyebrow">SAVED TREASURES</span>
-            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.2rem, 4vw, 3rem)', color: 'var(--color-espresso)', marginBottom: '6px' }}>
-              Your Wishlist
+            <h1
+              style={{
+                fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+                fontSize: 'clamp(2rem, 3.5vw, 2.6rem)',
+                fontWeight: 500,
+                color: '#111111',
+                margin: 0,
+              }}
+            >
+              Saved Pieces ({wishlist.length})
             </h1>
-            <p style={{ fontSize: '0.95rem', color: 'var(--color-muted-text)' }}>
-              {wishlist.length} {wishlist.length === 1 ? 'precious piece' : 'precious pieces'} saved
-            </p>
           </div>
 
-          <Link href="/shop" className="btn-secondary" style={{ padding: '10px 20px', fontSize: '0.85rem' }}>
-            <span>Continue Shopping</span>
-            <ArrowRight size={14} />
+          <Link
+            href="/shop"
+            style={{
+              fontFamily: 'var(--font-ui), "Jost", sans-serif',
+              fontSize: '0.78rem',
+              color: '#111111',
+              textDecoration: 'underline',
+              letterSpacing: '0.04em',
+            }}
+          >
+            Continue Shopping
           </Link>
         </div>
 
@@ -69,81 +164,105 @@ export default function WishlistPage() {
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '24px'
+            gap: '24px',
           }}
-          className="wishlist-grid"
+          className="wishlist-product-grid"
         >
-          {wishlist.map(product => (
+          {wishlist.map((prod) => (
             <div
-              key={product.id}
-              className="luxury-card"
-              style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}
+              key={prod.id}
+              style={{
+                backgroundColor: '#FFFFFF',
+                border: '1px solid #E8E7E2',
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
+                position: 'relative',
+              }}
             >
               {/* Image */}
-              <div style={{ position: 'relative', width: '100%', paddingTop: '120%', backgroundColor: '#F0ECE6' }}>
-                <Link href={`/product/${product.slug}`} style={{ position: 'absolute', inset: 0 }}>
-                  <Image src={product.images[0]} alt={product.name} fill sizes="300px" style={{ objectFit: 'cover' }} />
+              <div
+                style={{
+                  position: 'relative',
+                  width: '100%',
+                  paddingTop: '115%',
+                  backgroundColor: '#F8F7F3',
+                  overflow: 'hidden',
+                }}
+              >
+                <Link href={`/product/${prod.slug}`} style={{ position: 'absolute', inset: 0 }}>
+                  <Image
+                    src={prod.images[0]}
+                    alt={prod.name}
+                    fill
+                    sizes="(max-width: 640px) 50vw, 25vw"
+                    style={{ objectFit: 'cover' }}
+                  />
                 </Link>
 
-                {/* Remove button */}
+                {/* Remove from wishlist button */}
                 <button
-                  onClick={() => toggleWishlist(product)}
+                  onClick={() => toggleWishlist(prod)}
                   aria-label="Remove from wishlist"
                   style={{
                     position: 'absolute',
-                    top: '12px',
-                    right: '12px',
-                    width: '34px',
-                    height: '34px',
+                    top: '10px',
+                    right: '10px',
+                    width: '32px',
+                    height: '32px',
                     borderRadius: '50%',
                     backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                    backdropFilter: 'blur(4px)',
+                    border: 'none',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: 'var(--color-espresso)'
+                    cursor: 'pointer',
+                    color: '#111111',
                   }}
                 >
-                  <Trash2 size={16} />
+                  <Trash2 size={15} />
                 </button>
               </div>
 
-              {/* Details */}
+              {/* Info */}
               <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
                 <div>
-                  <span style={{ fontSize: '0.7rem', color: 'var(--color-muted-text)', textTransform: 'uppercase' }}>
-                    {product.purity} • {product.weight}
-                  </span>
                   <Link
-                    href={`/product/${product.slug}`}
-                    style={{ display: 'block', fontSize: '1.05rem', fontWeight: 600, color: 'var(--color-espresso)', marginTop: '2px', lineHeight: 1.3 }}
+                    href={`/product/${prod.slug}`}
+                    style={{
+                      fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+                      fontSize: '1.08rem',
+                      fontWeight: 600,
+                      color: '#111111',
+                      textDecoration: 'none',
+                      display: 'block',
+                      marginBottom: '6px',
+                    }}
                   >
-                    {product.name}
+                    {prod.name}
                   </Link>
-
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', margin: '8px 0 16px' }}>
-                    <span style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--color-espresso)' }}>
-                      {formatPrice(product.price)}
-                    </span>
-                    {product.compareAtPrice && (
-                      <span style={{ fontSize: '0.85rem', color: 'var(--color-light-text)', textDecoration: 'line-through' }}>
-                        {formatPrice(product.compareAtPrice)}
-                      </span>
-                    )}
+                  <div style={{ fontWeight: 600, fontSize: '0.92rem', color: '#111111', marginBottom: '14px' }}>
+                    {formatPrice(prod.price)}
                   </div>
                 </div>
 
-                {/* Move to bag */}
                 <button
-                  onClick={() => {
-                    addToCart(product, 1);
-                    toggleWishlist(product);
+                  onClick={() => addToCart(prod, 1)}
+                  style={{
+                    width: '100%',
+                    padding: '10px 0',
+                    backgroundColor: '#111111',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                    fontSize: '0.72rem',
+                    fontWeight: 600,
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    cursor: 'pointer',
                   }}
-                  className="btn-primary"
-                  style={{ width: '100%', padding: '10px 14px', fontSize: '0.82rem' }}
                 >
-                  <ShoppingBag size={15} />
-                  <span>Move To Bag</span>
+                  MOVE TO BAG
                 </button>
               </div>
             </div>
@@ -153,12 +272,13 @@ export default function WishlistPage() {
 
       <style jsx>{`
         @media (max-width: 1024px) {
-          .wishlist-grid {
+          .wishlist-product-grid {
             grid-template-columns: repeat(3, 1fr) !important;
+            gap: 16px !important;
           }
         }
         @media (max-width: 640px) {
-          .wishlist-grid {
+          .wishlist-product-grid {
             grid-template-columns: repeat(2, 1fr) !important;
             gap: 12px !important;
           }

@@ -27,6 +27,8 @@ export interface Product {
   occasion: ('everyday' | 'office' | 'festive' | 'gifting')[];
   style: ('minimal' | 'classic' | 'statement' | 'festive')[];
   inStock: boolean;
+  _id?: string;
+  numReviews?: number;
   featured?: boolean;
   isBestSeller?: boolean;
   isNewArrival?: boolean;
@@ -50,5 +52,6 @@ export interface CartItem {
   product: Product;
   quantity: number;
   selectedSize?: string;
+  variant?: string;
   customEngraving?: string;
 }

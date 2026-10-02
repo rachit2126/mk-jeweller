@@ -1,62 +1,214 @@
 import React from 'react';
-import { Truck, ShieldCheck, Clock } from 'lucide-react';
+import Link from 'next/link';
+import { Truck, Clock, ShieldCheck, MapPin } from 'lucide-react';
 
 export default function ShippingPage() {
   return (
-    <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '100vh', padding: '50px 0 100px' }}>
-      <div className="container" style={{ maxWidth: '880px' }}>
-        {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-          <span className="eyebrow">DOORSTEP DELIVERY</span>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.4rem, 4.5vw, 3.8rem)', color: 'var(--color-espresso)', marginBottom: '16px' }}>
-            Shipping & Transit Policy
+    <div
+      style={{
+        backgroundColor: '#FFFFFF',
+        color: '#111111',
+        minHeight: '100vh',
+        padding: '0 0 100px',
+      }}
+    >
+      <div
+        style={{
+          maxWidth: '880px',
+          margin: '0 auto',
+          padding: '0 clamp(16px, 3.5vw, 40px)',
+          boxSizing: 'border-box',
+        }}
+      >
+        {/* Breadcrumb */}
+        <nav
+          aria-label="Breadcrumb"
+          style={{
+            padding: '24px 0 32px',
+            fontSize: '0.74rem',
+            fontFamily: 'var(--font-ui), "Jost", sans-serif',
+            color: '#6F6F6A',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+        >
+          <Link href="/" style={{ color: '#6F6F6A', textDecoration: 'none' }}>
+            Home
+          </Link>
+          <span>/</span>
+          <span style={{ color: '#111111', fontWeight: 600 }}>Shipping Policy</span>
+        </nav>
+
+        {/* Page Title (Screen 11 in Mockup) */}
+        <div style={{ marginBottom: '36px', borderBottom: '1px solid #E8E7E2', paddingBottom: '20px' }}>
+          <h1
+            style={{
+              fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+              fontSize: 'clamp(2.2rem, 4vw, 3rem)',
+              fontWeight: 500,
+              color: '#111111',
+              margin: '0 0 10px',
+            }}
+          >
+            Shipping Policy
           </h1>
-          <p style={{ fontSize: '1.05rem', color: 'var(--color-muted-text)', maxWidth: '640px', margin: '0 auto', lineHeight: 1.7 }}>
-            Every MK Silver Hub parcel is shipped in tamper-evident, fully insured luxury packaging directly from our Jaipur atelier.
+          <p
+            style={{
+              fontFamily: 'var(--font-ui), "Jost", sans-serif',
+              fontSize: '0.9rem',
+              color: '#6F6F6A',
+              margin: 0,
+            }}
+          >
+            Everything you need to know about our insured pan-India jewellery transit.
           </p>
         </div>
 
-        {/* Core Policy Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '48px' }} className="shipping-cards-grid">
-          <div style={{ backgroundColor: 'var(--bg-cream)', padding: '28px 20px', borderRadius: 'var(--radius-card)', border: '1px solid var(--color-border)', textAlign: 'center' }}>
-            <Truck size={28} color="var(--color-champagne)" style={{ margin: '0 auto 12px' }} />
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '6px' }}>Free Shipping</h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--color-muted-text)', margin: 0 }}>On all orders above ₹999 across India (flat ₹99 under ₹999).</p>
-          </div>
-
-          <div style={{ backgroundColor: 'var(--bg-cream)', padding: '28px 20px', borderRadius: 'var(--radius-card)', border: '1px solid var(--color-border)', textAlign: 'center' }}>
-            <Clock size={28} color="var(--color-champagne)" style={{ margin: '0 auto 12px' }} />
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '6px' }}>3–5 Business Days</h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--color-muted-text)', margin: 0 }}>Dispatch within 24 hours via BlueDart & Delhivery Express.</p>
-          </div>
-
-          <div style={{ backgroundColor: 'var(--bg-cream)', padding: '28px 20px', borderRadius: 'var(--radius-card)', border: '1px solid var(--color-border)', textAlign: 'center' }}>
-            <ShieldCheck size={28} color="var(--color-champagne)" style={{ margin: '0 auto 12px' }} />
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '6px' }}>100% Transit Insured</h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--color-muted-text)', margin: 0 }}>Full replacement guarantee against transit damage or loss.</p>
-          </div>
-        </div>
-
-        {/* Detailed Sections */}
-        <div style={{ backgroundColor: 'var(--bg-cream)', borderRadius: 'var(--radius-editorial)', border: '1px solid var(--color-border)', padding: '36px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          <div>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.35rem', marginBottom: '8px' }}>Pan-India Coverage</h3>
-            <p style={{ fontSize: '0.92rem', color: 'var(--color-muted-text)', lineHeight: 1.6 }}>
-              We service over 25,000 PIN codes across all states and union territories in India. For metro cities (Delhi NCR, Mumbai, Bengaluru, Chennai, Hyderabad, Kolkata), delivery typically arrives within 48 to 72 hours.
+        {/* Structured Sections (Screen 11 in Mockup) */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          {/* 1. Processing Time */}
+          <div
+            style={{
+              backgroundColor: '#F8F7F3',
+              border: '1px solid #E8E7E2',
+              padding: '28px 32px',
+            }}
+          >
+            <h2
+              style={{
+                fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+                fontSize: '1.35rem',
+                fontWeight: 600,
+                color: '#111111',
+                margin: '0 0 10px',
+              }}
+            >
+              Processing Time
+            </h2>
+            <p
+              style={{
+                fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                fontSize: '0.88rem',
+                color: '#4A4A46',
+                lineHeight: 1.6,
+                margin: 0,
+              }}
+            >
+              Orders are verified, hallmarked, and processed within 1–2 business days from our Jaipur atelier. You will receive an immediate SMS and email notification upon parcel handover.
             </p>
           </div>
 
-          <div>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.35rem', marginBottom: '8px' }}>Tamper-Evident Luxury Packaging</h3>
-            <p style={{ fontSize: '0.92rem', color: 'var(--color-muted-text)', lineHeight: 1.6 }}>
-              All jewellery is encased in a signature MK Silver Hub presentation box, anti-tarnish velvet travel pouch, microfiber polishing cloth, and laminated BIS 925 Hallmark Purity Certificate.
+          {/* 2. Shipping Timeline */}
+          <div
+            style={{
+              backgroundColor: '#F8F7F3',
+              border: '1px solid #E8E7E2',
+              padding: '28px 32px',
+            }}
+          >
+            <h2
+              style={{
+                fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+                fontSize: '1.35rem',
+                fontWeight: 600,
+                color: '#111111',
+                margin: '0 0 14px',
+              }}
+            >
+              Shipping Timeline
+            </h2>
+            <ul
+              style={{
+                fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                fontSize: '0.88rem',
+                color: '#4A4A46',
+                lineHeight: 1.7,
+                margin: 0,
+                paddingLeft: '20px',
+              }}
+            >
+              <li>
+                <strong>Standard Shipping:</strong> 3–7 business days across all supported Indian PIN codes.
+              </li>
+              <li>
+                <strong>Express Shipping:</strong> 1–3 business days for major metropolitan areas (Delhi NCR, Mumbai, Bengaluru, Hyderabad).
+              </li>
+            </ul>
+          </div>
+
+          {/* 3. Shipping Charges */}
+          <div
+            style={{
+              backgroundColor: '#F8F7F3',
+              border: '1px solid #E8E7E2',
+              padding: '28px 32px',
+            }}
+          >
+            <h2
+              style={{
+                fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+                fontSize: '1.35rem',
+                fontWeight: 600,
+                color: '#111111',
+                margin: '0 0 10px',
+              }}
+            >
+              Shipping Charges
+            </h2>
+            <p
+              style={{
+                fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                fontSize: '0.88rem',
+                color: '#4A4A46',
+                lineHeight: 1.6,
+                margin: '0 0 8px',
+              }}
+            >
+              <strong>Complimentary Free Shipping</strong> on all orders above ₹1,000 anywhere in India.
+            </p>
+            <p
+              style={{
+                fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                fontSize: '0.84rem',
+                color: '#6F6F6A',
+                lineHeight: 1.6,
+                margin: 0,
+              }}
+            >
+              For orders below ₹1,000, a nominal flat shipping fee of ₹99 is applied at checkout to cover insured transit packaging.
             </p>
           </div>
 
-          <div>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.35rem', marginBottom: '8px' }}>Live Parcel Tracking</h3>
-            <p style={{ fontSize: '0.92rem', color: 'var(--color-muted-text)', lineHeight: 1.6 }}>
-              As soon as your parcel departs our Johari Bazaar atelier, tracking notifications with a real-time tracking link are dispatched via SMS, Email, and WhatsApp.
+          {/* 4. International Shipping */}
+          <div
+            style={{
+              backgroundColor: '#F8F7F3',
+              border: '1px solid #E8E7E2',
+              padding: '28px 32px',
+            }}
+          >
+            <h2
+              style={{
+                fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+                fontSize: '1.35rem',
+                fontWeight: 600,
+                color: '#111111',
+                margin: '0 0 10px',
+              }}
+            >
+              International Shipping
+            </h2>
+            <p
+              style={{
+                fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                fontSize: '0.88rem',
+                color: '#4A4A46',
+                lineHeight: 1.6,
+                margin: 0,
+              }}
+            >
+              Currently, we ship across India only. For international bulk inquiries or bespoke bridal orders outside India, please contact our concierge team at support@mksilverhub.com or via WhatsApp.
             </p>
           </div>
         </div>

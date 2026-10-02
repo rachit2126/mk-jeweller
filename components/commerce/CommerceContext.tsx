@@ -17,10 +17,13 @@ interface CommerceContextType {
   closeCart: () => void;
   toggleWishlist: (product: Product) => void;
   isInWishlist: (productId: string) => boolean;
+  isWishlisted: (productId: string) => boolean;
   openQuickView: (product: Product) => void;
   closeQuickView: () => void;
   openSearch: () => void;
   closeSearch: () => void;
+  toggleCartDrawer: () => void;
+  toggleSearchModal: () => void;
   cartCount: number;
   wishlistCount: number;
   cartSubtotal: number;
@@ -143,10 +146,13 @@ export function CommerceProvider({ children }: { children: React.ReactNode }) {
         closeCart: () => setIsCartOpen(false),
         toggleWishlist,
         isInWishlist,
+        isWishlisted: isInWishlist,
         openQuickView: (p: Product) => setQuickViewProduct(p),
         closeQuickView: () => setQuickViewProduct(null),
         openSearch: () => setIsSearchOpen(true),
         closeSearch: () => setIsSearchOpen(false),
+        toggleCartDrawer: () => setIsCartOpen((prev) => !prev),
+        toggleSearchModal: () => setIsSearchOpen((prev) => !prev),
         cartCount,
         wishlistCount,
         cartSubtotal,

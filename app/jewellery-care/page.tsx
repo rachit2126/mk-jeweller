@@ -1,115 +1,150 @@
 import React from 'react';
-import { Sparkles, Droplets, ShieldCheck, Sun, HeartHandshake, Package } from 'lucide-react';
+import Link from 'next/link';
+import { Sparkles, Droplets, ShieldCheck, Sun, Package, RefreshCw } from 'lucide-react';
 
 const CARE_TIPS = [
   {
     icon: Package,
-    title: 'Individual Storage',
-    desc: 'Always store each piece separately in the airtight anti-tarnish pouch provided with your order to avoid scratching and exposure to atmospheric moisture.'
+    title: 'Individual Pouch Storage',
+    desc: 'Store each piece separately in the complimentary airtight velvet pouch provided with your order to avoid friction scratching and moisture exposure.',
   },
   {
     icon: Sun,
-    title: 'The Last On, First Off Rule',
-    desc: 'Put your silver jewellery on after applying cosmetics, hairspray, lotions, and perfumes. Allow all beauty products to fully dry before wearing your jewels.'
+    title: 'Last On, First Off',
+    desc: 'Put your silver jewellery on after perfumes, lotions, and sprays have fully dried. Remove before bed to prevent tangling and pressure.',
   },
   {
     icon: Droplets,
-    title: 'Keep Away from Moisture & Pools',
-    desc: 'Remove your 925 sterling pieces before showering, swimming in chlorinated pools, ocean water, or hot yoga sessions to preserve the protective rhodium coat.'
+    title: 'Avoid Water & Pools',
+    desc: 'Remove before showering, swimming in chlorinated pools, or ocean water to protect the high-gloss anti-tarnish rhodium layer.',
   },
   {
     icon: Sparkles,
     title: 'Gentle Microfiber Polish',
-    desc: 'Buff gently with the complimentary soft microfiber cloth provided. Never use harsh paper towels or abrasive toothpaste which may scratch the mirror finish.'
+    desc: 'Buff gently with the included soft polishing cloth. Never use abrasive toothpastes or chemical bleaches on fine sterling silver.',
   },
   {
     icon: ShieldCheck,
-    title: 'Tarnish Prevention',
-    desc: 'Solid 925 silver can naturally react to airborne sulfur over prolonged periods. Regular gentle wear actually prevents tarnish as skin oils naturally protect silver.'
+    title: 'Wear Regularly',
+    desc: 'Solid 925 sterling silver loves to be worn. Natural skin contact creates a protective film that actively inhibits surface oxidation.',
   },
   {
-    icon: HeartHandshake,
-    title: 'Patron Re-Polishing Service',
-    desc: 'MK Silver Hub offers lifelong professional ultrasonic cleaning and rhodium re-plating services for all registered purchases.'
-  }
+    icon: RefreshCw,
+    title: 'Atelier Re-Polishing',
+    desc: 'We offer ultrasonic steam cleaning and rhodium re-plating services for all patron pieces at our Jaipur atelier whenever needed.',
+  },
 ];
 
 export default function JewelleryCarePage() {
   return (
-    <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '100vh', padding: '50px 0 100px' }}>
-      <div className="container" style={{ maxWidth: '960px' }}>
-        {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '56px' }}>
-          <span className="eyebrow">PRESERVING LUSTER</span>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.4rem, 4.5vw, 3.8rem)', color: 'var(--color-espresso)', marginBottom: '16px' }}>
-            Care For Your Silver
+    <div
+      style={{
+        backgroundColor: '#FFFFFF',
+        color: '#111111',
+        minHeight: '100vh',
+        padding: '0 0 100px',
+      }}
+    >
+      <div
+        style={{
+          maxWidth: '960px',
+          margin: '0 auto',
+          padding: '0 clamp(16px, 3.5vw, 40px)',
+          boxSizing: 'border-box',
+        }}
+      >
+        {/* Breadcrumb */}
+        <nav
+          aria-label="Breadcrumb"
+          style={{
+            padding: '24px 0 32px',
+            fontSize: '0.74rem',
+            fontFamily: 'var(--font-ui), "Jost", sans-serif',
+            color: '#6F6F6A',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+        >
+          <Link href="/" style={{ color: '#6F6F6A', textDecoration: 'none' }}>
+            Home
+          </Link>
+          <span>/</span>
+          <span style={{ color: '#111111', fontWeight: 600 }}>Jewellery Care</span>
+        </nav>
+
+        {/* Title */}
+        <div style={{ marginBottom: '40px', borderBottom: '1px solid #E8E7E2', paddingBottom: '24px' }}>
+          <h1
+            style={{
+              fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+              fontSize: 'clamp(2.2rem, 4vw, 3rem)',
+              fontWeight: 500,
+              color: '#111111',
+              margin: '0 0 10px',
+            }}
+          >
+            Care For Your 925 Silver
           </h1>
-          <p style={{ fontSize: '1.05rem', color: 'var(--color-muted-text)', maxWidth: '640px', margin: '0 auto', lineHeight: 1.7 }}>
-            Your 925 sterling silver jewels are crafted to be cherished for lifetimes. Follow these simple guidelines to keep your pieces radiating pure moonlight brilliance.
+          <p
+            style={{
+              fontFamily: 'var(--font-ui), "Jost", sans-serif',
+              fontSize: '0.9rem',
+              color: '#6F6F6A',
+              margin: 0,
+            }}
+          >
+            Simple rituals to preserve the lifelong radiance and mirror luster of your Jaipur hallmarked jewels.
           </p>
         </div>
 
-        {/* Tips Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '28px', marginBottom: '64px' }} className="care-grid">
+        {/* 6 Tips Grid */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '24px',
+          }}
+        >
           {CARE_TIPS.map((tip, idx) => {
             const Icon = tip.icon;
             return (
               <div
                 key={idx}
                 style={{
-                  backgroundColor: 'var(--bg-cream)',
-                  borderRadius: 'var(--radius-card)',
-                  border: '1px solid var(--color-border)',
-                  padding: '32px 28px',
-                  display: 'flex',
-                  gap: '20px'
+                  backgroundColor: '#F8F7F3',
+                  border: '1px solid #E8E7E2',
+                  padding: '28px',
                 }}
               >
-                <div
+                <div style={{ marginBottom: '14px' }}>
+                  <Icon size={22} color="#111111" />
+                </div>
+                <h3
                   style={{
-                    width: '46px',
-                    height: '46px',
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(201, 163, 90, 0.15)',
-                    color: 'var(--color-champagne)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0
+                    fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+                    fontSize: '1.25rem',
+                    fontWeight: 600,
+                    color: '#111111',
+                    margin: '0 0 8px',
                   }}
                 >
-                  <Icon size={22} />
-                </div>
-                <div>
-                  <h3 style={{ fontSize: '1.2rem', fontFamily: 'var(--font-display)', fontWeight: 600, color: 'var(--color-espresso)', marginBottom: '8px' }}>
-                    {tip.title}
-                  </h3>
-                  <p style={{ fontSize: '0.88rem', color: 'var(--color-muted-text)', lineHeight: 1.6, margin: 0 }}>
-                    {tip.desc}
-                  </p>
-                </div>
+                  {tip.title}
+                </h3>
+                <p
+                  style={{
+                    fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                    fontSize: '0.84rem',
+                    color: '#4A4A46',
+                    lineHeight: 1.6,
+                    margin: 0,
+                  }}
+                >
+                  {tip.desc}
+                </p>
               </div>
             );
           })}
-        </div>
-
-        {/* Support Section */}
-        <div style={{ textAlign: 'center', padding: '36px', backgroundColor: 'var(--bg-cream)', borderRadius: 'var(--radius-card)', border: '1px solid var(--color-border)' }}>
-          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', marginBottom: '8px' }}>
-            Have a question about caring for a specific gemstone?
-          </h3>
-          <p style={{ color: 'var(--color-muted-text)', fontSize: '0.92rem', marginBottom: '20px' }}>
-            Our jewellery concierge in Jaipur is available on WhatsApp to assist with care recommendations.
-          </p>
-          <a
-            href="https://wa.me/917425058118?text=Hi%20MK%20Silver%20Hub%2C%20I%20have%20a%20question%20regarding%20jewellery%20care."
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-primary"
-            style={{ backgroundColor: '#25D366', borderColor: '#25D366' }}
-          >
-            Ask On WhatsApp
-          </a>
         </div>
       </div>
     </div>

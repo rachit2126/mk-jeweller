@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { X, ChevronDown, MessageCircle, Heart, User, Search, ShoppingBag, Package, HelpCircle } from 'lucide-react';
+import { X, Plus, Minus, Search, Heart, User, ShoppingBag, MessageCircle } from 'lucide-react';
 import BrandLogo from '@/components/ui/BrandLogo';
 
 interface MobileDrawerProps {
@@ -11,31 +11,142 @@ interface MobileDrawerProps {
   onClose: () => void;
 }
 
-const SHOP_CATEGORIES = [
-  { label: 'Earrings', href: '/shop?category=earrings' },
-  { label: 'Necklaces', href: '/shop?category=necklaces' },
-  { label: 'Rings', href: '/shop?category=rings' },
-  { label: 'Bracelets', href: '/shop?category=bracelets' },
-  { label: 'Pendants', href: '/shop?category=pendants' },
-  { label: 'Anklets', href: '/shop?category=anklets' },
+interface AccordionCategory {
+  title: string;
+  href: string;
+  items: { label: string; href: string }[];
+}
+
+const ACCORDION_CATEGORIES: AccordionCategory[] = [
+  {
+    title: 'EARRINGS',
+    href: '/shop?category=earrings',
+    items: [
+      { label: 'All Earrings', href: '/shop?category=earrings' },
+      { label: 'Studs', href: '/shop?category=earrings&sub=studs' },
+      { label: 'Hoops', href: '/shop?category=earrings&sub=hoops' },
+      { label: 'Drop Earrings', href: '/shop?category=earrings&sub=drop' },
+      { label: 'Jhumki', href: '/shop?category=earrings&sub=jhumki' },
+      { label: 'Everyday Earrings', href: '/shop?category=earrings&sub=everyday' },
+      { label: 'Statement Earrings', href: '/shop?category=earrings&sub=statement' },
+    ],
+  },
+  {
+    title: 'NECKLACES',
+    href: '/shop?category=necklaces',
+    items: [
+      { label: 'All Necklaces', href: '/shop?category=necklaces' },
+      { label: 'Pendant Necklaces', href: '/shop?category=necklaces&sub=pendant' },
+      { label: 'Chains', href: '/shop?category=necklaces&sub=chains' },
+      { label: 'Chokers', href: '/shop?category=necklaces&sub=chokers' },
+      { label: 'Layered Necklaces', href: '/shop?category=necklaces&sub=layered' },
+      { label: 'Everyday Necklaces', href: '/shop?category=necklaces&sub=everyday' },
+      { label: 'Bridal Necklaces', href: '/shop?category=necklaces&sub=bridal' },
+    ],
+  },
+  {
+    title: 'RINGS',
+    href: '/shop?category=rings',
+    items: [
+      { label: 'All Rings', href: '/shop?category=rings' },
+      { label: 'Everyday Rings', href: '/shop?category=rings&sub=everyday' },
+      { label: 'Silver Rings', href: '/shop?category=rings&sub=silver' },
+      { label: 'Solitaire Rings', href: '/shop?category=rings&sub=solitaire' },
+      { label: 'Statement Rings', href: '/shop?category=rings&sub=statement' },
+      { label: 'Couple Rings', href: '/shop?category=rings&sub=couple' },
+      { label: 'Bridal Rings', href: '/shop?category=rings&sub=bridal' },
+    ],
+  },
+  {
+    title: 'BRACELETS',
+    href: '/shop?category=bracelets',
+    items: [
+      { label: 'All Bracelets', href: '/shop?category=bracelets' },
+      { label: 'Chain Bracelets', href: '/shop?category=bracelets&sub=chain' },
+      { label: 'Cuff Bracelets', href: '/shop?category=bracelets&sub=cuff' },
+      { label: 'Charm Bracelets', href: '/shop?category=bracelets&sub=charm' },
+      { label: 'Everyday Bracelets', href: '/shop?category=bracelets&sub=everyday' },
+    ],
+  },
+  {
+    title: 'BANGLES',
+    href: '/shop?category=bangles',
+    items: [
+      { label: 'All Bangles', href: '/shop?category=bangles' },
+      { label: 'Silver Bangles', href: '/shop?category=bangles&sub=silver' },
+      { label: 'Kada', href: '/shop?category=bangles&sub=kada' },
+      { label: 'Stacking Bangles', href: '/shop?category=bangles&sub=stacking' },
+      { label: 'Traditional Bangles', href: '/shop?category=bangles&sub=traditional' },
+    ],
+  },
+  {
+    title: 'ANKLETS',
+    href: '/shop?category=anklets',
+    items: [
+      { label: 'All Anklets', href: '/shop?category=anklets' },
+      { label: 'Everyday Anklets', href: '/shop?category=anklets&sub=everyday' },
+      { label: 'Silver Anklets', href: '/shop?category=anklets&sub=silver' },
+      { label: 'Bridal Anklets', href: '/shop?category=anklets&sub=bridal' },
+    ],
+  },
+  {
+    title: 'PENDANTS',
+    href: '/shop?category=pendants',
+    items: [
+      { label: 'All Pendants', href: '/shop?category=pendants' },
+      { label: 'Solitaire Pendants', href: '/shop?category=pendants&sub=solitaire' },
+      { label: 'Floral Pendants', href: '/shop?category=pendants&sub=floral' },
+      { label: 'Spiritual Pendants', href: '/shop?category=pendants&sub=spiritual' },
+    ],
+  },
+  {
+    title: 'MEN',
+    href: '/shop?category=men',
+    items: [
+      { label: 'All Men’s Jewellery', href: '/shop?category=men' },
+      { label: 'Chains', href: '/shop?category=men&sub=chains' },
+      { label: 'Bracelets', href: '/shop?category=men&sub=bracelets' },
+      { label: 'Pendants', href: '/shop?category=men&sub=pendants' },
+      { label: 'Rings', href: '/shop?category=men&sub=rings' },
+      { label: 'Cufflinks', href: '/shop?category=men&sub=cufflinks' },
+    ],
+  },
+  {
+    title: 'BRIDAL',
+    href: '/collections/bridal',
+    items: [
+      { label: 'Bridal Edit', href: '/collections/bridal' },
+      { label: 'Bridal Sets', href: '/shop?category=bridal&sub=sets' },
+      { label: 'Necklaces', href: '/shop?category=necklaces&sub=bridal' },
+      { label: 'Earrings', href: '/shop?category=earrings&sub=bridal' },
+      { label: 'Rings', href: '/shop?category=rings&sub=bridal' },
+    ],
+  },
+  {
+    title: 'COLLECTIONS',
+    href: '/collections',
+    items: [
+      { label: 'All Collections', href: '/collections' },
+      { label: 'Minimal', href: '/collections/minimal' },
+      { label: 'Everyday', href: '/collections/everyday' },
+      { label: 'Festive', href: '/collections/festive' },
+      { label: 'Bridal', href: '/collections/bridal' },
+      { label: 'Heritage', href: '/collections/heritage' },
+    ],
+  },
 ];
 
-const COLLECTION_LINKS = [
-  { label: 'New Arrivals', href: '/shop?collection=new-arrivals' },
-  { label: 'Best Sellers', href: '/shop?collection=best-sellers' },
-  { label: 'Curated Suites', href: '/collections' },
-  { label: 'Everyday Essentials', href: '/shop?occasion=everyday' },
-  { label: 'Festive Collection', href: '/shop?occasion=festive' },
-  { label: 'Bridal Collection', href: '/shop?occasion=bridal' },
+const DIRECT_ITEMS = [
+  { label: 'NEW ARRIVALS', href: '/shop?sort=newest' },
+  { label: 'BEST SELLERS', href: '/shop?isBestSeller=true' },
+  { label: 'ABOUT', href: '/about' },
 ];
 
 export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
   const router = useRouter();
-  const [isShopOpen, setIsShopOpen] = useState(true);
-  const [isCollectionsOpen, setIsCollectionsOpen] = useState(false);
+  const [openSection, setOpenSection] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Close on Escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -51,6 +162,10 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen, onClose]);
+
+  const toggleSection = (title: string) => {
+    setOpenSection((prev) => (prev === title ? null : title));
+  };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,40 +192,39 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundColor: 'rgba(59, 43, 43, 0.45)',
-          backdropFilter: 'blur(6px)',
-          WebkitBackdropFilter: 'blur(6px)',
-          animation: 'fadeIn 0.22s ease',
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          backdropFilter: 'blur(4px)',
+          WebkitBackdropFilter: 'blur(4px)',
+          animation: 'fadeIn 0.2s ease',
         }}
       />
 
-      {/* Drawer */}
+      {/* Drawer Panel */}
       <div
         style={{
           position: 'relative',
-          width: '90vw',
+          width: '88vw',
           maxWidth: '380px',
           height: '100%',
-          backgroundColor: '#FFF9F3',
-          borderTopRightRadius: '24px',
-          borderBottomRightRadius: '24px',
-          boxShadow: '0 20px 50px rgba(59, 43, 43, 0.25)',
+          backgroundColor: '#FFFFFF',
+          boxShadow: '10px 0 40px rgba(0, 0, 0, 0.2)',
           display: 'flex',
           flexDirection: 'column',
           zIndex: 10,
-          animation: 'slideInLeft 0.28s cubic-bezier(0.16, 1, 0.3, 1)',
+          animation: 'slideInLeft 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
           overflowY: 'auto',
           fontFamily: 'var(--font-ui), "Jost", sans-serif',
         }}
       >
-        {/* Header */}
+        {/* Drawer Top Header (Mockup Screen 3) */}
         <div
           style={{
-            padding: '20px 20px 14px 20px',
-            borderBottom: '1px solid #E8D8D0',
+            padding: '16px 20px',
+            borderBottom: '1px solid #E8E7E2',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
+            backgroundColor: '#FFFFFF',
           }}
         >
           <BrandLogo size="compact" />
@@ -118,39 +232,37 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
             onClick={onClose}
             aria-label="Close menu"
             style={{
-              width: '36px',
-              height: '36px',
+              width: '34px',
+              height: '34px',
               borderRadius: '50%',
-              backgroundColor: '#FFE3D3',
+              backgroundColor: '#F8F7F3',
               border: 'none',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#3B2B2B',
+              color: '#111111',
               cursor: 'pointer',
-              transition: 'background-color 0.2s ease',
             }}
           >
-            <X size={18} />
+            <X size={18} strokeWidth={1.5} />
           </button>
         </div>
 
         {/* Search Field */}
-        <div style={{ padding: '16px 20px 8px 20px' }}>
+        <div style={{ padding: '16px 20px', borderBottom: '1px solid #F2F0EA' }}>
           <form onSubmit={handleSearchSubmit}>
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                backgroundColor: '#FFFFFF',
-                borderRadius: '14px',
-                border: '1px solid #E8D8D0',
+                backgroundColor: '#F8F7F3',
+                borderRadius: '0px',
+                border: '1px solid #E8E7E2',
                 padding: '10px 14px',
                 gap: '10px',
-                boxShadow: '0 2px 8px rgba(59, 43, 43, 0.04)',
               }}
             >
-              <Search size={16} color="#806D68" />
+              <Search size={16} color="#6F6F6A" />
               <input
                 type="text"
                 placeholder="Search jewellery..."
@@ -160,333 +272,189 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
                   border: 'none',
                   outline: 'none',
                   backgroundColor: 'transparent',
-                  fontFamily: 'var(--font-ui), "Jost", sans-serif',
-                  fontSize: '0.86rem',
-                  color: '#342727',
                   width: '100%',
+                  fontSize: '0.85rem',
+                  color: '#111111',
+                  fontFamily: 'var(--font-ui), "Jost", sans-serif',
                 }}
               />
             </div>
           </form>
         </div>
 
-        {/* Navigation List */}
-        <nav style={{ padding: '8px 20px', flex: 1 }}>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {/* 0. HOME Link */}
-            <div style={{ borderBottom: '1px solid #F0E2DA' }}>
-              <Link
-                href="/"
-                onClick={onClose}
-                style={{
-                  display: 'block',
-                  padding: '13px 0',
-                  fontSize: '0.9rem',
-                  fontWeight: 600,
-                  letterSpacing: '0.08em',
-                  color: '#342727',
-                  textDecoration: 'none',
-                }}
-              >
-                HOME
-              </Link>
-            </div>
+        {/* Accordion Categories List (Screen 3 in Mockup) */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '8px 0' }}>
+          {ACCORDION_CATEGORIES.map((cat) => {
+            const isOpen = openSection === cat.title;
 
-            {/* 1. SHOP Accordion */}
-            <div style={{ borderBottom: '1px solid #F0E2DA' }}>
-              <button
-                onClick={() => setIsShopOpen(!isShopOpen)}
-                style={{
-                  width: '100%',
-                  padding: '13px 0',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  fontSize: '0.9rem',
-                  fontWeight: 600,
-                  letterSpacing: '0.08em',
-                  color: isShopOpen ? '#B76E79' : '#342727',
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                }}
-              >
-                <span>SHOP</span>
-                <ChevronDown
-                  size={16}
+            return (
+              <div key={cat.title} style={{ borderBottom: '1px solid #F2F0EA' }}>
+                <button
+                  onClick={() => toggleSection(cat.title)}
                   style={{
-                    transform: isShopOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                    transition: 'transform 0.22s ease',
-                    color: isShopOpen ? '#B76E79' : '#806D68',
+                    width: '100%',
+                    padding: '14px 20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    background: 'transparent',
+                    border: 'none',
+                    textAlign: 'left',
+                    fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                    fontSize: '0.78rem',
+                    fontWeight: 600,
+                    letterSpacing: '0.12em',
+                    color: '#111111',
+                    cursor: 'pointer',
                   }}
-                />
-              </button>
+                >
+                  <span>{cat.title}</span>
+                  {isOpen ? (
+                    <Minus size={14} color="#111111" />
+                  ) : (
+                    <Plus size={14} color="#6F6F6A" />
+                  )}
+                </button>
 
-              {isShopOpen && (
-                <div style={{ paddingLeft: '14px', paddingBottom: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  {SHOP_CATEGORIES.map((cat) => (
-                    <Link
-                      key={cat.label}
-                      href={cat.href}
-                      onClick={onClose}
-                      style={{
-                        fontSize: '0.86rem',
-                        color: '#6F5A58',
-                        textDecoration: 'none',
-                        padding: '6px 0',
-                        display: 'block',
-                        transition: 'color 0.18s ease',
-                      }}
-                    >
-                      {cat.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
+                {isOpen && (
+                  <div
+                    style={{
+                      backgroundColor: '#F8F7F3',
+                      padding: '8px 20px 14px 24px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '10px',
+                    }}
+                  >
+                    {cat.items.map((sub) => (
+                      <Link
+                        key={sub.label}
+                        href={sub.href}
+                        onClick={onClose}
+                        style={{
+                          fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                          fontSize: '0.82rem',
+                          color: '#252525',
+                          textDecoration: 'none',
+                          padding: '3px 0',
+                          display: 'block',
+                        }}
+                      >
+                        {sub.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
 
-            {/* 2. COLLECTIONS Accordion */}
-            <div style={{ borderBottom: '1px solid #F0E2DA' }}>
-              <button
-                onClick={() => setIsCollectionsOpen(!isCollectionsOpen)}
-                style={{
-                  width: '100%',
-                  padding: '13px 0',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  fontSize: '0.9rem',
-                  fontWeight: 600,
-                  letterSpacing: '0.08em',
-                  color: isCollectionsOpen ? '#B76E79' : '#342727',
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                }}
-              >
-                <span>COLLECTIONS</span>
-                <ChevronDown
-                  size={16}
-                  style={{
-                    transform: isCollectionsOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                    transition: 'transform 0.22s ease',
-                    color: isCollectionsOpen ? '#B76E79' : '#806D68',
-                  }}
-                />
-              </button>
-
-              {isCollectionsOpen && (
-                <div style={{ paddingLeft: '14px', paddingBottom: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  {COLLECTION_LINKS.map((col) => (
-                    <Link
-                      key={col.label}
-                      href={col.href}
-                      onClick={onClose}
-                      style={{
-                        fontSize: '0.86rem',
-                        color: '#6F5A58',
-                        textDecoration: 'none',
-                        padding: '6px 0',
-                        display: 'block',
-                        transition: 'color 0.18s ease',
-                      }}
-                    >
-                      {col.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* 3. GIFTS */}
-            <div style={{ borderBottom: '1px solid #F0E2DA' }}>
+          {/* Direct Items: NEW ARRIVALS, BEST SELLERS, ABOUT */}
+          {DIRECT_ITEMS.map((item) => (
+            <div key={item.label} style={{ borderBottom: '1px solid #F2F0EA' }}>
               <Link
-                href="/gifts"
+                href={item.href}
                 onClick={onClose}
                 style={{
                   display: 'block',
-                  padding: '13px 0',
-                  fontSize: '0.9rem',
+                  padding: '14px 20px',
+                  fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                  fontSize: '0.78rem',
                   fontWeight: 600,
-                  letterSpacing: '0.08em',
-                  color: '#342727',
+                  letterSpacing: '0.12em',
+                  color: '#111111',
                   textDecoration: 'none',
                 }}
               >
-                GIFTS
+                {item.label}
               </Link>
             </div>
+          ))}
+        </div>
 
-            {/* 4. ABOUT */}
-            <div style={{ borderBottom: '1px solid #F0E2DA' }}>
-              <Link
-                href="/about"
-                onClick={onClose}
-                style={{
-                  display: 'block',
-                  padding: '13px 0',
-                  fontSize: '0.9rem',
-                  fontWeight: 600,
-                  letterSpacing: '0.08em',
-                  color: '#342727',
-                  textDecoration: 'none',
-                }}
-              >
-                ABOUT
-              </Link>
-            </div>
-
-            {/* 5. CONTACT */}
-            <div style={{ borderBottom: '1px solid #F0E2DA' }}>
-              <Link
-                href="/contact"
-                onClick={onClose}
-                style={{
-                  display: 'block',
-                  padding: '13px 0',
-                  fontSize: '0.9rem',
-                  fontWeight: 600,
-                  letterSpacing: '0.08em',
-                  color: '#342727',
-                  textDecoration: 'none',
-                }}
-              >
-                CONTACT
-              </Link>
-            </div>
-
-            {/* 6. FAQ */}
-            <div style={{ borderBottom: '1px solid #F0E2DA' }}>
-              <Link
-                href="/faq"
-                onClick={onClose}
-                style={{
-                  display: 'block',
-                  padding: '13px 0',
-                  fontSize: '0.9rem',
-                  fontWeight: 600,
-                  letterSpacing: '0.08em',
-                  color: '#342727',
-                  textDecoration: 'none',
-                }}
-              >
-                FAQ
-              </Link>
-            </div>
-          </div>
-        </nav>
-
-        {/* WhatsApp Styling Advice Card (Section 3) */}
-        <div style={{ padding: '14px 20px', backgroundColor: '#FCE8DE', margin: '0 16px 12px 16px', borderRadius: '16px', border: '1px solid #E8D8D0' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div>
-              <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#342727' }}>Need styling advice?</div>
-              <div style={{ fontSize: '0.72rem', color: '#806D68' }}>Chat with our silver expert</div>
-            </div>
-            <a
-              href="https://wa.me/917425058118?text=Hi%20MK%20Silver%20Hub%2C%20I%20need%20styling%20advice"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="WhatsApp Styling Advice"
+        {/* Drawer Bottom Quick Actions */}
+        <div
+          style={{
+            padding: '18px 20px',
+            borderTop: '1px solid #E8E7E2',
+            backgroundColor: '#F8F7F3',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px',
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
+            <Link
+              href="/account"
+              onClick={onClose}
               style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '50%',
-                backgroundColor: '#25D366',
-                color: '#FFFFFF',
+                flex: 1,
+                padding: '9px 12px',
+                backgroundColor: '#FFFFFF',
+                border: '1px solid #E8E7E2',
+                color: '#111111',
+                fontSize: '0.74rem',
+                fontWeight: 500,
+                textDecoration: 'none',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 4px 12px rgba(37, 211, 102, 0.35)',
+                gap: '6px',
               }}
             >
-              <MessageCircle size={18} />
-            </a>
-          </div>
-        </div>
+              <User size={14} />
+              <span>Account</span>
+            </Link>
 
-        {/* Bottom Quick Actions (Matching Screen 2 in Reference) */}
-        <div
-          style={{
-            padding: '12px 16px',
-            borderTop: '1px solid #E8D8D0',
-            backgroundColor: '#FFFFFF',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '8px',
-            textAlign: 'center',
-          }}
-        >
-          <Link
-            href="/account"
-            onClick={onClose}
+            <Link
+              href="/wishlist"
+              onClick={onClose}
+              style={{
+                flex: 1,
+                padding: '9px 12px',
+                backgroundColor: '#FFFFFF',
+                border: '1px solid #E8E7E2',
+                color: '#111111',
+                fontSize: '0.74rem',
+                fontWeight: 500,
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+              }}
+            >
+              <Heart size={14} />
+              <span>Wishlist</span>
+            </Link>
+          </div>
+
+          <a
+            href="https://wa.me/917425058118"
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '4px',
-              color: '#806D68',
+              padding: '10px 14px',
+              backgroundColor: '#111111',
+              color: '#FFFFFF',
+              fontSize: '0.74rem',
+              fontWeight: 600,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
               textDecoration: 'none',
-              fontSize: '0.66rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
             }}
           >
-            <User size={18} />
-            <span>My Account</span>
-          </Link>
-          <Link
-            href="/account#orders"
-            onClick={onClose}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '4px',
-              color: '#806D68',
-              textDecoration: 'none',
-              fontSize: '0.66rem',
-            }}
-          >
-            <Package size={18} />
-            <span>My Orders</span>
-          </Link>
-          <Link
-            href="/wishlist"
-            onClick={onClose}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '4px',
-              color: '#806D68',
-              textDecoration: 'none',
-              fontSize: '0.66rem',
-            }}
-          >
-            <Heart size={18} />
-            <span>Wishlist</span>
-          </Link>
-          <Link
-            href="/cart"
-            onClick={onClose}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '4px',
-              color: '#806D68',
-              textDecoration: 'none',
-              fontSize: '0.66rem',
-            }}
-          >
-            <ShoppingBag size={18} />
-            <span>Cart</span>
-          </Link>
+            <MessageCircle size={15} />
+            <span>Chat on WhatsApp</span>
+          </a>
         </div>
       </div>
 
-      <style jsx>{`
+      <style jsx global>{`
         @keyframes fadeIn {
           from { opacity: 0; }
           to { opacity: 1; }

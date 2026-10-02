@@ -119,10 +119,10 @@ img {
 }
 
 .btn-primary:hover {
-  background-color: var(--color-primary-btn-hover);
-  border-color: var(--color-primary-btn-hover);
+  background-color: #252525;
+  border-color: #252525;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(183, 110, 121, 0.28);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 .btn-secondary {
@@ -131,20 +131,21 @@ img {
   justify-content: center;
   gap: var(--space-3);
   background-color: #FFFFFF;
-  color: var(--color-primary-text);
+  color: #111111;
   padding: 14px 30px;
-  border-radius: var(--radius-pill);
+  border-radius: 0px;
   font-size: 0.85rem;
   font-weight: 500;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   transition: all var(--transition-normal);
-  border: 1px solid var(--color-border);
+  border: 1px solid #111111;
 }
 
 .btn-secondary:hover {
-  background-color: var(--bg-peach);
-  border-color: var(--color-primary-btn);
-  color: var(--color-primary-btn);
+  background-color: #F8F7F3;
+  border-color: #111111;
+  color: #111111;
   transform: translateY(-2px);
 }
 
@@ -157,59 +158,60 @@ img {
   backdrop-filter: blur(10px);
   color: #FFFFFF;
   padding: 14px 28px;
-  border-radius: var(--radius-pill);
+  border-radius: 0px;
   font-size: 0.85rem;
   font-weight: 500;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   transition: all var(--transition-normal);
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .btn-outline-light:hover {
   background-color: #FFFFFF;
-  color: var(--color-espresso);
+  color: #111111;
   transform: translateY(-2px);
 }
 
 /* Luxury Card base */
 .luxury-card {
-  background-color: var(--bg-cream);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-card);
+  background-color: #FFFFFF;
+  border: 1px solid #E8E7E2;
+  border-radius: 0px;
   transition: all var(--transition-normal);
   overflow: hidden;
 }
 
 .luxury-card:hover {
-  border-color: rgba(201, 163, 90, 0.5);
-  box-shadow: var(--shadow-card);
+  border-color: #111111;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
-/* Badge System */
 .badge-tag {
   display: inline-block;
   padding: 4px 10px;
   font-size: 0.65rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  border-radius: var(--radius-pill);
+  border-radius: 0px;
 }
 
 .badge-new {
-  background-color: var(--color-espresso);
+  background-color: #111111;
   color: #FFFFFF;
 }
 
 .badge-bestseller {
-  background-color: var(--color-champagne);
-  color: #FFFFFF;
+  background-color: #F8F7F3;
+  color: #111111;
+  border: 1px solid #E8E7E2;
 }
 
 .badge-engravable {
-  background-color: #ECE7DE;
-  color: var(--color-espresso);
-  border: 1px solid var(--color-border);
+  background-color: #F8F7F3;
+  color: #111111;
+  border: 1px solid #E8E7E2;
 }
 
 /* Scrollbar Customization */
@@ -271,14 +273,14 @@ img {
 
 /* Navbar & Header */
 .nav-link:hover {
-  color: var(--color-champagne);
+  color: #111111;
 }
 .action-icon-btn:hover {
-  transform: scale(1.08);
-  background-color: rgba(33, 25, 20, 0.05);
+  transform: scale(1.05);
+  background-color: #F8F7F3;
 }
 .cart-nav-btn:hover {
-  background-color: var(--color-black);
+  background-color: #252525;
   transform: translateY(-1px);
 }
 @media (max-width: 1024px) {
@@ -297,23 +299,23 @@ img {
 
 /* Megamenu */
 .megamenu-item:hover {
-  background-color: rgba(201, 163, 90, 0.1);
+  background-color: #F8F7F3;
 }
 .featured-col-card:hover img {
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 
 /* Product Card */
 .product-card:hover {
-  border-color: rgba(201, 163, 90, 0.4);
-  box-shadow: 0 12px 30px rgba(25, 20, 15, 0.08);
-  transform: translateY(-3px);
+  border-color: #111111;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
 }
 .wishlist-btn:hover {
-  transform: scale(1.15);
+  transform: scale(1.1);
 }
 .add-to-cart-btn:hover {
-  background-color: var(--color-black);
+  background-color: #252525;
 }
 @media (max-width: 768px) {
   .quickview-overlay {

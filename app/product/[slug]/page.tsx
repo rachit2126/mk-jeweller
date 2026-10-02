@@ -7,22 +7,22 @@ import Link from 'next/link';
 import {
   Heart,
   ShoppingBag,
-  ShieldCheck,
   Star,
-  MessageCircle,
   Truck,
   RotateCcw,
-  Sparkles,
-  ChevronDown,
+  ShieldCheck,
   CheckCircle2,
-  RotateCw,
-  Maximize2
+  Share2,
+  ChevronDown,
+  Lock,
 } from 'lucide-react';
 import { Product } from '@/lib/types';
 import { useCommerce } from '@/components/commerce/CommerceContext';
 import { formatPrice } from '@/lib/format';
 import ProductCard from '@/components/products/ProductCard';
-import { useRecentlyViewedStore } from '@/stores/recently-viewed';
+
+const CHAIN_LENGTHS = ['16-inch', '18-inch', '20-inch'];
+const RING_SIZES = ['Size 6', 'Size 7', 'Size 8', 'Size 9', 'Free Size'];
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -32,31 +32,27 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const addRecentlyViewed = useRecentlyViewedStore(state => state.addSlug);
 
   const { addToCart, toggleWishlist, isInWishlist } = useCommerce();
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState('Standard Size');
-  const [activeTab, setActiveTab] = useState<'images' | '360'>('images');
-  const [spinDegree, setSpinDegree] = useState(0);
-  const [isSpinning, setIsSpinning] = useState(false);
-  const [openAccordion, setOpenAccordion] = useState<string | null>('desc');
+  const [selectedOption, setSelectedOption] = useState<string>('18-inch');
+  const [activeAccordion, setActiveAccordion] = useState<string | null>('desc');
+  const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     if (!slug) return;
-    addRecentlyViewed(slug);
 
     let isMounted = true;
     setLoading(true);
 
     fetch(`/api/products/${slug}`)
-      .then(res => {
+      .then((res) => {
         if (!res.ok) throw new Error('Not found');
         return res.json();
       })
-      .then(data => {
+      .then((data) => {
         if (isMounted) {
           setProduct(data.product || null);
           setRelatedProducts(data.relatedProducts || []);
@@ -73,508 +69,772 @@ export default function ProductDetailPage() {
     return () => {
       isMounted = false;
     };
-  }, [slug, addRecentlyViewed]);
+  }, [slug]);
 
   if (loading) {
     return (
-      <div style={{ textAlign: 'center', padding: '140px 20px', minHeight: '60vh', backgroundColor: 'var(--bg-main)' }}>
-        <div style={{ width: '48px', height: '48px', border: '3px solid rgba(183, 110, 121, 0.2)', borderTopColor: '#B76E79', borderRadius: '50%', margin: '0 auto 16px', animation: 'spin 0.8s linear infinite' }} />
-        <p style={{ fontFamily: 'var(--font-ui)', color: 'var(--color-muted-text)', fontSize: '0.9rem', letterSpacing: '0.05em' }}>Loading Jaipur Hallmarked Silver...</p>
+      <div
+        style={{
+          textAlign: 'center',
+          padding: '160px 20px',
+          minHeight: '70vh',
+          backgroundColor: '#FFFFFF',
+        }}
+      >
+        <div
+          style={{
+            width: '40px',
+            height: '40px',
+            border: '2px solid #E8E7E2',
+            borderTopColor: '#111111',
+            borderRadius: '50%',
+            margin: '0 auto 16px',
+            animation: 'spin 0.7s linear infinite',
+          }}
+        />
+        <p style={{ fontFamily: 'var(--font-ui), "Jost", sans-serif', color: '#6F6F6A', fontSize: '0.85rem' }}>
+          Loading 925 Sterling Jewellery Piece...
+        </p>
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div style={{ textAlign: 'center', padding: '120px 20px', minHeight: '60vh', backgroundColor: 'var(--bg-main)' }}>
-        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '2rem' }}>Product Not Found</h2>
-        <p style={{ color: 'var(--color-muted-text)', margin: '12px 0 24px' }}>The jewellery piece you are seeking does not exist or has been archived.</p>
-        <Link href="/shop" className="btn-primary">Browse All Jewellery</Link>
+      <div
+        style={{
+          textAlign: 'center',
+          padding: '120px 20px',
+          minHeight: '60vh',
+          backgroundColor: '#FFFFFF',
+        }}
+      >
+        <h2
+          style={{
+            fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+            fontSize: '2.2rem',
+            margin: '0 0 12px',
+          }}
+        >
+          Jewellery Piece Not Found
+        </h2>
+        <p style={{ color: '#6F6F6A', marginBottom: '24px', fontSize: '0.88rem' }}>
+          The requested silver jewellery item does not exist or has been archived.
+        </p>
+        <Link
+          href="/shop"
+          style={{
+            padding: '12px 28px',
+            backgroundColor: '#111111',
+            color: '#FFFFFF',
+            fontSize: '0.74rem',
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            textDecoration: 'none',
+          }}
+        >
+          Browse All Pieces
+        </Link>
       </div>
     );
   }
 
   const isFavorited = isInWishlist(product.id);
 
-  const whatsappMessage = `Hi MK Silver Hub, I'm interested in ${product.name} (${formatPrice(product.price)}). Can you help me with more details?`;
-  const whatsappUrl = `https://wa.me/917425058118?text=${encodeURIComponent(whatsappMessage)}`;
+  const discountPercent =
+    product.compareAtPrice && product.compareAtPrice > product.price
+      ? Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)
+      : null;
+
+  const handleAddToCart = () => {
+    addToCart(product, quantity, selectedOption);
+  };
 
   const handleBuyNow = () => {
-    addToCart(product, quantity, selectedSize);
+    addToCart(product, quantity, selectedOption);
     router.push('/checkout');
   };
 
-  const toggleAccordion = (id: string) => {
-    setOpenAccordion(prev => (prev === id ? null : id));
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: product.name,
+        url: window.location.href,
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
+    }
   };
 
-  // 360 Spin auto simulation
-  const handleRotate360 = () => {
-    setIsSpinning(true);
-    let deg = spinDegree;
-    const interval = setInterval(() => {
-      deg += 15;
-      setSpinDegree(deg);
-      if (deg >= spinDegree + 360) {
-        clearInterval(interval);
-        setIsSpinning(false);
-      }
-    }, 40);
+  const toggleAccordion = (id: string) => {
+    setActiveAccordion((prev) => (prev === id ? null : id));
   };
+
+  const isRing = product.category?.toLowerCase() === 'rings';
+  const optionsList = isRing ? RING_SIZES : CHAIN_LENGTHS;
 
   return (
-    <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '100vh', padding: '36px 0 100px' }}>
-      <div className="container">
-        {/* Breadcrumbs */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: 'var(--color-muted-text)', marginBottom: '32px' }}>
-          <Link href="/">Home</Link>
+    <div
+      style={{
+        backgroundColor: '#FFFFFF',
+        minHeight: '100vh',
+        padding: '0 0 100px',
+      }}
+    >
+      <div
+        style={{
+          maxWidth: '1440px',
+          margin: '0 auto',
+          padding: '0 clamp(16px, 3.5vw, 40px)',
+          boxSizing: 'border-box',
+        }}
+      >
+        {/* 1. BREADCRUMB (Mockup Screen 5) */}
+        <nav
+          aria-label="Breadcrumb"
+          style={{
+            padding: '24px 0 20px',
+            fontSize: '0.74rem',
+            fontFamily: 'var(--font-ui), "Jost", sans-serif',
+            color: '#6F6F6A',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+        >
+          <Link href="/" style={{ color: '#6F6F6A', textDecoration: 'none' }}>
+            Home
+          </Link>
           <span>/</span>
-          <Link href="/shop">Shop</Link>
+          <Link href={`/shop?category=${product.category}`} style={{ color: '#6F6F6A', textDecoration: 'none', textTransform: 'capitalize' }}>
+            {product.category || 'Jewellery'}
+          </Link>
           <span>/</span>
-          <Link href={`/collections/${product.category}`}>{product.categoryLabel}</Link>
-          <span>/</span>
-          <span style={{ color: 'var(--color-espresso)', fontWeight: 600 }}>{product.name}</span>
-        </div>
+          <span style={{ color: '#111111', fontWeight: 600 }}>{product.name}</span>
+        </nav>
 
-        {/* Product Grid: 55-60% Gallery | 40-45% Info */}
+        {/* 2. MAIN 2-COLUMN PDP LAYOUT (Mockup Screen 5) */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: '1.25fr 1fr',
-            gap: '54px',
-            alignItems: 'start'
+            gridTemplateColumns: 'minmax(0, 1.25fr) minmax(0, 1fr)',
+            gap: 'clamp(28px, 4.5vw, 64px)',
+            alignItems: 'start',
+            marginBottom: '72px',
           }}
-          className="product-detail-grid"
+          className="pdp-main-grid"
         >
-          {/* LEFT: Gallery & 360 Viewer */}
-          <div>
-            {/* View Mode Toggle: Standard Photography vs 360° View */}
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '14px' }}>
-              <button
-                onClick={() => setActiveTab('images')}
-                style={{
-                  padding: '8px 18px',
-                  borderRadius: 'var(--radius-pill)',
-                  fontSize: '0.8rem',
-                  fontWeight: 600,
-                  backgroundColor: activeTab === 'images' ? 'var(--color-espresso)' : 'var(--bg-cream)',
-                  color: activeTab === 'images' ? '#FFFFFF' : 'var(--color-espresso)',
-                  border: '1px solid var(--color-border)',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                Photography Gallery
-              </button>
-              <button
-                onClick={() => setActiveTab('360')}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '8px 18px',
-                  borderRadius: 'var(--radius-pill)',
-                  fontSize: '0.8rem',
-                  fontWeight: 600,
-                  backgroundColor: activeTab === '360' ? 'var(--color-espresso)' : 'var(--bg-cream)',
-                  color: activeTab === '360' ? '#FFFFFF' : 'var(--color-espresso)',
-                  border: '1px solid var(--color-border)',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                <RotateCw size={14} />
-                <span>Interactive 360° Spin</span>
-              </button>
-            </div>
-
-            {activeTab === 'images' ? (
-              <div style={{ display: 'flex', gap: '16px' }} className="gallery-layout">
-                {/* Thumbnails Column (Desktop) */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }} className="gallery-thumbs">
-                  {product.images.map((img, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setSelectedImageIdx(idx)}
-                      style={{
-                        position: 'relative',
-                        width: '74px',
-                        height: '92px',
-                        borderRadius: '10px',
-                        overflow: 'hidden',
-                        border: selectedImageIdx === idx ? '2px solid var(--color-champagne)' : '1px solid var(--color-border)',
-                        opacity: selectedImageIdx === idx ? 1 : 0.65,
-                        transition: 'all 0.2s ease',
-                        backgroundColor: '#F0ECE6'
-                      }}
-                    >
-                      <Image src={img} alt="Thumbnail" fill sizes="80px" style={{ objectFit: 'cover' }} />
-                    </button>
-                  ))}
-                </div>
-
-                {/* Main Hero Photo Container */}
-                <div
-                  style={{
-                    position: 'relative',
-                    flex: 1,
-                    height: '560px',
-                    borderRadius: 'var(--radius-editorial)',
-                    overflow: 'hidden',
-                    backgroundColor: '#EDE8E0',
-                    border: '1px solid var(--color-border)',
-                    boxShadow: 'var(--shadow-card)'
-                  }}
-                  className="main-photo-box"
-                >
-                  <Image
-                    src={product.images[selectedImageIdx] || product.images[0]}
-                    alt={product.name}
-                    fill
-                    priority
-                    sizes="(max-width: 1024px) 100vw, 55vw"
-                    style={{ objectFit: 'cover', transition: 'opacity 0.3s ease' }}
-                  />
-
-                  {product.badge && (
-                    <span
-                      style={{
-                        position: 'absolute',
-                        top: '16px',
-                        left: '16px',
-                        padding: '6px 14px',
-                        borderRadius: 'var(--radius-pill)',
-                        backgroundColor: 'var(--color-espresso)',
-                        color: '#FFFFFF',
-                        fontSize: '0.72rem',
-                        fontWeight: 600,
-                        letterSpacing: '0.08em'
-                      }}
-                    >
-                      {product.badge}
-                    </span>
-                  )}
-                </div>
-              </div>
-            ) : (
-              /* 360° Interactive Simulator */
+          {/* ================================================================= */}
+          {/* LEFT: GALLERY WITH VERTICAL THUMBNAILS & LARGE MAIN VIEW          */}
+          {/* ================================================================= */}
+          <div style={{ display: 'flex', gap: '16px' }} className="pdp-gallery-container">
+            {/* Vertical Thumbnail Strip */}
+            {product.images && product.images.length > 1 && (
               <div
                 style={{
-                  position: 'relative',
-                  width: '100%',
-                  height: '560px',
-                  borderRadius: 'var(--radius-editorial)',
-                  backgroundColor: '#EAE5DC',
-                  border: '1px solid var(--color-border)',
                   display: 'flex',
                   flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '24px',
-                  boxShadow: 'var(--shadow-card)',
-                  overflow: 'hidden'
+                  gap: '12px',
+                  width: '74px',
+                  flexShrink: 0,
                 }}
+                className="pdp-thumb-strip"
               >
-                <div
-                  style={{
-                    position: 'relative',
-                    width: '320px',
-                    height: '380px',
-                    transform: `rotate(${spinDegree}deg)`,
-                    transition: isSpinning ? 'transform 0.05s linear' : 'transform 0.3s ease',
-                    filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.18))'
-                  }}
-                >
-                  <Image
-                    src={product.images[0]}
-                    alt={`${product.name} 360 view`}
-                    fill
-                    sizes="340px"
-                    style={{ objectFit: 'contain' }}
-                  />
-                </div>
-
-                {/* 360 Controls */}
-                <div style={{ position: 'absolute', bottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                {product.images.map((img, idx) => (
                   <button
-                    onClick={handleRotate360}
-                    className="btn-primary"
-                    style={{ padding: '10px 20px', fontSize: '0.8rem' }}
+                    key={idx}
+                    onClick={() => setSelectedImageIdx(idx)}
+                    style={{
+                      position: 'relative',
+                      width: '74px',
+                      height: '92px',
+                      border: selectedImageIdx === idx ? '1.5px solid #111111' : '1px solid #E8E7E2',
+                      backgroundColor: '#F8F7F3',
+                      overflow: 'hidden',
+                      cursor: 'pointer',
+                      padding: 0,
+                      opacity: selectedImageIdx === idx ? 1 : 0.7,
+                      transition: 'all 0.2s ease',
+                    }}
                   >
-                    <RotateCw size={15} />
-                    <span>Auto Spin 360°</span>
+                    <Image
+                      src={img}
+                      alt={`${product.name} thumbnail ${idx + 1}`}
+                      fill
+                      sizes="80px"
+                      style={{ objectFit: 'cover' }}
+                    />
                   </button>
-                  <button
-                    onClick={() => setSpinDegree(prev => prev + 45)}
-                    className="btn-secondary"
-                    style={{ padding: '10px 16px', fontSize: '0.8rem' }}
-                  >
-                    +45° Step
-                  </button>
-                  <button
-                    onClick={() => setSpinDegree(0)}
-                    className="btn-secondary"
-                    style={{ padding: '10px 16px', fontSize: '0.8rem' }}
-                  >
-                    Reset Angle
-                  </button>
-                </div>
+                ))}
               </div>
             )}
+
+            {/* Large Hero Product Photo */}
+            <div
+              style={{
+                position: 'relative',
+                flex: 1,
+                paddingTop: '118%',
+                backgroundColor: '#F8F7F3',
+                border: '1px solid #E8E7E2',
+                overflow: 'hidden',
+              }}
+              className="pdp-main-image-wrapper"
+            >
+              <Image
+                src={product.images[selectedImageIdx] || product.images[0]}
+                alt={product.name}
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 55vw"
+                style={{ objectFit: 'cover' }}
+              />
+
+              {/* Wishlist Button on Image Top-Right */}
+              <button
+                onClick={() => toggleWishlist(product)}
+                aria-label={isFavorited ? 'Remove from wishlist' : 'Add to wishlist'}
+                style={{
+                  position: 'absolute',
+                  top: '16px',
+                  right: '16px',
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(255, 255, 255, 0.92)',
+                  border: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  zIndex: 2,
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
+                }}
+              >
+                <Heart
+                  size={18}
+                  fill={isFavorited ? '#111111' : 'none'}
+                  color={isFavorited ? '#111111' : '#6F6F6A'}
+                  strokeWidth={1.5}
+                />
+              </button>
+            </div>
           </div>
 
-          {/* RIGHT: Product Information */}
-          <div>
-            {/* Hallmark Assurance Badge */}
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: 'var(--radius-pill)', backgroundColor: 'rgba(201, 163, 90, 0.12)', color: 'var(--color-espresso)', fontSize: '0.78rem', fontWeight: 600, marginBottom: '14px' }}>
-              <ShieldCheck size={16} color="var(--color-champagne)" />
-              <span>BIS 925 Hallmark Certified • Pure Sterling Silver</span>
-            </div>
-
+          {/* ================================================================= */}
+          {/* RIGHT: PRODUCT INFORMATION & COMMERCE ACTIONS                    */}
+          {/* ================================================================= */}
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
             {/* Title */}
             <h1
               style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(2rem, 3.2vw, 2.6rem)',
-                fontWeight: 600,
-                lineHeight: 1.15,
-                color: 'var(--color-espresso)',
-                marginBottom: '12px'
+                fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+                fontSize: 'clamp(1.9rem, 3.2vw, 2.6rem)',
+                fontWeight: 500,
+                color: '#111111',
+                margin: '0 0 10px',
+                lineHeight: 1.18,
+                letterSpacing: '0.02em',
               }}
             >
               {product.name}
             </h1>
 
-            {/* Rating & Reviews */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '18px' }}>
-              <div style={{ display: 'flex', color: '#D4AF37' }}>
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={15} fill={i < Math.floor(product.rating) ? '#D4AF37' : 'none'} color="#D4AF37" />
-                ))}
-              </div>
-              <span style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--color-espresso)' }}>
-                {product.rating}
-              </span>
-              <span style={{ fontSize: '0.85rem', color: 'var(--color-muted-text)' }}>
-                ({product.reviewsCount} customer reviews)
-              </span>
-            </div>
-
-            {/* Price Box */}
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '14px', marginBottom: '24px', paddingBottom: '20px', borderBottom: '1px solid var(--color-border)' }}>
-              <span style={{ fontSize: '1.85rem', fontWeight: 700, color: 'var(--color-espresso)' }}>
+            {/* Price & Discount */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px' }}>
+              <span
+                style={{
+                  fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                  fontSize: '1.45rem',
+                  fontWeight: 600,
+                  color: '#111111',
+                }}
+              >
                 {formatPrice(product.price)}
               </span>
-              {product.compareAtPrice && (
-                <>
-                  <span style={{ fontSize: '1.15rem', color: 'var(--color-light-text)', textDecoration: 'line-through' }}>
-                    {formatPrice(product.compareAtPrice)}
-                  </span>
-                  <span style={{ fontSize: '0.9rem', color: 'var(--color-copper)', fontWeight: 700, backgroundColor: 'rgba(154, 79, 47, 0.1)', padding: '4px 10px', borderRadius: 'var(--radius-pill)' }}>
-                    Save {product.discountPercent}%
-                  </span>
-                </>
+              {product.compareAtPrice && product.compareAtPrice > product.price && (
+                <span
+                  style={{
+                    fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                    fontSize: '1.05rem',
+                    color: '#6F6F6A',
+                    textDecoration: 'line-through',
+                  }}
+                >
+                  {formatPrice(product.compareAtPrice)}
+                </span>
               )}
-              <span style={{ fontSize: '0.75rem', color: 'var(--color-muted-text)' }}>
-                (Inclusive of all taxes)
+              {discountPercent && (
+                <span
+                  style={{
+                    fontSize: '0.72rem',
+                    fontWeight: 600,
+                    letterSpacing: '0.06em',
+                    backgroundColor: '#F8F7F3',
+                    border: '1px solid #D8D5CE',
+                    color: '#111111',
+                    padding: '3px 8px',
+                  }}
+                >
+                  ({discountPercent}% OFF)
+                </span>
+              )}
+            </div>
+
+            {/* Rating & Reviews */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '20px' }}>
+              <div style={{ display: 'flex', gap: '2px' }}>
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <Star
+                    key={s}
+                    size={13}
+                    fill={s <= Math.round(product.rating || 5) ? '#111111' : 'none'}
+                    color="#111111"
+                    strokeWidth={1}
+                  />
+                ))}
+              </div>
+              <span
+                style={{
+                  fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                  fontSize: '0.78rem',
+                  color: '#6F6F6A',
+                  marginLeft: '4px',
+                }}
+              >
+                ({product.reviewsCount || product.numReviews || 86} reviews)
               </span>
             </div>
 
-            {/* Weight & Metal Highlights */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '24px' }}>
-              <div style={{ padding: '12px', borderRadius: '10px', backgroundColor: 'var(--bg-cream)', border: '1px solid var(--color-border)', textAlign: 'center' }}>
-                <span style={{ fontSize: '0.7rem', color: 'var(--color-muted-text)', textTransform: 'uppercase', display: 'block' }}>Silver Weight</span>
-                <strong style={{ fontSize: '0.95rem', color: 'var(--color-espresso)' }}>{product.weight}</strong>
+            {/* Short Editorial Description */}
+            <p
+              style={{
+                fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                fontSize: '0.88rem',
+                lineHeight: 1.6,
+                color: '#4A4A46',
+                margin: '0 0 24px',
+                paddingBottom: '20px',
+                borderBottom: '1px solid #E8E7E2',
+              }}
+            >
+              {product.description ||
+                'A timeless solitaire piece crafted in pure 925 sterling silver with precision diamond-cut stones and hypoallergenic protective rhodium finish.'}
+            </p>
+
+            {/* Specifications list */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: '12px',
+                marginBottom: '24px',
+                fontSize: '0.8rem',
+                fontFamily: 'var(--font-ui), "Jost", sans-serif',
+              }}
+            >
+              <div>
+                <span style={{ color: '#6F6F6A' }}>Material: </span>
+                <strong style={{ color: '#111111', fontWeight: 600 }}>925 Sterling Silver</strong>
               </div>
-              <div style={{ padding: '12px', borderRadius: '10px', backgroundColor: 'var(--bg-cream)', border: '1px solid var(--color-border)', textAlign: 'center' }}>
-                <span style={{ fontSize: '0.7rem', color: 'var(--color-muted-text)', textTransform: 'uppercase', display: 'block' }}>Purity Grade</span>
-                <strong style={{ fontSize: '0.95rem', color: 'var(--color-espresso)' }}>925 Sterling</strong>
-              </div>
-              <div style={{ padding: '12px', borderRadius: '10px', backgroundColor: 'var(--bg-cream)', border: '1px solid var(--color-border)', textAlign: 'center' }}>
-                <span style={{ fontSize: '0.7rem', color: 'var(--color-muted-text)', textTransform: 'uppercase', display: 'block' }}>Protection</span>
-                <strong style={{ fontSize: '0.95rem', color: 'var(--color-espresso)' }}>Rhodium Seal</strong>
+              <div>
+                <span style={{ color: '#6F6F6A' }}>Finish: </span>
+                <strong style={{ color: '#111111', fontWeight: 600 }}>Anti-Tarnish Rhodium</strong>
               </div>
             </div>
 
-            {/* Size / Variant Selector if rings/bangles */}
-            {['rings', 'bracelets'].includes(product.category) && (
-              <div style={{ marginBottom: '24px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '8px' }}>
-                  <span style={{ fontWeight: 600 }}>Select Size:</span>
-                  <Link href="/faq" style={{ color: 'var(--color-champagne)', fontSize: '0.78rem', textDecoration: 'underline' }}>
-                    View Sizing Guide
-                  </Link>
-                </div>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  {['Size S (2.4)', 'Size M (2.6)', 'Size L (2.8)', 'Adjustable'].map(sz => (
+            {/* Size / Length Selector */}
+            <div style={{ marginBottom: '24px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  fontSize: '0.76rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  marginBottom: '10px',
+                  color: '#111111',
+                }}
+              >
+                <span>{isRing ? 'Ring Size:' : 'Chain Length:'}</span>
+                <Link
+                  href="/size-guide"
+                  style={{
+                    color: '#6F6F6A',
+                    textDecoration: 'underline',
+                    fontSize: '0.72rem',
+                    textTransform: 'none',
+                    fontWeight: 400,
+                  }}
+                >
+                  Size Guide
+                </Link>
+              </div>
+
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                {optionsList.map((opt) => {
+                  const isSelected = selectedOption === opt;
+                  return (
                     <button
-                      key={sz}
-                      onClick={() => setSelectedSize(sz)}
+                      key={opt}
+                      onClick={() => setSelectedOption(opt)}
                       style={{
-                        padding: '8px 14px',
-                        borderRadius: '8px',
-                        border: selectedSize === sz ? '2px solid var(--color-espresso)' : '1px solid var(--color-border)',
-                        backgroundColor: selectedSize === sz ? 'var(--color-espresso)' : '#FFFFFF',
-                        color: selectedSize === sz ? '#FFFFFF' : 'var(--color-espresso)',
-                        fontSize: '0.8rem',
-                        fontWeight: 600
+                        padding: '8px 16px',
+                        border: isSelected ? '1.5px solid #111111' : '1px solid #E8E7E2',
+                        backgroundColor: isSelected ? '#111111' : '#FFFFFF',
+                        color: isSelected ? '#FFFFFF' : '#111111',
+                        fontSize: '0.76rem',
+                        fontWeight: 500,
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease',
                       }}
                     >
-                      {sz}
+                      {opt}
                     </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Quantity Stepper */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px' }}>
-              <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--color-espresso)' }}>Quantity:</span>
-              <div style={{ display: 'inline-flex', alignItems: 'center', border: '1px solid var(--color-border)', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
-                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} style={{ padding: '8px 14px', color: 'var(--color-espresso)' }}>-</button>
-                <span style={{ minWidth: '32px', textAlign: 'center', fontWeight: 600 }}>{quantity}</span>
-                <button onClick={() => setQuantity(quantity + 1)} style={{ padding: '8px 14px', color: 'var(--color-espresso)' }}>+</button>
+                  );
+                })}
               </div>
             </div>
 
-            {/* Core Action CTAs */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '28px' }}>
-              <div style={{ display: 'flex', gap: '12px' }}>
+            {/* Quantity Selector */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '28px' }}>
+              <span
+                style={{
+                  fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                  fontSize: '0.76rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: '#111111',
+                }}
+              >
+                Quantity:
+              </span>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: '1px solid #E8E7E2',
+                }}
+              >
                 <button
-                  onClick={() => addToCart(product, quantity, selectedSize)}
-                  className="btn-primary"
-                  style={{ flex: 1, padding: '16px', fontSize: '0.92rem' }}
-                >
-                  <ShoppingBag size={18} />
-                  <span>Add To Bag</span>
-                </button>
-
-                <button
-                  onClick={() => toggleWishlist(product)}
-                  aria-label="Save to wishlist"
+                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                   style={{
-                    width: '54px',
-                    height: '54px',
-                    borderRadius: 'var(--radius-pill)',
-                    border: '1px solid var(--color-border)',
-                    backgroundColor: '#FFFFFF',
+                    width: '36px',
+                    height: '36px',
+                    border: 'none',
+                    background: 'none',
+                    cursor: 'pointer',
+                    fontSize: '1.1rem',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: isFavorited ? '#E53E3E' : 'var(--color-espresso)',
-                    flexShrink: 0
                   }}
                 >
-                  <Heart size={22} fill={isFavorited ? '#E53E3E' : 'none'} />
+                  -
+                </button>
+                <span
+                  style={{
+                    width: '36px',
+                    textAlign: 'center',
+                    fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                    fontSize: '0.85rem',
+                    fontWeight: 600,
+                  }}
+                >
+                  {quantity}
+                </span>
+                <button
+                  onClick={() => setQuantity((q) => q + 1)}
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    border: 'none',
+                    background: 'none',
+                    cursor: 'pointer',
+                    fontSize: '1.1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  +
                 </button>
               </div>
+            </div>
 
-              {/* Buy Now Direct Button */}
+            {/* CTA Buttons (ADD TO BAG & BUY NOW) */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '24px' }}>
               <button
-                onClick={handleBuyNow}
-                className="btn-secondary"
+                onClick={handleAddToCart}
                 style={{
                   width: '100%',
-                  padding: '15px',
-                  backgroundColor: 'var(--color-champagne)',
-                  color: 'var(--color-espresso)',
-                  borderColor: 'var(--color-champagne)',
-                  fontWeight: 700
-                }}
-              >
-                <span>Buy It Now • Instant Checkout</span>
-              </button>
-
-              {/* WhatsApp Consultation Button with dynamic product prefill */}
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
+                  padding: '14px 0',
+                  backgroundColor: '#111111',
+                  color: '#FFFFFF',
+                  border: '1px solid #111111',
+                  fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                  fontSize: '0.78rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '8px',
-                  padding: '13px',
-                  borderRadius: 'var(--radius-pill)',
-                  backgroundColor: '#E8F8EE',
-                  color: '#128C7E',
-                  fontSize: '0.88rem',
+                  transition: 'background-color 0.2s ease',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#252525')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#111111')}
+              >
+                <ShoppingBag size={16} />
+                <span>ADD TO BAG</span>
+              </button>
+
+              <button
+                onClick={handleBuyNow}
+                style={{
+                  width: '100%',
+                  padding: '14px 0',
+                  backgroundColor: '#FFFFFF',
+                  color: '#111111',
+                  border: '1px solid #111111',
+                  fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                  fontSize: '0.78rem',
                   fontWeight: 600,
-                  border: '1px solid rgba(37, 211, 102, 0.4)',
-                  transition: 'background-color 0.2s ease'
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#F8F7F3';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FFFFFF';
                 }}
               >
-                <MessageCircle size={18} />
-                <span>Ask Details on WhatsApp</span>
-              </a>
+                BUY NOW
+              </button>
             </div>
 
-            {/* Quick Guarantees */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '16px', backgroundColor: '#F4EFE8', borderRadius: '12px', fontSize: '0.82rem', color: 'var(--color-espresso)', marginBottom: '32px' }}>
+            {/* Secondary Wishlist / Share Actions */}
+            <div
+              style={{
+                display: 'flex',
+                gap: '24px',
+                paddingBottom: '24px',
+                borderBottom: '1px solid #E8E7E2',
+                marginBottom: '24px',
+              }}
+            >
+              <button
+                onClick={() => toggleWishlist(product)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  color: isFavorited ? '#111111' : '#6F6F6A',
+                  fontSize: '0.78rem',
+                  fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                  cursor: 'pointer',
+                  padding: 0,
+                }}
+              >
+                <Heart size={14} fill={isFavorited ? '#111111' : 'none'} />
+                <span>{isFavorited ? 'In Wishlist' : 'Add to Wishlist'}</span>
+              </button>
+
+              <button
+                onClick={handleShare}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  color: '#6F6F6A',
+                  fontSize: '0.78rem',
+                  fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                  cursor: 'pointer',
+                  padding: 0,
+                }}
+              >
+                <Share2 size={14} />
+                <span>{isCopied ? 'Link Copied!' : 'Share'}</span>
+              </button>
+            </div>
+
+            {/* 4 Trust Benefits Strip (Mockup Screen 5) */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: '14px',
+                padding: '16px',
+                backgroundColor: '#F8F7F3',
+                border: '1px solid #E8E7E2',
+                marginBottom: '28px',
+              }}
+            >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Truck size={16} color="var(--color-champagne)" />
-                <span>Complimentary insured shipping on orders above ₹999</span>
+                <Truck size={17} color="#111111" />
+                <div>
+                  <div style={{ fontSize: '0.76rem', fontWeight: 600, color: '#111111' }}>Free Shipping</div>
+                  <div style={{ fontSize: '0.68rem', color: '#6F6F6A' }}>Above ₹1,000</div>
+                </div>
               </div>
+
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <RotateCcw size={16} color="var(--color-champagne)" />
-                <span>15-day hassle-free doorstep returns and exchanges</span>
+                <RotateCcw size={17} color="#111111" />
+                <div>
+                  <div style={{ fontSize: '0.76rem', fontWeight: 600, color: '#111111' }}>Easy Returns</div>
+                  <div style={{ fontSize: '0.68rem', color: '#6F6F6A' }}>7 Days Hassle-Free</div>
+                </div>
               </div>
+
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <CheckCircle2 size={16} color="var(--color-champagne)" />
-                <span>Includes anti-tarnish storage pouch & purity certificate</span>
+                <ShieldCheck size={17} color="#111111" />
+                <div>
+                  <div style={{ fontSize: '0.76rem', fontWeight: 600, color: '#111111' }}>925 Silver</div>
+                  <div style={{ fontSize: '0.68rem', color: '#6F6F6A' }}>BIS Hallmarked</div>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Lock size={17} color="#111111" />
+                <div>
+                  <div style={{ fontSize: '0.76rem', fontWeight: 600, color: '#111111' }}>Safe Payments</div>
+                  <div style={{ fontSize: '0.68rem', color: '#6F6F6A' }}>100% Encrypted</div>
+                </div>
               </div>
             </div>
 
-            {/* Detailed Accordions */}
-            <div style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid var(--color-border)' }}>
+            {/* Product Accordions (Description, Specs, Shipping, Returns, Reviews) */}
+            <div style={{ borderTop: '1px solid #E8E7E2' }}>
               {/* Accordion 1: Description */}
-              <div style={{ borderBottom: '1px solid var(--color-border)' }}>
+              <div style={{ borderBottom: '1px solid #E8E7E2' }}>
                 <button
                   onClick={() => toggleAccordion('desc')}
-                  style={{ width: '100%', padding: '16px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 600, fontSize: '0.95rem', color: 'var(--color-espresso)' }}
+                  style={{
+                    width: '100%',
+                    padding: '16px 0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontSize: '0.82rem',
+                    fontWeight: 600,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    color: '#111111',
+                  }}
                 >
-                  <span>Description & Story</span>
-                  <ChevronDown size={18} style={{ transform: openAccordion === 'desc' ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }} />
+                  <span>Description</span>
+                  <ChevronDown
+                    size={16}
+                    style={{
+                      transform: activeAccordion === 'desc' ? 'rotate(180deg)' : 'none',
+                      transition: 'transform 0.2s ease',
+                    }}
+                  />
                 </button>
-                {openAccordion === 'desc' && (
-                  <div style={{ paddingBottom: '16px', fontSize: '0.9rem', color: 'var(--color-muted-text)', lineHeight: 1.6 }}>
-                    {product.description}
+                {activeAccordion === 'desc' && (
+                  <div style={{ paddingBottom: '16px', fontSize: '0.84rem', lineHeight: 1.6, color: '#4A4A46' }}>
+                    <p style={{ margin: 0 }}>
+                      Each piece is hand-sculpted in solid 925 sterling silver by master craftsmen in Jaipur. Finished with a protective rhodium layer for unmatched tarnish resistance and everyday durability.
+                    </p>
                   </div>
                 )}
               </div>
 
-              {/* Accordion 2: Material & Purity */}
-              <div style={{ borderBottom: '1px solid var(--color-border)' }}>
+              {/* Accordion 2: Specifications */}
+              <div style={{ borderBottom: '1px solid #E8E7E2' }}>
                 <button
-                  onClick={() => toggleAccordion('mat')}
-                  style={{ width: '100%', padding: '16px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 600, fontSize: '0.95rem', color: 'var(--color-espresso)' }}
+                  onClick={() => toggleAccordion('specs')}
+                  style={{
+                    width: '100%',
+                    padding: '16px 0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontSize: '0.82rem',
+                    fontWeight: 600,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    color: '#111111',
+                  }}
                 >
-                  <span>Material & Purity Specifications</span>
-                  <ChevronDown size={18} style={{ transform: openAccordion === 'mat' ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }} />
+                  <span>Specifications</span>
+                  <ChevronDown
+                    size={16}
+                    style={{
+                      transform: activeAccordion === 'specs' ? 'rotate(180deg)' : 'none',
+                      transition: 'transform 0.2s ease',
+                    }}
+                  />
                 </button>
-                {openAccordion === 'mat' && (
-                  <div style={{ paddingBottom: '16px', fontSize: '0.85rem', color: 'var(--color-muted-text)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                    <div><strong>Metal:</strong> {product.details.material}</div>
-                    <div><strong>Finish:</strong> {product.details.plating}</div>
-                    <div><strong>Dimensions:</strong> {product.details.dimensions}</div>
-                    <div><strong>Stone Setting:</strong> {product.details.gemstone || 'Pure Silver Sculpted'}</div>
-                    <div><strong>Clasp / Fastening:</strong> {product.details.claspType || 'Comfort Fastening'}</div>
-                    <div><strong>Stamp Certification:</strong> {product.details.hallmark}</div>
+                {activeAccordion === 'specs' && (
+                  <div style={{ paddingBottom: '16px', fontSize: '0.82rem', lineHeight: 1.6, color: '#4A4A46' }}>
+                    <ul style={{ margin: 0, paddingLeft: '18px' }}>
+                      <li>Purity: 92.5% Solid Sterling Silver (Hallmarked)</li>
+                      <li>Plating: Anti-Tarnish High-Gloss Rhodium Seal</li>
+                      <li>Stone: Premium AAA Grade Cubic Zirconia</li>
+                      <li>Weight: Approx 4.2 grams</li>
+                      <li>Origin: Jaipur, Rajasthan, India</li>
+                    </ul>
                   </div>
                 )}
               </div>
 
-              {/* Accordion 3: Care Guidelines */}
-              <div style={{ borderBottom: '1px solid var(--color-border)' }}>
+              {/* Accordion 3: Shipping & Returns */}
+              <div style={{ borderBottom: '1px solid #E8E7E2' }}>
                 <button
-                  onClick={() => toggleAccordion('care')}
-                  style={{ width: '100%', padding: '16px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 600, fontSize: '0.95rem', color: 'var(--color-espresso)' }}
+                  onClick={() => toggleAccordion('shipping')}
+                  style={{
+                    width: '100%',
+                    padding: '16px 0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontSize: '0.82rem',
+                    fontWeight: 600,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    color: '#111111',
+                  }}
                 >
-                  <span>Care & Maintenance</span>
-                  <ChevronDown size={18} style={{ transform: openAccordion === 'care' ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }} />
+                  <span>Shipping & Returns</span>
+                  <ChevronDown
+                    size={16}
+                    style={{
+                      transform: activeAccordion === 'shipping' ? 'rotate(180deg)' : 'none',
+                      transition: 'transform 0.2s ease',
+                    }}
+                  />
                 </button>
-                {openAccordion === 'care' && (
-                  <div style={{ paddingBottom: '16px', fontSize: '0.88rem', color: 'var(--color-muted-text)', lineHeight: 1.6 }}>
-                    Store in the provided airtight MK Silver Hub anti-tarnish pouch. Keep away from harsh perfumes, chemicals, and saltwater. Clean gently with a soft micro-fiber cloth to restore mirror luster.
+                {activeAccordion === 'shipping' && (
+                  <div style={{ paddingBottom: '16px', fontSize: '0.84rem', lineHeight: 1.6, color: '#4A4A46' }}>
+                    <p style={{ margin: '0 0 8px' }}>
+                      Orders are dispatched within 24–48 hours in tamper-proof luxury packaging. Standard insured delivery takes 3–5 business days across India.
+                    </p>
+                    <p style={{ margin: 0 }}>
+                      We offer a 7-day hassle-free return and exchange window on all unworn items with security tag intact.
+                    </p>
                   </div>
                 )}
               </div>
@@ -582,18 +842,37 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        {/* Complete The Look / Related Products */}
+        {/* 3. RELATED PRODUCTS: "YOU MAY ALSO LIKE" */}
         {relatedProducts.length > 0 && (
-          <div style={{ marginTop: '90px' }}>
+          <div style={{ marginTop: '80px', borderTop: '1px solid #E8E7E2', paddingTop: '56px' }}>
             <div style={{ textAlign: 'center', marginBottom: '36px' }}>
-              <span className="eyebrow">COMPLETE YOUR LOOK</span>
-              <h2 style={{ fontSize: 'clamp(2rem, 3.2vw, 2.6rem)', color: 'var(--color-espresso)' }}>
-                Complementary Pieces
+              <h2
+                style={{
+                  fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+                  fontSize: 'clamp(1.8rem, 3vw, 2.4rem)',
+                  fontWeight: 500,
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase',
+                  color: '#111111',
+                  margin: '0 0 8px',
+                }}
+              >
+                YOU MAY ALSO LIKE
               </h2>
+              <p style={{ fontFamily: 'var(--font-ui), "Jost", sans-serif', fontSize: '0.84rem', color: '#6F6F6A', margin: 0 }}>
+                Curated companions to elevate your silver jewellery collection.
+              </p>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }} className="related-grid">
-              {relatedProducts.map(p => (
-                <ProductCard key={p.id} product={p} />
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                gap: '24px',
+              }}
+            >
+              {relatedProducts.slice(0, 4).map((p) => (
+                <ProductCard key={p.id || p.slug} product={p} />
               ))}
             </div>
           </div>
@@ -601,29 +880,24 @@ export default function ProductDetailPage() {
       </div>
 
       <style jsx>{`
-        @media (max-width: 1024px) {
-          .product-detail-grid {
-            grid-template-columns: 1fr !important;
-            gap: 40px !important;
-          }
-          .related-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
+        @keyframes spin {
+          to {
+            transform: rotate(360deg);
           }
         }
-        @media (max-width: 640px) {
-          .gallery-layout {
+
+        @media (max-width: 900px) {
+          .pdp-main-grid {
+            grid-template-columns: 1fr !important;
+            gap: 32px !important;
+          }
+          .pdp-gallery-container {
             flex-direction: column-reverse !important;
           }
-          .gallery-thumbs {
+          .pdp-thumb-strip {
             flex-direction: row !important;
+            width: 100% !important;
             overflow-x: auto;
-          }
-          .main-photo-box {
-            height: 380px !important;
-          }
-          .related-grid {
-            grid-template-columns: 1fr 1fr !important;
-            gap: 12px !important;
           }
         }
       `}</style>

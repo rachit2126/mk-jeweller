@@ -1,208 +1,346 @@
 'use client';
-import React, { useRef, useState, useEffect } from 'react';
+
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
-import ProductCard from '@/components/products/ProductCard';
+import Image from 'next/image';
+import { ChevronRight, ChevronLeft, Heart, ArrowRight } from 'lucide-react';
 import { Product } from '@/lib/types';
+import { useCommerce } from '@/components/commerce/CommerceContext';
+import { formatPrice } from '@/lib/format';
 
 export default function NewArrivalsSection() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [newArrivals, setNewArrivals] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const { addToCart, toggleWishlist, isInWishlist } = useCommerce();
 
   useEffect(() => {
     fetch('/api/products?isNewArrival=true&limit=8')
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data.products && data.products.length > 0) {
-          setNewArrivals(data.products);
+          setProducts(data.products);
         }
       })
-      .catch(err => console.error('Failed to load new arrivals:', err));
+      .catch((err) => console.error('Failed to load new arrivals:', err))
+      .finally(() => setLoading(false));
   }, []);
 
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollRef.current) {
-      const offset = direction === 'left' ? -320 : 320;
-      scrollRef.current.scrollBy({ left: offset, behavior: 'smooth' });
+  const scrollLeft = () => {
+    if (sliderRef.current) {
+      sliderRef.current.scrollBy({ left: -300, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (sliderRef.current) {
+      sliderRef.current.scrollBy({ left: 300, behavior: 'smooth' });
     }
   };
 
   return (
     <section
+      id="new-arrivals"
+      aria-label="MK Silver Hub New Arrivals"
       style={{
-        backgroundColor: '#FFF9F3',
-        padding: 'clamp(48px, 6vw, 84px) 0',
-        position: 'relative',
-        borderTop: '1px solid rgba(232, 216, 208, 0.65)',
-        borderBottom: '1px solid rgba(232, 216, 208, 0.65)',
+        width: '100%',
+        backgroundColor: '#F8F7F3',
+        padding: 'clamp(56px, 7vw, 96px) 0',
       }}
     >
-      <div className="container" style={{ maxWidth: '1440px', margin: '0 auto', padding: '0 clamp(16px, 4vw, 32px)' }}>
-        {/* Header */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'flex-end',
-            justifyContent: 'space-between',
-            marginBottom: '32px',
-            flexWrap: 'wrap',
-            gap: '16px',
-          }}
-        >
-          <div>
-            <div
+      <div
+        style={{
+          maxWidth: '1440px',
+          margin: '0 auto',
+          padding: '0 clamp(16px, 3vw, 40px)',
+        }}
+      >
+        <div className="new-arrivals-layout">
+          {/* Left Column: Heading, Subtitle & Shop Now CTA */}
+          <div className="new-arrivals-header-col">
+            <span
               style={{
-                fontFamily: 'var(--font-ui), "Jost", sans-serif',
-                fontSize: '0.74rem',
+                fontFamily: 'var(--font-ui), "Jost", -apple-system, sans-serif',
+                fontSize: '0.72rem',
                 fontWeight: 600,
-                letterSpacing: '0.24em',
-                color: '#B76E79',
+                letterSpacing: '0.18em',
                 textTransform: 'uppercase',
-                marginBottom: '6px',
+                color: '#6F6F6A',
+                display: 'block',
+                marginBottom: '8px',
               }}
             >
-              NEW ARRIVALS
-            </div>
+              JUST IN
+            </span>
+
             <h2
               style={{
                 fontFamily: 'var(--font-display), "Cormorant Garamond", Georgia, serif',
-                fontSize: 'clamp(2.1rem, 3.4vw, 3rem)',
+                fontSize: 'clamp(2rem, 3.4vw, 2.8rem)',
                 fontWeight: 500,
-                color: '#342727',
-                lineHeight: 1.12,
-                margin: 0,
+                letterSpacing: '0.02em',
+                color: '#111111',
+                margin: '0 0 10px 0',
+                lineHeight: 1.1,
               }}
             >
-              Freshly crafted for you.
+              NEW ARRIVALS
             </h2>
+
             <p
               style={{
-                fontFamily: 'var(--font-ui), "Jost", sans-serif',
-                fontSize: '0.88rem',
-                color: '#806D68',
-                marginTop: '6px',
-                marginBottom: 0,
+                fontFamily: 'var(--font-body), "Jost", -apple-system, sans-serif',
+                fontSize: '0.92rem',
+                color: '#6F6F6A',
+                margin: '0 0 24px 0',
+                lineHeight: 1.5,
               }}
             >
-              Handcrafted in 925 sterling silver, sculpted for effortless elegance.
+              Fresh designs for your jewellery collection.
             </p>
-          </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <Link
-              href="/shop?badge=NEW%20ARRIVAL"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                fontSize: '0.86rem',
-                fontWeight: 600,
-                color: '#B76E79',
-                textDecoration: 'none',
-                fontFamily: 'var(--font-ui), "Jost", sans-serif',
-              }}
-              className="view-all-link"
-            >
-              <span>View All</span>
-              <ArrowRight size={15} />
-            </Link>
-
-            {/* Slider Navigation Controls (Desktop) */}
-            <div className="desktop-slider-arrows" style={{ display: 'flex', gap: '8px' }}>
-              <button
-                onClick={() => scroll('left')}
-                aria-label="Previous products"
+            <div>
+              <Link
+                href="/shop?sort=newest"
                 style={{
-                  width: '38px',
-                  height: '38px',
-                  borderRadius: '50%',
-                  border: '1px solid #E8D8D0',
-                  backgroundColor: '#FFFFFF',
-                  display: 'flex',
+                  display: 'inline-flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#342727',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  boxShadow: '0 2px 8px rgba(59, 43, 43, 0.05)',
+                  gap: '6px',
+                  fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                  fontSize: '0.78rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  color: '#111111',
+                  textDecoration: 'none',
+                  paddingBottom: '3px',
+                  borderBottom: '1px solid #111111',
                 }}
+                className="shop-now-link"
               >
-                <ChevronLeft size={18} />
-              </button>
-              <button
-                onClick={() => scroll('right')}
-                aria-label="Next products"
-                style={{
-                  width: '38px',
-                  height: '38px',
-                  borderRadius: '50%',
-                  border: '1px solid #E8D8D0',
-                  backgroundColor: '#FFFFFF',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#342727',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  boxShadow: '0 2px 8px rgba(59, 43, 43, 0.05)',
-                }}
-              >
-                <ChevronRight size={18} />
-              </button>
+                <span>SHOP NOW</span>
+                <ArrowRight size={13} />
+              </Link>
             </div>
           </div>
-        </div>
 
-        {/* Product Slider (1.25-card horizontal carousel on mobile) */}
-        <div
-          ref={scrollRef}
-          style={{
-            display: 'flex',
-            gap: '16px',
-            overflowX: 'auto',
-            scrollSnapType: 'x mandatory',
-            paddingBottom: '16px',
-            scrollbarWidth: 'none',
-            WebkitOverflowScrolling: 'touch',
-          }}
-          className="arrivals-slider"
-        >
-          {newArrivals.map((product, idx) => (
+          {/* Right Column: Carousel with product cards */}
+          <div className="new-arrivals-slider-col">
             <div
-              key={product.id}
+              ref={sliderRef}
+              className="new-arrivals-track"
               style={{
-                flex: '0 0 calc((100% - 48px) / 4)',
-                minWidth: '260px',
-                scrollSnapAlign: 'start',
+                display: 'flex',
+                gap: '16px',
+                overflowX: 'auto',
+                scrollSnapType: 'x mandatory',
+                paddingBottom: '8px',
               }}
-              className="product-col"
             >
-              <ProductCard product={product} priority={idx < 4} />
+              {loading ? (
+                Array.from({ length: 4 }).map((_, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      flex: '0 0 240px',
+                      height: '300px',
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid #E8E7E2',
+                    }}
+                  />
+                ))
+              ) : (
+                products.map((product) => {
+                  const wishlisted = isInWishlist?.(product.id) || false;
+                  const img = product.images?.[0] || '/images/collection-rings.jpg';
+
+                  return (
+                    <div
+                      key={product.id}
+                      className="na-card"
+                      style={{
+                        flex: '0 0 240px',
+                        scrollSnapAlign: 'start',
+                        backgroundColor: '#FFFFFF',
+                        border: '1px solid #E8E7E2',
+                        padding: '10px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        position: 'relative',
+                        boxSizing: 'border-box',
+                      }}
+                    >
+                      {/* Image */}
+                      <Link
+                        href={`/product/${product.slug || product.id}`}
+                        style={{
+                          position: 'relative',
+                          width: '100%',
+                          aspectRatio: '1/1',
+                          backgroundColor: '#F8F7F3',
+                          overflow: 'hidden',
+                          display: 'block',
+                          marginBottom: '10px',
+                        }}
+                      >
+                        <Image
+                          src={img}
+                          alt={product.name}
+                          fill
+                          sizes="(max-width: 768px) 50vw, 20vw"
+                          style={{ objectFit: 'cover' }}
+                          className="na-img"
+                        />
+                      </Link>
+
+                      {/* Wishlist Button */}
+                      <button
+                        onClick={() => toggleWishlist(product)}
+                        aria-label={`Wishlist ${product.name}`}
+                        style={{
+                          position: 'absolute',
+                          top: '16px',
+                          right: '16px',
+                          zIndex: 3,
+                          background: 'rgba(255, 255, 255, 0.85)',
+                          border: 'none',
+                          borderRadius: '50%',
+                          width: '30px',
+                          height: '30px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                          color: wishlisted ? '#B76E79' : '#111111',
+                        }}
+                      >
+                        <Heart
+                          size={14}
+                          strokeWidth={1.5}
+                          fill={wishlisted ? '#B76E79' : 'none'}
+                        />
+                      </button>
+
+                      {/* Info */}
+                      <Link
+                        href={`/product/${product.slug || product.id}`}
+                        style={{
+                          fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                          fontSize: '0.82rem',
+                          fontWeight: 500,
+                          color: '#111111',
+                          textDecoration: 'none',
+                          display: '-webkit-box',
+                          WebkitLineClamp: 1,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                          marginBottom: '4px',
+                        }}
+                      >
+                        {product.name}
+                      </Link>
+
+                      <span
+                        style={{
+                          fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                          fontSize: '0.88rem',
+                          fontWeight: 600,
+                          color: '#111111',
+                        }}
+                      >
+                        {formatPrice(product.price)}
+                      </span>
+                    </div>
+                  );
+                })
+              )}
             </div>
-          ))}
+
+            {/* Slider Next Arrow Overlay */}
+            <button
+              onClick={scrollRight}
+              aria-label="Next new arrival products"
+              className="na-arrow-btn"
+            >
+              <ChevronRight size={16} strokeWidth={1.5} />
+            </button>
+          </div>
         </div>
       </div>
 
       <style jsx>{`
-        .arrivals-slider::-webkit-scrollbar {
+        .new-arrivals-layout {
+          display: grid;
+          grid-template-columns: 280px 1fr;
+          gap: 32px;
+          align-items: center;
+        }
+
+        .new-arrivals-header-col {
+          display: flex;
+          flex-direction: column;
+          justifyContent: center;
+        }
+
+        .new-arrivals-slider-col {
+          position: relative;
+          overflow: hidden;
+        }
+
+        .new-arrivals-track::-webkit-scrollbar {
           display: none;
         }
-        .view-all-link:hover {
-          color: #9C5762;
+
+        .na-card {
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
-        @media (max-width: 1024px) {
-          .product-col {
-            flex: 0 0 calc((100% - 32px) / 3) !important;
-          }
+
+        .na-card:hover {
+          border-color: #111111;
+          box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
         }
-        @media (max-width: 768px) {
-          .desktop-slider-arrows {
-            display: none !important;
-          }
-          .product-col {
-            flex: 0 0 78vw !important;
-            max-width: 310px !important;
-            min-width: 250px !important;
+
+        .na-card:hover .na-img {
+          transform: scale(1.04);
+        }
+
+        .na-img {
+          transition: transform 0.4s ease;
+        }
+
+        .na-arrow-btn {
+          position: absolute;
+          right: 4px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 38px;
+          height: 38px;
+          border-radius: 50%;
+          border: 1px solid #E8E7E2;
+          background: #FFFFFF;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #111111;
+          cursor: pointer;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+          z-index: 5;
+          transition: all 0.2s ease;
+        }
+
+        .na-arrow-btn:hover {
+          background: #111111;
+          color: #FFFFFF;
+          border-color: #111111;
+        }
+
+        .shop-now-link:hover {
+          opacity: 0.75;
+        }
+
+        @media (max-width: 900px) {
+          .new-arrivals-layout {
+            grid-template-columns: 1fr;
           }
         }
       `}</style>

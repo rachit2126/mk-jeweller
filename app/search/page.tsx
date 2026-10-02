@@ -2,18 +2,19 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Search, X, Sparkles } from 'lucide-react';
+import Link from 'next/link';
+import { Search, X } from 'lucide-react';
 import { Product } from '@/lib/types';
 import ProductCard from '@/components/products/ProductCard';
 
+const POPULAR_SEARCHES = ['Earrings', 'Silver Rings', 'Necklaces', 'Bracelets', 'Bridal', 'Minimal'];
+
 function SearchInner() {
   const searchParams = useSearchParams();
-  const qParam = searchParams.get('q') || '';
+  const qParam = searchParams.get('q') || searchParams.get('search') || '';
   const [query, setQuery] = useState(qParam);
   const [results, setResults] = useState<Product[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-
-  const popular = ['Chandbali', 'Polki Choker', 'Silver Ring', 'Freshwater Pearls', 'Ruby Pendant', 'Kada Bangles'];
 
   useEffect(() => {
     if (!query.trim()) {
@@ -38,12 +39,53 @@ function SearchInner() {
   }, [query]);
 
   return (
-    <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '100vh', padding: '50px 0 100px' }}>
-      <div className="container" style={{ maxWidth: '1000px' }}>
+    <div
+      style={{
+        backgroundColor: '#FFFFFF',
+        color: '#111111',
+        minHeight: '100vh',
+        padding: '0 0 100px',
+      }}
+    >
+      <div
+        style={{
+          maxWidth: '1440px',
+          margin: '0 auto',
+          padding: '0 clamp(16px, 3.5vw, 40px)',
+          boxSizing: 'border-box',
+        }}
+      >
+        {/* Breadcrumb */}
+        <nav
+          aria-label="Breadcrumb"
+          style={{
+            padding: '24px 0 32px',
+            fontSize: '0.74rem',
+            fontFamily: 'var(--font-ui), "Jost", sans-serif',
+            color: '#6F6F6A',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+        >
+          <Link href="/" style={{ color: '#6F6F6A', textDecoration: 'none' }}>
+            Home
+          </Link>
+          <span>/</span>
+          <span style={{ color: '#111111', fontWeight: 600 }}>Search</span>
+        </nav>
+
         {/* Search Input Box */}
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <span className="eyebrow">DISCOVERY CATALOGUE</span>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.2rem, 4vw, 3.2rem)', color: 'var(--color-espresso)', marginBottom: '20px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '44px', maxWidth: '720px', margin: '0 auto 44px' }}>
+          <h1
+            style={{
+              fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+              fontSize: 'clamp(2.2rem, 4vw, 3.2rem)',
+              fontWeight: 500,
+              color: '#111111',
+              marginBottom: '20px',
+            }}
+          >
             Search Fine Jewellery
           </h1>
 
@@ -51,52 +93,57 @@ function SearchInner() {
             style={{
               display: 'flex',
               alignItems: 'center',
-              backgroundColor: '#FFFFFF',
-              border: '1.5px solid var(--color-border)',
-              borderRadius: 'var(--radius-pill)',
-              padding: '10px 24px',
-              maxWidth: '680px',
-              margin: '0 auto 16px',
-              boxShadow: '0 4px 20px rgba(0,0,0,0.04)'
+              backgroundColor: '#F8F7F3',
+              border: '1.5px solid #111111',
+              padding: '14px 20px',
+              gap: '12px',
+              marginBottom: '16px',
             }}
           >
-            <Search size={22} color="var(--color-champagne)" style={{ marginRight: '10px' }} />
+            <Search size={20} color="#111111" />
             <input
               type="text"
-              placeholder="Search earrings, necklaces, rings, polki..."
+              placeholder="Search by jewellery type, design or gemstone..."
               value={query}
-              onChange={e => setQuery(e.target.value)}
+              onChange={(e) => setQuery(e.target.value)}
+              autoFocus
               style={{
-                flex: 1,
                 border: 'none',
+                backgroundColor: 'transparent',
                 outline: 'none',
-                fontSize: '1.1rem',
-                color: 'var(--color-espresso)',
-                backgroundColor: 'transparent'
+                width: '100%',
+                fontSize: '0.94rem',
+                fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                color: '#111111',
               }}
             />
             {query && (
-              <button onClick={() => setQuery('')} style={{ color: 'var(--color-muted-text)' }}>
-                <X size={18} />
+              <button
+                onClick={() => setQuery('')}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+              >
+                <X size={18} color="#6F6F6A" />
               </button>
             )}
           </div>
 
-          {/* Popular Tag Pills */}
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--color-muted-text)' }}>Popular searches:</span>
-            {popular.map((term, i) => (
+          {/* Popular Searches */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', flexWrap: 'wrap' }}>
+            <span style={{ fontSize: '0.74rem', color: '#6F6F6A', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+              Popular:
+            </span>
+            {POPULAR_SEARCHES.map((term) => (
               <button
-                key={i}
+                key={term}
                 onClick={() => setQuery(term)}
                 style={{
-                  fontSize: '0.78rem',
+                  border: '1px solid #E8E7E2',
+                  backgroundColor: '#FFFFFF',
                   padding: '4px 12px',
-                  borderRadius: 'var(--radius-pill)',
-                  backgroundColor: 'var(--bg-cream)',
-                  border: '1px solid var(--color-border)',
-                  color: 'var(--color-espresso)',
-                  cursor: 'pointer'
+                  fontSize: '0.74rem',
+                  fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                  color: '#111111',
+                  cursor: 'pointer',
                 }}
               >
                 {term}
@@ -105,41 +152,87 @@ function SearchInner() {
           </div>
         </div>
 
-        {/* Results */}
-        {query.trim() === '' ? (
-          <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--color-muted-text)' }}>
-            <Sparkles size={36} color="var(--color-champagne)" style={{ margin: '0 auto 16px' }} />
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', color: 'var(--color-espresso)', marginBottom: '8px' }}>
-              Explore Authentic 925 Sterling Silver
+        {/* Results Area */}
+        {isSearching ? (
+          <p style={{ textAlign: 'center', color: '#6F6F6A', fontSize: '0.88rem' }}>
+            Searching MongoDB jewellery catalogue...
+          </p>
+        ) : query.trim() && results.length === 0 ? (
+          <div
+            style={{
+              textAlign: 'center',
+              padding: '60px 20px',
+              backgroundColor: '#F8F7F3',
+              border: '1px solid #E8E7E2',
+              maxWidth: '600px',
+              margin: '0 auto',
+            }}
+          >
+            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.6rem', margin: '0 0 10px' }}>
+              No matches found for &quot;{query}&quot;
             </h3>
-            <p style={{ fontSize: '0.9rem' }}>Type any design name, jewellery style, or gemstone above.</p>
+            <p style={{ color: '#6F6F6A', fontSize: '0.86rem', margin: '0 0 20px' }}>
+              Try searching for &quot;rings&quot;, &quot;earrings&quot;, &quot;necklaces&quot;, or browse our entire collection.
+            </p>
+            <Link
+              href="/shop"
+              style={{
+                display: 'inline-block',
+                padding: '12px 28px',
+                backgroundColor: '#111111',
+                color: '#FFFFFF',
+                fontSize: '0.74rem',
+                fontWeight: 600,
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+              }}
+            >
+              Browse All Jewellery
+            </Link>
           </div>
-        ) : results.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '60px 20px', backgroundColor: 'var(--bg-cream)', borderRadius: 'var(--radius-card)', border: '1px solid var(--color-border)' }}>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', marginBottom: '8px' }}>Nothing found for &ldquo;{query}&rdquo;</h3>
-            <p style={{ fontSize: '0.9rem', color: 'var(--color-muted-text)', marginBottom: '20px' }}>Try another jewellery style, gemstone, or collection.</p>
-            <button onClick={() => setQuery('')} className="btn-secondary">Clear Search</button>
-          </div>
-        ) : (
+        ) : results.length > 0 ? (
           <div>
-            <div style={{ marginBottom: '20px', fontSize: '0.9rem', color: 'var(--color-muted-text)' }}>
-              Found <strong>{results.length}</strong> matching jewellery pieces
+            <div style={{ marginBottom: '24px', fontSize: '0.84rem', color: '#6F6F6A' }}>
+              Found {results.length} {results.length === 1 ? 'creation' : 'creations'} for &quot;{query}&quot;
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '20px' }}>
-              {results.map(product => (
-                <ProductCard key={product.id} product={product} />
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(4, 1fr)',
+                gap: '24px',
+              }}
+              className="search-results-grid"
+            >
+              {results.map((product) => (
+                <ProductCard key={product.id || product.slug} product={product} />
               ))}
             </div>
           </div>
-        )}
+        ) : null}
       </div>
+
+      <style jsx>{`
+        @media (max-width: 1024px) {
+          .search-results-grid {
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 16px !important;
+          }
+        }
+        @media (max-width: 640px) {
+          .search-results-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 12px !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
 
 export default function SearchPage() {
   return (
-    <Suspense fallback={<div style={{ padding: '60px 0', textAlign: 'center' }}>Loading Search...</div>}>
+    <Suspense fallback={<div style={{ minHeight: '80vh', textAlign: 'center', paddingTop: '100px' }}>Loading search...</div>}>
       <SearchInner />
     </Suspense>
   );

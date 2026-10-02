@@ -3,29 +3,27 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShieldCheck, CheckCircle2, Lock, ArrowRight, MessageCircle, Truck, Sparkles } from 'lucide-react';
+import { Lock, CheckCircle2, ArrowRight, ShieldCheck, Truck, ChevronRight } from 'lucide-react';
 import { useCommerce } from '@/components/commerce/CommerceContext';
 import { formatPrice } from '@/lib/format';
 
-type CheckoutStep = 'info' | 'delivery' | 'payment' | 'success';
+type Step = 'info' | 'address' | 'delivery' | 'payment' | 'success';
 
 export default function CheckoutPage() {
   const { cart, cartSubtotal, cartTotal, shippingFee, clearCart } = useCommerce();
-  const [step, setStep] = useState<CheckoutStep>('info');
+  const [currentStep, setCurrentStep] = useState<Step>('info');
 
-  // Form states
   const [formData, setFormData] = useState({
     email: '',
-    firstName: '',
-    lastName: '',
+    fullName: '',
     phone: '',
     address: '',
     apartment: '',
     city: '',
     state: 'Rajasthan',
     pincode: '',
-    deliveryMethod: 'insured-free',
-    paymentMethod: 'upi'
+    deliveryMethod: 'standard',
+    paymentMethod: 'online',
   });
 
   const [orderNumber, setOrderNumber] = useState('');
@@ -34,17 +32,18 @@ export default function CheckoutPage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleProceedToDelivery = (e: React.FormEvent) => {
+  const handleNextStep = (e: React.FormEvent) => {
     e.preventDefault();
-    setStep('delivery');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleProceedToPayment = () => {
-    setStep('payment');
+    if (currentStep === 'info') {
+      setCurrentStep('address');
+    } else if (currentStep === 'address') {
+      setCurrentStep('delivery');
+    } else if (currentStep === 'delivery') {
+      setCurrentStep('payment');
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -58,10 +57,10 @@ export default function CheckoutPage() {
 
     try {
       const payload = {
-        customerName: `${formData.firstName} ${formData.lastName}`.trim() || 'Patron',
+        customerName: formData.fullName.trim() || 'Valued Patron',
         email: formData.email,
         phone: formData.phone,
-        items: cart.map(item => ({
+        items: cart.map((item) => ({
           productId: item.product.id,
           name: item.product.name,
           sku: (item.product as any).sku || `MK-${(item.product.category || 'JEW').toUpperCase().slice(0, 3)}`,
@@ -98,7 +97,7 @@ export default function CheckoutPage() {
       }
 
       setOrderNumber(data.order.id);
-      setStep('success');
+      setCurrentStep('success');
       clearCart();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err: any) {
@@ -108,464 +107,767 @@ export default function CheckoutPage() {
     }
   };
 
-  if (step === 'success') {
+  // SUCCESS CONFIRMATION VIEW
+  if (currentStep === 'success') {
     return (
-      <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '80vh', padding: '80px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div
+        style={{
+          backgroundColor: '#FFFFFF',
+          minHeight: '80vh',
+          padding: '80px 20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <div
           style={{
-            maxWidth: '600px',
+            maxWidth: '540px',
             width: '100%',
-            backgroundColor: 'var(--bg-cream)',
-            borderRadius: 'var(--radius-editorial)',
+            backgroundColor: '#F8F7F3',
+            border: '1px solid #E8E7E2',
             padding: '48px 36px',
-            border: '1px solid var(--color-border)',
-            boxShadow: 'var(--shadow-card)',
-            textAlign: 'center'
+            textAlign: 'center',
           }}
         >
           <div
             style={{
-              width: '68px',
-              height: '68px',
+              width: '56px',
+              height: '56px',
               borderRadius: '50%',
-              backgroundColor: 'rgba(19, 138, 91, 0.12)',
-              color: 'var(--color-success)',
+              backgroundColor: '#111111',
+              color: '#FFFFFF',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              margin: '0 auto 20px'
+              margin: '0 auto 20px',
             }}
           >
-            <CheckCircle2 size={36} />
+            <CheckCircle2 size={28} />
           </div>
 
-          <span className="eyebrow" style={{ color: 'var(--color-success)' }}>ORDER CONFIRMED</span>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '2.4rem', color: 'var(--color-espresso)', marginBottom: '8px' }}>
-            Thank You, {formData.firstName || 'Valued Patron'}!
+          <span
+            style={{
+              fontFamily: 'var(--font-ui), "Jost", sans-serif',
+              fontSize: '0.72rem',
+              fontWeight: 600,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              color: '#6F6F6A',
+            }}
+          >
+            ORDER CONFIRMED
+          </span>
+
+          <h1
+            style={{
+              fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+              fontSize: '2.4rem',
+              fontWeight: 500,
+              margin: '8px 0 16px',
+              color: '#111111',
+            }}
+          >
+            Thank You For Your Patronage
           </h1>
-          <p style={{ color: 'var(--color-muted-text)', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '24px' }}>
-            Your order <strong>{orderNumber}</strong> has been received by our Jaipur atelier. A confirmation email and tracking link will be sent to <strong>{formData.email || 'your email'}</strong>.
+
+          <p
+            style={{
+              fontFamily: 'var(--font-ui), "Jost", sans-serif',
+              fontSize: '0.88rem',
+              color: '#4A4A46',
+              lineHeight: 1.6,
+              marginBottom: '24px',
+            }}
+          >
+            Your order <strong>{orderNumber}</strong> has been logged into our Jaipur atelier system. A tracking notification will be dispatched to <strong>{formData.email}</strong> once hallmarked and shipped.
           </p>
 
-          {/* Details summary */}
-          <div style={{ backgroundColor: '#F2EDE5', borderRadius: '12px', padding: '18px 24px', textAlign: 'left', fontSize: '0.85rem', marginBottom: '28px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-              <span style={{ color: 'var(--color-muted-text)' }}>Estimated Delivery:</span>
-              <strong style={{ color: 'var(--color-espresso)' }}>3 – 5 Business Days</strong>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-              <span style={{ color: 'var(--color-muted-text)' }}>Shipping Address:</span>
-              <strong style={{ color: 'var(--color-espresso)' }}>{formData.city}, {formData.pincode}</strong>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ color: 'var(--color-muted-text)' }}>Hallmark Assurance:</span>
-              <span style={{ color: 'var(--color-champagne)', fontWeight: 600 }}>BIS 925 Certificate Included</span>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <a
-              href={`https://wa.me/917425058118?text=${encodeURIComponent(
-                `Hi MK Silver Hub, I just placed order ${orderNumber}. Can you confirm order status?`
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                padding: '14px',
-                borderRadius: 'var(--radius-pill)',
-                backgroundColor: '#25D366',
-                color: '#FFFFFF',
-                fontWeight: 600,
-                fontSize: '0.9rem'
-              }}
-            >
-              <MessageCircle size={18} />
-              <span>Get Order Updates on WhatsApp</span>
-            </a>
-
-            <Link href="/" className="btn-secondary" style={{ padding: '14px' }}>
-              Return to Homepage
-            </Link>
-          </div>
+          <Link
+            href="/shop"
+            style={{
+              display: 'inline-block',
+              padding: '14px 32px',
+              backgroundColor: '#111111',
+              color: '#FFFFFF',
+              fontFamily: 'var(--font-ui), "Jost", sans-serif',
+              fontSize: '0.74rem',
+              fontWeight: 600,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              textDecoration: 'none',
+            }}
+          >
+            CONTINUE BROWSING
+          </Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '100vh', padding: '40px 0 100px' }}>
-      <div className="container">
-        {/* Step Indicator Header */}
-        <div style={{ maxWidth: '800px', margin: '0 auto 40px', textAlign: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '24px', fontSize: '0.85rem' }}>
-            <span style={{ fontWeight: step === 'info' ? 700 : 500, color: step === 'info' ? 'var(--color-espresso)' : 'var(--color-muted-text)' }}>
-              1. Information
-            </span>
-            <span style={{ color: 'var(--color-border)' }}>—</span>
-            <span style={{ fontWeight: step === 'delivery' ? 700 : 500, color: step === 'delivery' ? 'var(--color-espresso)' : 'var(--color-muted-text)' }}>
-              2. Delivery
-            </span>
-            <span style={{ color: 'var(--color-border)' }}>—</span>
-            <span style={{ fontWeight: step === 'payment' ? 700 : 500, color: step === 'payment' ? 'var(--color-espresso)' : 'var(--color-muted-text)' }}>
-              3. Payment
-            </span>
-          </div>
+    <div
+      style={{
+        backgroundColor: '#FFFFFF',
+        minHeight: '100vh',
+        padding: '32px 0 100px',
+      }}
+    >
+      <div
+        style={{
+          maxWidth: '1440px',
+          margin: '0 auto',
+          padding: '0 clamp(16px, 3.5vw, 40px)',
+          boxSizing: 'border-box',
+        }}
+      >
+        {/* Header Breadcrumb */}
+        <nav
+          aria-label="Breadcrumb"
+          style={{
+            paddingBottom: '20px',
+            fontSize: '0.74rem',
+            fontFamily: 'var(--font-ui), "Jost", sans-serif',
+            color: '#6F6F6A',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+        >
+          <Link href="/cart" style={{ color: '#6F6F6A', textDecoration: 'none' }}>
+            Cart
+          </Link>
+          <span>/</span>
+          <span style={{ color: '#111111', fontWeight: 600 }}>Checkout</span>
+        </nav>
+
+        {/* Multi-Step Indicator Bar (Screen 7 in Mockup) */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            padding: '16px 20px',
+            backgroundColor: '#F8F7F3',
+            border: '1px solid #E8E7E2',
+            marginBottom: '36px',
+            fontSize: '0.74rem',
+            fontFamily: 'var(--font-ui), "Jost", sans-serif',
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            overflowX: 'auto',
+          }}
+        >
+          <span style={{ fontWeight: currentStep === 'info' ? 700 : 500, color: currentStep === 'info' ? '#111111' : '#6F6F6A' }}>
+            1 Information
+          </span>
+          <ChevronRight size={14} color="#BFC1C4" />
+          <span style={{ fontWeight: currentStep === 'address' ? 700 : 500, color: currentStep === 'address' ? '#111111' : '#6F6F6A' }}>
+            2 Address
+          </span>
+          <ChevronRight size={14} color="#BFC1C4" />
+          <span style={{ fontWeight: currentStep === 'delivery' ? 700 : 500, color: currentStep === 'delivery' ? '#111111' : '#6F6F6A' }}>
+            3 Delivery
+          </span>
+          <ChevronRight size={14} color="#BFC1C4" />
+          <span style={{ fontWeight: currentStep === 'payment' ? 700 : 500, color: currentStep === 'payment' ? '#111111' : '#6F6F6A' }}>
+            4 Payment
+          </span>
         </div>
 
-        {/* 2-Column Split: Form | Summary */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: '48px', alignItems: 'start' }} className="checkout-grid">
-          {/* Left: Step Form */}
-          <div style={{ backgroundColor: 'var(--bg-cream)', padding: '36px', borderRadius: 'var(--radius-editorial)', border: '1px solid var(--color-border)' }}>
-            {step === 'info' && (
-              <form onSubmit={handleProceedToDelivery}>
-                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.6rem', marginBottom: '20px' }}>
-                  Contact Information
-                </h2>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '32px' }}>
-                  <div>
-                    <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '6px' }}>Email Address</label>
-                    <input
-                      type="email"
-                      required
-                      name="email"
-                      placeholder="your.email@domain.com"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      style={{ width: '100%', padding: '12px 16px', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: '#FFFFFF' }}
-                    />
-                  </div>
-
-                  <div>
-                    <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '6px' }}>Mobile Phone (for delivery SMS & WhatsApp updates)</label>
-                    <input
-                      type="tel"
-                      required
-                      name="phone"
-                      placeholder="Enter your phone number"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      style={{ width: '100%', padding: '12px 16px', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: '#FFFFFF' }}
-                    />
-                  </div>
-                </div>
-
-                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.6rem', marginBottom: '20px' }}>
-                  Shipping Address
-                </h2>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
-                  <div>
-                    <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '6px' }}>First Name</label>
-                    <input
-                      type="text"
-                      required
-                      name="firstName"
-                      placeholder="Priya"
-                      value={formData.firstName}
-                      onChange={handleInputChange}
-                      style={{ width: '100%', padding: '12px 16px', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: '#FFFFFF' }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '6px' }}>Last Name</label>
-                    <input
-                      type="text"
-                      required
-                      name="lastName"
-                      placeholder="Sharma"
-                      value={formData.lastName}
-                      onChange={handleInputChange}
-                      style={{ width: '100%', padding: '12px 16px', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: '#FFFFFF' }}
-                    />
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '32px' }}>
-                  <div>
-                    <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '6px' }}>Street Address / Flat No.</label>
-                    <input
-                      type="text"
-                      required
-                      name="address"
-                      placeholder="House No, Society, Landmark"
-                      value={formData.address}
-                      onChange={handleInputChange}
-                      style={{ width: '100%', padding: '12px 16px', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: '#FFFFFF' }}
-                    />
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr', gap: '12px' }}>
-                    <div>
-                      <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '6px' }}>City</label>
-                      <input
-                        type="text"
-                        required
-                        name="city"
-                        placeholder="Jaipur"
-                        value={formData.city}
-                        onChange={handleInputChange}
-                        style={{ width: '100%', padding: '12px 16px', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: '#FFFFFF' }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '6px' }}>State</label>
-                      <select
-                        name="state"
-                        value={formData.state}
-                        onChange={handleInputChange}
-                        style={{ width: '100%', padding: '12px 16px', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: '#FFFFFF' }}
-                      >
-                        <option value="Rajasthan">Rajasthan</option>
-                        <option value="Maharashtra">Maharashtra</option>
-                        <option value="Delhi">Delhi NCR</option>
-                        <option value="Karnataka">Karnataka</option>
-                        <option value="Gujarat">Gujarat</option>
-                        <option value="Tamil Nadu">Tamil Nadu</option>
-                        <option value="Uttar Pradesh">Uttar Pradesh</option>
-                        <option value="West Bengal">West Bengal</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label style={{ fontSize: '0.8rem', fontWeight: 600, display: 'block', marginBottom: '6px' }}>PIN Code</label>
-                      <input
-                        type="text"
-                        required
-                        name="pincode"
-                        placeholder="302001"
-                        value={formData.pincode}
-                        onChange={handleInputChange}
-                        style={{ width: '100%', padding: '12px 16px', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: '#FFFFFF' }}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <button type="submit" className="btn-primary" style={{ width: '100%', padding: '16px' }}>
-                  <span>Continue to Delivery Options</span>
-                  <ArrowRight size={16} />
-                </button>
-              </form>
-            )}
-
-            {step === 'delivery' && (
-              <div>
-                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.6rem', marginBottom: '16px' }}>
-                  Shipping & Transit Method
-                </h2>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '32px' }}>
-                  <label
+        {/* 2-Column Split: Form Fields | Order Summary */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'minmax(0, 1.45fr) minmax(0, 1fr)',
+            gap: 'clamp(28px, 4.5vw, 56px)',
+            alignItems: 'start',
+          }}
+          className="checkout-split-grid"
+        >
+          {/* ======================================================= */}
+          {/* LEFT: CHECKOUT FORM STEPS (Screen 7 in Mockup)          */}
+          {/* ======================================================= */}
+          <div>
+            <form onSubmit={handleNextStep}>
+              {/* STEP 1 & 2: Contact Info & Address */}
+              {(currentStep === 'info' || currentStep === 'address') && (
+                <div>
+                  <h2
                     style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '18px 20px',
-                      borderRadius: '12px',
-                      border: '2px solid var(--color-espresso)',
-                      backgroundColor: '#FFFFFF',
-                      cursor: 'pointer'
+                      fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+                      fontSize: '1.45rem',
+                      fontWeight: 600,
+                      color: '#111111',
+                      margin: '0 0 16px',
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <input type="radio" checked readOnly style={{ accentColor: 'var(--color-espresso)' }} />
+                    Contact Information
+                  </h2>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '28px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.74rem', color: '#6F6F6A', marginBottom: '6px' }}>
+                        Email Address *
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        required
+                        autoComplete="email"
+                        placeholder="patron@example.com"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        style={{
+                          width: '100%',
+                          padding: '12px 14px',
+                          border: '1px solid #E8E7E2',
+                          backgroundColor: '#FFFFFF',
+                          fontSize: '0.84rem',
+                          fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                          outline: 'none',
+                        }}
+                      />
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '14px' }}>
                       <div>
-                        <div style={{ fontWeight: 600, fontSize: '0.95rem' }}>Complimentary Insured Courier</div>
-                        <div style={{ fontSize: '0.78rem', color: 'var(--color-muted-text)' }}>3–5 business days • BlueDart / Delhivery Express</div>
+                        <label style={{ display: 'block', fontSize: '0.74rem', color: '#6F6F6A', marginBottom: '6px' }}>
+                          Full Name *
+                        </label>
+                        <input
+                          type="text"
+                          name="fullName"
+                          required
+                          autoComplete="name"
+                          placeholder="Your Name"
+                          value={formData.fullName}
+                          onChange={handleInputChange}
+                          style={{
+                            width: '100%',
+                            padding: '12px 14px',
+                            border: '1px solid #E8E7E2',
+                            backgroundColor: '#FFFFFF',
+                            fontSize: '0.84rem',
+                            fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                            outline: 'none',
+                          }}
+                        />
+                      </div>
+
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.74rem', color: '#6F6F6A', marginBottom: '6px' }}>
+                          Phone (for delivery updates) *
+                        </label>
+                        <input
+                          type="tel"
+                          name="phone"
+                          required
+                          autoComplete="tel"
+                          placeholder="+91 98765 43210"
+                          value={formData.phone}
+                          onChange={handleInputChange}
+                          style={{
+                            width: '100%',
+                            padding: '12px 14px',
+                            border: '1px solid #E8E7E2',
+                            backgroundColor: '#FFFFFF',
+                            fontSize: '0.84rem',
+                            fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                            outline: 'none',
+                          }}
+                        />
                       </div>
                     </div>
-                    <strong style={{ color: 'var(--color-success)', fontSize: '0.9rem' }}>FREE</strong>
-                  </label>
+                  </div>
 
-                  <label
+                  <h2
                     style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '18px 20px',
-                      borderRadius: '12px',
-                      border: '1px solid var(--color-border)',
-                      backgroundColor: '#FFFFFF',
-                      cursor: 'pointer'
+                      fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+                      fontSize: '1.45rem',
+                      fontWeight: 600,
+                      color: '#111111',
+                      margin: '0 0 16px',
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <input type="radio" disabled />
+                    Shipping Address
+                  </h2>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '28px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.74rem', color: '#6F6F6A', marginBottom: '6px' }}>
+                        Street Address *
+                      </label>
+                      <input
+                        type="text"
+                        name="address"
+                        required
+                        autoComplete="street-address"
+                        placeholder="House / Flat / Street Name"
+                        value={formData.address}
+                        onChange={handleInputChange}
+                        style={{
+                          width: '100%',
+                          padding: '12px 14px',
+                          border: '1px solid #E8E7E2',
+                          backgroundColor: '#FFFFFF',
+                          fontSize: '0.84rem',
+                          fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                          outline: 'none',
+                        }}
+                      />
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px' }}>
                       <div>
-                        <div style={{ fontWeight: 600, fontSize: '0.95rem' }}>Next-Day Air Priority (Metro Only)</div>
-                        <div style={{ fontSize: '0.78rem', color: 'var(--color-muted-text)' }}>Guaranteed 24-48 hr air shipping</div>
+                        <label style={{ display: 'block', fontSize: '0.74rem', color: '#6F6F6A', marginBottom: '6px' }}>
+                          City *
+                        </label>
+                        <input
+                          type="text"
+                          name="city"
+                          required
+                          autoComplete="address-level2"
+                          placeholder="City"
+                          value={formData.city}
+                          onChange={handleInputChange}
+                          style={{
+                            width: '100%',
+                            padding: '12px 14px',
+                            border: '1px solid #E8E7E2',
+                            backgroundColor: '#FFFFFF',
+                            fontSize: '0.84rem',
+                            fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                            outline: 'none',
+                          }}
+                        />
+                      </div>
+
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.74rem', color: '#6F6F6A', marginBottom: '6px' }}>
+                          State *
+                        </label>
+                        <input
+                          type="text"
+                          name="state"
+                          required
+                          value={formData.state}
+                          onChange={handleInputChange}
+                          style={{
+                            width: '100%',
+                            padding: '12px 14px',
+                            border: '1px solid #E8E7E2',
+                            backgroundColor: '#FFFFFF',
+                            fontSize: '0.84rem',
+                            fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                            outline: 'none',
+                          }}
+                        />
+                      </div>
+
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.74rem', color: '#6F6F6A', marginBottom: '6px' }}>
+                          PIN Code *
+                        </label>
+                        <input
+                          type="text"
+                          name="pincode"
+                          required
+                          autoComplete="postal-code"
+                          placeholder="302001"
+                          value={formData.pincode}
+                          onChange={handleInputChange}
+                          style={{
+                            width: '100%',
+                            padding: '12px 14px',
+                            border: '1px solid #E8E7E2',
+                            backgroundColor: '#FFFFFF',
+                            fontSize: '0.84rem',
+                            fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                            outline: 'none',
+                          }}
+                        />
                       </div>
                     </div>
-                    <strong style={{ fontSize: '0.9rem' }}>₹199</strong>
-                  </label>
-                </div>
+                  </div>
 
-                <div style={{ display: 'flex', gap: '12px' }}>
-                  <button onClick={() => setStep('info')} className="btn-secondary" style={{ padding: '14px 24px' }}>
-                    Back
-                  </button>
-                  <button onClick={handleProceedToPayment} className="btn-primary" style={{ flex: 1, padding: '14px' }}>
-                    <span>Proceed to Payment</span>
-                    <ArrowRight size={16} />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {step === 'payment' && (
-              <div>
-                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.6rem', marginBottom: '16px' }}>
-                  Payment Method
-                </h2>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '32px' }}>
-                  <label
+                  <button
+                    type="submit"
                     style={{
-                      padding: '18px 20px',
-                      borderRadius: '12px',
-                      border: formData.paymentMethod === 'upi' ? '2px solid var(--color-espresso)' : '1px solid var(--color-border)',
-                      backgroundColor: '#FFFFFF',
+                      padding: '14px 32px',
+                      backgroundColor: '#111111',
+                      color: '#FFFFFF',
+                      border: 'none',
+                      fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                      fontSize: '0.76rem',
+                      fontWeight: 600,
+                      letterSpacing: '0.14em',
+                      textTransform: 'uppercase',
                       cursor: 'pointer',
-                      display: 'block'
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span>CONTINUE TO DELIVERY</span>
+                    <ArrowRight size={14} />
+                  </button>
+                </div>
+              )}
+
+              {/* STEP 3: Delivery Options */}
+              {currentStep === 'delivery' && (
+                <div>
+                  <h2
+                    style={{
+                      fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+                      fontSize: '1.45rem',
+                      fontWeight: 600,
+                      color: '#111111',
+                      margin: '0 0 16px',
+                    }}
+                  >
+                    Select Delivery Method
+                  </h2>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '28px' }}>
+                    <label
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '16px 20px',
+                        border: '1.5px solid #111111',
+                        backgroundColor: '#F8F7F3',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <input
+                          type="radio"
+                          name="deliveryMethod"
+                          checked={formData.deliveryMethod === 'standard'}
+                          onChange={() => setFormData((p) => ({ ...p, deliveryMethod: 'standard' }))}
+                          style={{ accentColor: '#111111' }}
+                        />
+                        <div>
+                          <div style={{ fontWeight: 600, fontSize: '0.84rem', color: '#111111' }}>
+                            Standard Insured Doorstep Delivery
+                          </div>
+                          <div style={{ fontSize: '0.72rem', color: '#6F6F6A' }}>
+                            Delivered in 3–5 business days with tamper-proof seal
+                          </div>
+                        </div>
+                      </div>
+                      <span style={{ fontWeight: 600, fontSize: '0.84rem', color: '#111111' }}>
+                        Free
+                      </span>
+                    </label>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '12px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setCurrentStep('address')}
+                      style={{
+                        padding: '14px 24px',
+                        backgroundColor: '#FFFFFF',
+                        color: '#111111',
+                        border: '1px solid #E8E7E2',
+                        fontSize: '0.74rem',
+                        fontWeight: 600,
+                        letterSpacing: '0.1em',
+                        textTransform: 'uppercase',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Back
+                    </button>
+                    <button
+                      type="submit"
+                      style={{
+                        padding: '14px 32px',
+                        backgroundColor: '#111111',
+                        color: '#FFFFFF',
+                        border: 'none',
+                        fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                        fontSize: '0.76rem',
+                        fontWeight: 600,
+                        letterSpacing: '0.14em',
+                        textTransform: 'uppercase',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      CONTINUE TO PAYMENT
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 4: Payment */}
+              {currentStep === 'payment' && (
+                <div>
+                  <h2
+                    style={{
+                      fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+                      fontSize: '1.45rem',
+                      fontWeight: 600,
+                      color: '#111111',
+                      margin: '0 0 16px',
+                    }}
+                  >
+                    Select Payment Method
+                  </h2>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '28px' }}>
+                    <label
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '16px 20px',
+                        border: formData.paymentMethod === 'online' ? '1.5px solid #111111' : '1px solid #E8E7E2',
+                        backgroundColor: formData.paymentMethod === 'online' ? '#F8F7F3' : '#FFFFFF',
+                        cursor: 'pointer',
+                      }}
+                    >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                         <input
                           type="radio"
                           name="paymentMethod"
-                          value="upi"
-                          checked={formData.paymentMethod === 'upi'}
-                          onChange={() => setFormData(p => ({ ...p, paymentMethod: 'upi' }))}
-                          style={{ accentColor: 'var(--color-espresso)' }}
+                          checked={formData.paymentMethod === 'online'}
+                          onChange={() => setFormData((p) => ({ ...p, paymentMethod: 'online' }))}
+                          style={{ accentColor: '#111111' }}
                         />
-                        <span style={{ fontWeight: 600 }}>UPI (GPay / PhonePe / Paytm / BHIM)</span>
+                        <div>
+                          <div style={{ fontWeight: 600, fontSize: '0.84rem', color: '#111111' }}>
+                            Online Payment (UPI, Credit/Debit Card, NetBanking)
+                          </div>
+                          <div style={{ fontSize: '0.72rem', color: '#6F6F6A' }}>
+                            100% Encrypted & Insured Gateway
+                          </div>
+                        </div>
                       </div>
-                      <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-success)', backgroundColor: 'rgba(19,138,91,0.1)', padding: '2px 8px', borderRadius: '4px' }}>Fastest</span>
-                    </div>
-                    {formData.paymentMethod === 'upi' && (
-                      <div style={{ marginTop: '12px', paddingLeft: '28px', fontSize: '0.82rem', color: 'var(--color-muted-text)' }}>
-                        Instant verification QR will be presented on confirmation. Zero convenience fees.
+                    </label>
+
+                    <label
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '16px 20px',
+                        border: formData.paymentMethod === 'cod' ? '1.5px solid #111111' : '1px solid #E8E7E2',
+                        backgroundColor: formData.paymentMethod === 'cod' ? '#F8F7F3' : '#FFFFFF',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <input
+                          type="radio"
+                          name="paymentMethod"
+                          checked={formData.paymentMethod === 'cod'}
+                          onChange={() => setFormData((p) => ({ ...p, paymentMethod: 'cod' }))}
+                          style={{ accentColor: '#111111' }}
+                        />
+                        <div>
+                          <div style={{ fontWeight: 600, fontSize: '0.84rem', color: '#111111' }}>
+                            Cash on Delivery (COD)
+                          </div>
+                          <div style={{ fontSize: '0.72rem', color: '#6F6F6A' }}>
+                            Pay in cash or UPI at the time of delivery
+                          </div>
+                        </div>
                       </div>
-                    )}
-                  </label>
-
-                  <label
-                    style={{
-                      padding: '18px 20px',
-                      borderRadius: '12px',
-                      border: formData.paymentMethod === 'card' ? '2px solid var(--color-espresso)' : '1px solid var(--color-border)',
-                      backgroundColor: '#FFFFFF',
-                      cursor: 'pointer',
-                      display: 'block'
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <input
-                        type="radio"
-                        name="paymentMethod"
-                        value="card"
-                        checked={formData.paymentMethod === 'card'}
-                        onChange={() => setFormData(p => ({ ...p, paymentMethod: 'card' }))}
-                        style={{ accentColor: 'var(--color-espresso)' }}
-                      />
-                      <span style={{ fontWeight: 600 }}>Credit & Debit Cards (Visa, Mastercard, RuPay)</span>
-                    </div>
-                  </label>
-
-                  <label
-                    style={{
-                      padding: '18px 20px',
-                      borderRadius: '12px',
-                      border: formData.paymentMethod === 'cod' ? '2px solid var(--color-espresso)' : '1px solid var(--color-border)',
-                      backgroundColor: '#FFFFFF',
-                      cursor: 'pointer',
-                      display: 'block'
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <input
-                        type="radio"
-                        name="paymentMethod"
-                        value="cod"
-                        checked={formData.paymentMethod === 'cod'}
-                        onChange={() => setFormData(p => ({ ...p, paymentMethod: 'cod' }))}
-                        style={{ accentColor: 'var(--color-espresso)' }}
-                      />
-                      <span style={{ fontWeight: 600 }}>Cash on Delivery (OTP Verified)</span>
-                    </div>
-                  </label>
-                </div>
-
-                {submitError && (
-                  <div style={{ color: '#E53E3E', fontSize: '0.85rem', marginBottom: '12px', padding: '10px 14px', backgroundColor: '#FFF5F5', borderRadius: '8px', border: '1px solid #FED7D7' }}>
-                    {submitError}
+                    </label>
                   </div>
-                )}
-                <div style={{ display: 'flex', gap: '12px' }}>
-                  <button onClick={() => setStep('delivery')} disabled={isSubmitting} className="btn-secondary" style={{ padding: '14px 24px' }}>
-                    Back
-                  </button>
-                  <button onClick={handlePlaceOrder} disabled={isSubmitting} className="btn-primary" style={{ flex: 1, padding: '14px', opacity: isSubmitting ? 0.7 : 1 }}>
-                    <Lock size={16} />
-                    <span>{isSubmitting ? 'Securing Order in Atelier...' : `Pay Securely ${formatPrice(cartTotal)}`}</span>
-                  </button>
+
+                  {submitError && (
+                    <div
+                      style={{
+                        padding: '12px',
+                        backgroundColor: '#FFEBEE',
+                        color: '#B71C1C',
+                        fontSize: '0.82rem',
+                        marginBottom: '18px',
+                      }}
+                    >
+                      {submitError}
+                    </div>
+                  )}
+
+                  <div style={{ display: 'flex', gap: '12px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setCurrentStep('delivery')}
+                      style={{
+                        padding: '14px 24px',
+                        backgroundColor: '#FFFFFF',
+                        color: '#111111',
+                        border: '1px solid #E8E7E2',
+                        fontSize: '0.74rem',
+                        fontWeight: 600,
+                        letterSpacing: '0.1em',
+                        textTransform: 'uppercase',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Back
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handlePlaceOrder}
+                      disabled={isSubmitting}
+                      style={{
+                        flex: 1,
+                        padding: '16px 0',
+                        backgroundColor: '#111111',
+                        color: '#FFFFFF',
+                        border: 'none',
+                        fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                        fontSize: '0.78rem',
+                        fontWeight: 600,
+                        letterSpacing: '0.14em',
+                        textTransform: 'uppercase',
+                        cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                      }}
+                    >
+                      {isSubmitting ? 'PROCESSING...' : `PLACE ORDER (${formatPrice(cartTotal)})`}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </form>
           </div>
 
-          {/* Right: Order Summary Sidebar */}
+          {/* ======================================================= */}
+          {/* RIGHT: ORDER SUMMARY CARD (Screen 7 in Mockup)          */}
+          {/* ======================================================= */}
           <div
             style={{
-              padding: '28px',
-              backgroundColor: 'var(--bg-cream)',
-              borderRadius: 'var(--radius-editorial)',
-              border: '1px solid var(--color-border)'
+              backgroundColor: '#F8F7F3',
+              border: '1px solid #E8E7E2',
+              padding: 'clamp(20px, 2.5vw, 32px)',
             }}
           >
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', fontWeight: 600, marginBottom: '16px' }}>
-              In Your Bag ({cart.length})
-            </h3>
+            <h2
+              style={{
+                fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+                fontSize: '1.35rem',
+                fontWeight: 600,
+                color: '#111111',
+                margin: '0 0 16px',
+                borderBottom: '1px solid #E8E7E2',
+                paddingBottom: '12px',
+              }}
+            >
+              Order Summary
+            </h2>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '300px', overflowY: 'auto', marginBottom: '20px' }}>
+            {/* Item Previews */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
               {cart.map((item, i) => (
-                <div key={i} style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                  <div style={{ position: 'relative', width: '50px', height: '60px', borderRadius: '8px', overflow: 'hidden', backgroundColor: '#F0ECE6', flexShrink: 0 }}>
-                    <Image src={item.product.images[0]} alt={item.product.name} fill sizes="50px" style={{ objectFit: 'cover' }} />
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div
+                    style={{
+                      position: 'relative',
+                      width: '54px',
+                      height: '64px',
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid #E8E7E2',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Image
+                      src={item.product.images[0]}
+                      alt={item.product.name}
+                      fill
+                      sizes="60px"
+                      style={{ objectFit: 'cover' }}
+                    />
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--color-espresso)', lineHeight: 1.2 }}>{item.product.name}</div>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--color-muted-text)' }}>Qty: {item.quantity} • {item.product.purity}</div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+                        fontSize: '0.98rem',
+                        fontWeight: 600,
+                        color: '#111111',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}
+                    >
+                      {item.product.name}
+                    </div>
+                    <div style={{ fontSize: '0.74rem', color: '#6F6F6A' }}>
+                      Qty: {item.quantity} {item.variant ? `· ${item.variant}` : ''}
+                    </div>
                   </div>
-                  <div style={{ fontSize: '0.88rem', fontWeight: 700 }}>{formatPrice(item.product.price * item.quantity)}</div>
+                  <div style={{ fontSize: '0.86rem', fontWeight: 600, color: '#111111' }}>
+                    {formatPrice(item.product.price * item.quantity)}
+                  </div>
                 </div>
               ))}
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', paddingTop: '16px', borderTop: '1px solid var(--color-border)', fontSize: '0.88rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'var(--color-muted-text)' }}>Subtotal</span>
-                <span>{formatPrice(cartSubtotal)}</span>
+            {/* Cost Breakdown */}
+            <div
+              style={{
+                borderTop: '1px solid #E8E7E2',
+                paddingTop: '16px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px',
+                fontSize: '0.84rem',
+                marginBottom: '18px',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6F6F6A' }}>
+                <span>Subtotal</span>
+                <span style={{ fontWeight: 600, color: '#111111' }}>{formatPrice(cartSubtotal)}</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'var(--color-muted-text)' }}>Insured Delivery</span>
-                <span style={{ color: shippingFee === 0 ? 'var(--color-success)' : 'inherit', fontWeight: 600 }}>
-                  {shippingFee === 0 ? 'FREE' : formatPrice(shippingFee)}
+              <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6F6F6A' }}>
+                <span>Shipping</span>
+                <span style={{ fontWeight: 600, color: '#111111' }}>
+                  {shippingFee === 0 ? 'Free' : formatPrice(shippingFee)}
                 </span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.15rem', fontWeight: 700, paddingTop: '10px', borderTop: '1px solid var(--color-border)', color: 'var(--color-espresso)' }}>
-                <span>Total Due</span>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  borderTop: '1px solid #E8E7E2',
+                  paddingTop: '14px',
+                  fontSize: '1rem',
+                  fontWeight: 600,
+                  color: '#111111',
+                }}
+              >
+                <span>Total</span>
                 <span>{formatPrice(cartTotal)}</span>
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '20px', color: 'var(--color-muted-text)', fontSize: '0.75rem' }}>
-              <ShieldCheck size={16} color="var(--color-champagne)" />
-              <span>BIS 925 Registered • Encrypted 256-bit SSL</span>
+            {/* Payment Security Badges (UPI, Visa, RuPay) */}
+            <div
+              style={{
+                borderTop: '1px solid #E8E7E2',
+                paddingTop: '16px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+                fontSize: '0.7rem',
+                color: '#6F6F6A',
+                textAlign: 'center',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                <Lock size={13} color="#111111" />
+                <span style={{ fontWeight: 600, color: '#111111' }}>Secure Encrypted Payments</span>
+              </div>
+              <div style={{ letterSpacing: '0.12em', color: '#252525', fontWeight: 600 }}>
+                UPI · VISA · MASTERCARD · RUPAY
+              </div>
             </div>
           </div>
         </div>
@@ -573,7 +875,7 @@ export default function CheckoutPage() {
 
       <style jsx>{`
         @media (max-width: 900px) {
-          .checkout-grid {
+          .checkout-split-grid {
             grid-template-columns: 1fr !important;
           }
         }

@@ -1,74 +1,111 @@
-import type { Metadata } from 'next';
-import { siteConfig } from '@/config/site';
+import React from 'react';
+import Link from 'next/link';
 
-export const metadata: Metadata = {
-  title: 'Privacy Policy | MK Silver Hub',
-  description: 'Privacy policy and data protection guidelines for MK Silver Hub online store.',
+export const metadata = {
+  title: 'Privacy Policy | MK Silver Hub — Fine 925 Sterling Jewellery',
+  description: 'Privacy policy and data security practices of MK Silver Hub.',
 };
 
 export default function PrivacyPage() {
   return (
-    <div style={{ background: 'var(--color-bg)', minHeight: '100vh', padding: 'clamp(3rem, 5vw, 5rem) var(--gutter)' }}>
-      <div style={{ maxWidth: '780px', margin: '0 auto', background: 'var(--color-surface)', padding: 'clamp(2rem, 4vw, 3.5rem)', borderRadius: 'var(--radius-card)', border: '1px solid var(--color-border)' }}>
-        <p className="eyebrow" style={{ color: 'var(--color-text-muted)', marginBottom: '0.75rem' }}>
-          LEGAL & COMPLIANCE
-        </p>
-        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--fs-h1)', marginBottom: '1.5rem' }}>
-          Privacy Policy
-        </h1>
-        <p style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem', marginBottom: '2.5rem' }}>
-          Last Updated: 29 September 2026 · [CLIENT TO PROVIDE FINAL LEGAL TEXT]
-        </p>
+    <div
+      style={{
+        backgroundColor: '#FFFFFF',
+        color: '#111111',
+        minHeight: '100vh',
+        padding: '0 0 100px',
+      }}
+    >
+      <div
+        style={{
+          maxWidth: '880px',
+          margin: '0 auto',
+          padding: '0 clamp(16px, 3.5vw, 40px)',
+          boxSizing: 'border-box',
+        }}
+      >
+        {/* Breadcrumb */}
+        <nav
+          aria-label="Breadcrumb"
+          style={{
+            padding: '24px 0 32px',
+            fontSize: '0.74rem',
+            fontFamily: 'var(--font-ui), "Jost", sans-serif',
+            color: '#6F6F6A',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+        >
+          <Link href="/" style={{ color: '#6F6F6A', textDecoration: 'none' }}>
+            Home
+          </Link>
+          <span>/</span>
+          <span style={{ color: '#111111', fontWeight: 600 }}>Privacy Policy</span>
+        </nav>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', lineHeight: 1.7, fontSize: '0.95rem', color: 'var(--color-text)' }}>
-          <div style={{ background: 'var(--color-sunken)', padding: '1rem 1.25rem', borderRadius: '8px', borderLeft: '4px solid var(--color-copper)' }}>
-            <strong>Notice to Business Counsel:</strong> The sections below are drafted as structured policy placeholders in accordance with standard Indian e-commerce consumer guidelines. Replace bracketed fields before production deployment.
-          </div>
+        {/* Title */}
+        <div style={{ marginBottom: '36px', borderBottom: '1px solid #E8E7E2', paddingBottom: '20px' }}>
+          <h1
+            style={{
+              fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+              fontSize: 'clamp(2.2rem, 4vw, 3rem)',
+              fontWeight: 500,
+              color: '#111111',
+              margin: '0 0 10px',
+            }}
+          >
+            Privacy Policy
+          </h1>
+          <p
+            style={{
+              fontFamily: 'var(--font-ui), "Jost", sans-serif',
+              fontSize: '0.9rem',
+              color: '#6F6F6A',
+              margin: 0,
+            }}
+          >
+            How MK Silver Hub collects, encrypts, and protects your personal and order data.
+          </p>
+        </div>
 
-          <section>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.35rem', marginBottom: '0.75rem' }}>
+        {/* Content Blocks */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div style={{ backgroundColor: '#F8F7F3', border: '1px solid #E8E7E2', padding: '28px 32px' }}>
+            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem', fontWeight: 600, margin: '0 0 10px' }}>
               1. Information We Collect
             </h2>
-            <p>
-              When you purchase or browse through <strong>{siteConfig.name}</strong>, we collect personal information you share with us such as your name, delivery address, phone number (+91), email address, and IP address for checkout facilitation, pincode verification, and automated transaction updates.
+            <p style={{ fontFamily: 'var(--font-ui)', fontSize: '0.88rem', color: '#4A4A46', lineHeight: 1.65, margin: 0 }}>
+              When you purchase pieces or create an account with MK Silver Hub, we collect essential details including your name, delivery address, phone number, and email. This information is strictly utilized to process insured deliveries, send order status updates, and provide personalized customer care.
             </p>
-            <p style={{ color: 'var(--color-text-muted)', fontStyle: 'italic' }}>
-              [LEGAL TEXT REQUIRED: Specific cookie disclosure, third-party pixel tags, and analytics tracking specifics].
-            </p>
-          </section>
+          </div>
 
-          <section>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.35rem', marginBottom: '0.75rem' }}>
-              2. Payment Security & Processing
+          <div style={{ backgroundColor: '#F8F7F3', border: '1px solid #E8E7E2', padding: '28px 32px' }}>
+            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem', fontWeight: 600, margin: '0 0 10px' }}>
+              2. Payment Security & Encryption
             </h2>
-            <p>
-              All online payment transactions are processed through certified PCI-DSS Level 1 compliant payment gateways. <strong>{siteConfig.name}</strong> does not store, process, or have access to your raw credit/debit card numbers or UPI PINs.
+            <p style={{ fontFamily: 'var(--font-ui)', fontSize: '0.88rem', color: '#4A4A46', lineHeight: 1.65, margin: 0 }}>
+              All online transactions are processed through verified, RBI-compliant PCI-DSS Level 1 payment gateways. MK Silver Hub never captures, views, or stores your credit/debit card numbers, CVV codes, or UPI passwords.
             </p>
-          </section>
+          </div>
 
-          <section>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.35rem', marginBottom: '0.75rem' }}>
-              3. Communication & WhatsApp Updates
+          <div style={{ backgroundColor: '#F8F7F3', border: '1px solid #E8E7E2', padding: '28px 32px' }}>
+            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem', fontWeight: 600, margin: '0 0 10px' }}>
+              3. WhatsApp & Transactional Communications
             </h2>
-            <p>
-              By opting into order tracking, you consent to receive transactional notifications regarding dispatch, delivery tracking, and invoice receipts via SMS, WhatsApp, and email. You can opt out of promotional messages at any time.
+            <p style={{ fontFamily: 'var(--font-ui)', fontSize: '0.88rem', color: '#4A4A46', lineHeight: 1.65, margin: 0 }}>
+              We communicate order status, dispatch tracking, and delivery receipts through WhatsApp and email. You can opt out of promotional newsletters at any time by clicking the unsubscribe link or adjusting account preferences.
             </p>
-          </section>
+          </div>
 
-          <section>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.35rem', marginBottom: '0.75rem' }}>
-              4. Contact the Grievance Officer
+          <div style={{ backgroundColor: '#F8F7F3', border: '1px solid #E8E7E2', padding: '28px 32px' }}>
+            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem', fontWeight: 600, margin: '0 0 10px' }}>
+              4. Data Privacy Inquiries
             </h2>
-            <p>
-              Under the Indian Information Technology Act 2000 and consumer rules, any inquiries or grievances regarding privacy data may be addressed to:
+            <p style={{ fontFamily: 'var(--font-ui)', fontSize: '0.88rem', color: '#4A4A46', lineHeight: 1.65, margin: 0 }}>
+              For any privacy inquiries or to request data modification, contact our grievance team at <strong>privacy@mksilverhub.com</strong> or our Jaipur office at <strong>+91 74250 58118</strong>.
             </p>
-            <div style={{ background: 'var(--color-bg)', padding: '1.25rem', borderRadius: '8px', marginTop: '0.75rem' }}>
-              <p><strong>Grievance Officer:</strong> [CLIENT TO NOMINATE OFFICER]</p>
-              <p><strong>Entity:</strong> {siteConfig.name}</p>
-              <p><strong>Helpline:</strong> {siteConfig.phoneDisplay}</p>
-              <p><strong>Direct Inquiries:</strong> <a href={siteConfig.whatsappUrl} style={{ textDecoration: 'underline' }}>WhatsApp Support</a></p>
-            </div>
-          </section>
+          </div>
         </div>
       </div>
     </div>

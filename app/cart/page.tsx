@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Trash2, Plus, Minus, ArrowRight, ShieldCheck, Sparkles, MessageSquare } from 'lucide-react';
+import { Trash2, Heart, ShieldCheck, RotateCcw, Lock, ArrowRight } from 'lucide-react';
 import { useCommerce } from '@/components/commerce/CommerceContext';
 import { formatPrice } from '@/lib/format';
 
@@ -15,57 +15,80 @@ export default function CartPage() {
     cartSubtotal,
     cartTotal,
     shippingFee,
-    freeShippingThreshold,
-    amountNeededForFreeShipping
+    toggleWishlist,
+    isInWishlist,
   } = useCommerce();
 
-  const [giftNote, setGiftNote] = useState('');
   const [couponCode, setCouponCode] = useState('');
   const [discountApplied, setDiscountApplied] = useState(0);
-  const [couponMessage, setCouponMessage] = useState('');
-
-  const progressPercent = Math.min(100, ((freeShippingThreshold - amountNeededForFreeShipping) / freeShippingThreshold) * 100);
+  const [couponMessage, setCouponMessage] = useState<{ text: string; success: boolean } | null>(null);
 
   const handleApplyCoupon = (e: React.FormEvent) => {
     e.preventDefault();
-    if (couponCode.toUpperCase() === 'FIRST10') {
+    if (couponCode.trim().toUpperCase() === 'FIRST10' || couponCode.trim().toUpperCase() === 'MK10') {
       const discount = Math.round(cartSubtotal * 0.1);
       setDiscountApplied(discount);
-      setCouponMessage('Privilege code FIRST10 applied! 10% savings granted.');
+      setCouponMessage({ text: 'Code applied! 10% discount deducted.', success: true });
     } else {
-      setCouponMessage('Invalid code. Try "FIRST10" for 10% off your order.');
+      setCouponMessage({ text: 'Invalid coupon. Use FIRST10 for 10% off.', success: false });
     }
   };
 
   const finalTotal = Math.max(0, cartTotal - discountApplied);
+  const totalItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   if (cart.length === 0) {
     return (
-      <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '75vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px 20px' }}>
-        <div style={{ textAlign: 'center', maxWidth: '480px' }}>
-          <div
+      <div
+        style={{
+          backgroundColor: '#FFFFFF',
+          minHeight: '70vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '80px 20px',
+        }}
+      >
+        <div style={{ textAlign: 'center', maxWidth: '440px' }}>
+          <h1
             style={{
-              width: '72px',
-              height: '72px',
-              borderRadius: '50%',
-              backgroundColor: 'rgba(201, 163, 90, 0.12)',
-              color: 'var(--color-champagne)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 20px'
+              fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+              fontSize: '2.4rem',
+              fontWeight: 500,
+              color: '#111111',
+              margin: '0 0 12px',
             }}
           >
-            <Sparkles size={32} />
-          </div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '2.2rem', marginBottom: '10px' }}>
-            Your bag is beautifully empty.
+            Your Shopping Bag Is Empty
           </h1>
-          <p style={{ color: 'var(--color-muted-text)', fontSize: '0.95rem', marginBottom: '32px' }}>
-            Explore our curated collections in fine 925 sterling silver, crafted to bring timeless poise to your everyday and celebrations.
+          <p
+            style={{
+              fontFamily: 'var(--font-ui), "Jost", sans-serif',
+              color: '#6F6F6A',
+              fontSize: '0.88rem',
+              lineHeight: 1.6,
+              margin: '0 0 28px',
+            }}
+          >
+            Explore our curated 925 sterling silver collections, handcrafted in Jaipur with hallmark certified purity.
           </p>
-          <Link href="/shop" className="btn-primary" style={{ padding: '16px 36px' }}>
-            Discover Jewellery Collection
+          <Link
+            href="/shop"
+            style={{
+              display: 'inline-block',
+              padding: '14px 36px',
+              backgroundColor: '#111111',
+              color: '#FFFFFF',
+              fontFamily: 'var(--font-ui), "Jost", sans-serif',
+              fontSize: '0.76rem',
+              fontWeight: 600,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              textDecoration: 'none',
+              transition: 'background-color 0.2s ease',
+            }}
+          >
+            DISCOVER JEWELLERY
           </Link>
         </div>
       </div>
@@ -73,225 +96,442 @@ export default function CartPage() {
   }
 
   return (
-    <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '100vh', padding: '40px 0 100px' }}>
-      <div className="container">
-        {/* Header */}
-        <div style={{ marginBottom: '32px' }}>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.2rem, 4vw, 3rem)', color: 'var(--color-espresso)', marginBottom: '6px' }}>
-            Your Shopping Bag
-          </h1>
-          <p style={{ fontSize: '0.95rem', color: 'var(--color-muted-text)' }}>
-            Review your selected 925 sterling pieces before safe, encrypted checkout.
-          </p>
-        </div>
-
-        {/* Free Shipping Progress Indicator */}
-        <div
+    <div
+      style={{
+        backgroundColor: '#FFFFFF',
+        minHeight: '100vh',
+        padding: '36px 0 100px',
+      }}
+    >
+      <div
+        style={{
+          maxWidth: '1440px',
+          margin: '0 auto',
+          padding: '0 clamp(16px, 3.5vw, 40px)',
+          boxSizing: 'border-box',
+        }}
+      >
+        {/* Breadcrumb */}
+        <nav
+          aria-label="Breadcrumb"
           style={{
-            padding: '18px 24px',
-            backgroundColor: '#FCFAF6',
-            borderRadius: 'var(--radius-card)',
-            border: '1px solid var(--color-border)',
-            marginBottom: '32px'
+            paddingBottom: '24px',
+            fontSize: '0.74rem',
+            fontFamily: 'var(--font-ui), "Jost", sans-serif',
+            color: '#6F6F6A',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
-            <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--color-espresso)' }}>
-              {amountNeededForFreeShipping === 0 ? (
-                <span style={{ color: 'var(--color-success)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <Sparkles size={16} /> Complimentary insured doorstep shipping unlocked!
-                </span>
-              ) : (
-                <span>Add <strong>{formatPrice(amountNeededForFreeShipping)}</strong> more to unlock <strong>Complimentary Insured Shipping</strong></span>
-              )}
-            </span>
-            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--color-champagne)' }}>
-              {Math.round(progressPercent)}%
-            </span>
-          </div>
-          <div style={{ width: '100%', height: '8px', backgroundColor: '#E2DBD0', borderRadius: '999px', overflow: 'hidden' }}>
-            <div
-              style={{
-                width: `${progressPercent}%`,
-                height: '100%',
-                backgroundColor: progressPercent === 100 ? 'var(--color-success)' : 'var(--color-champagne)',
-                borderRadius: '999px',
-                transition: 'width 0.4s ease'
-              }}
-            />
-          </div>
+          <Link href="/" style={{ color: '#6F6F6A', textDecoration: 'none' }}>
+            Home
+          </Link>
+          <span>/</span>
+          <span style={{ color: '#111111', fontWeight: 600 }}>Cart</span>
+        </nav>
+
+        {/* Top Header Row with Title & Continue Shopping Link (Screen 6 in Mockup) */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'baseline',
+            justifyContent: 'space-between',
+            borderBottom: '1px solid #E8E7E2',
+            paddingBottom: '18px',
+            marginBottom: '36px',
+          }}
+        >
+          <h1
+            style={{
+              fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+              fontSize: 'clamp(2rem, 3.5vw, 2.6rem)',
+              fontWeight: 500,
+              color: '#111111',
+              margin: 0,
+            }}
+          >
+            Your Cart ({totalItemCount} {totalItemCount === 1 ? 'item' : 'items'})
+          </h1>
+
+          <Link
+            href="/shop"
+            style={{
+              fontFamily: 'var(--font-ui), "Jost", sans-serif',
+              fontSize: '0.78rem',
+              color: '#111111',
+              textDecoration: 'underline',
+              letterSpacing: '0.04em',
+            }}
+          >
+            Continue Shopping
+          </Link>
         </div>
 
-        {/* 2-Column Split: Cart Items | Order Summary */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '40px', alignItems: 'start' }} className="cart-grid">
-          {/* Left: Items List */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {cart.map((item, idx) => (
-              <div
-                key={`${item.product.id}-${idx}`}
-                style={{
-                  display: 'flex',
-                  gap: '20px',
-                  padding: '24px',
-                  backgroundColor: 'var(--bg-cream)',
-                  borderRadius: 'var(--radius-card)',
-                  border: '1px solid var(--color-border)',
-                  alignItems: 'center'
-                }}
-                className="cart-item-row"
-              >
-                {/* Thumbnail */}
-                <div style={{ position: 'relative', width: '100px', height: '120px', borderRadius: '12px', overflow: 'hidden', backgroundColor: '#EDE8E0', flexShrink: 0 }}>
-                  <Image src={item.product.images[0]} alt={item.product.name} fill sizes="100px" style={{ objectFit: 'cover' }} />
-                </div>
+        {/* 2-Column Split: Cart Items | Order Summary (Screen 6 in Mockup) */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'minmax(0, 1.45fr) minmax(0, 1fr)',
+            gap: 'clamp(28px, 4.5vw, 56px)',
+            alignItems: 'start',
+          }}
+          className="cart-split-grid"
+        >
+          {/* ======================================================= */}
+          {/* LEFT: CART PRODUCTS LIST                                */}
+          {/* ======================================================= */}
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {cart.map((item, idx) => {
+              const isFav = isInWishlist(item.product.id);
 
-                {/* Details */}
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                    <div>
-                      <span style={{ fontSize: '0.72rem', color: 'var(--color-muted-text)', textTransform: 'uppercase' }}>
-                        {item.product.purity} • {item.product.weight}
-                      </span>
-                      <Link
-                        href={`/product/${item.product.slug}`}
-                        style={{ display: 'block', fontSize: '1.1rem', fontWeight: 600, color: 'var(--color-espresso)', marginTop: '2px' }}
+              return (
+                <div
+                  key={`${item.product.id}-${item.variant || 'std'}-${idx}`}
+                  style={{
+                    display: 'flex',
+                    gap: '20px',
+                    padding: '24px 0',
+                    borderBottom: '1px solid #E8E7E2',
+                    alignItems: 'center',
+                  }}
+                  className="cart-item-row"
+                >
+                  {/* Item Image */}
+                  <div
+                    style={{
+                      position: 'relative',
+                      width: '90px',
+                      height: '108px',
+                      backgroundColor: '#F8F7F3',
+                      border: '1px solid #E8E7E2',
+                      flexShrink: 0,
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <Image
+                      src={item.product.images[0]}
+                      alt={item.product.name}
+                      fill
+                      sizes="100px"
+                      style={{ objectFit: 'cover' }}
+                    />
+                  </div>
+
+                  {/* Item Details */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <Link
+                      href={`/product/${item.product.slug}`}
+                      style={{
+                        fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+                        fontSize: '1.15rem',
+                        fontWeight: 600,
+                        color: '#111111',
+                        textDecoration: 'none',
+                        display: 'block',
+                        marginBottom: '4px',
+                      }}
+                    >
+                      {item.product.name}
+                    </Link>
+
+                    {item.variant && (
+                      <div
+                        style={{
+                          fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                          fontSize: '0.78rem',
+                          color: '#6F6F6A',
+                          marginBottom: '8px',
+                        }}
                       >
-                        {item.product.name}
-                      </Link>
-                      {item.selectedSize && (
-                        <div style={{ fontSize: '0.78rem', color: 'var(--color-champagne)', fontWeight: 600, marginTop: '4px' }}>
-                          Size: {item.selectedSize}
-                        </div>
-                      )}
+                        Size: {item.variant}
+                      </div>
+                    )}
+
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                        fontSize: '0.94rem',
+                        fontWeight: 600,
+                        color: '#111111',
+                      }}
+                    >
+                      {formatPrice(item.product.price)}
                     </div>
+                  </div>
+
+                  {/* Quantity Selector [ - 1 + ] */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      border: '1px solid #E8E7E2',
+                      backgroundColor: '#FFFFFF',
+                    }}
+                  >
+                    <button
+                      onClick={() => updateQuantity(item.product.id, Math.max(1, item.quantity - 1))}
+                      style={{
+                        width: '32px',
+                        height: '32px',
+                        border: 'none',
+                        background: 'none',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '1rem',
+                        color: '#111111',
+                      }}
+                    >
+                      -
+                    </button>
+                    <span
+                      style={{
+                        width: '32px',
+                        textAlign: 'center',
+                        fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                        fontSize: '0.82rem',
+                        fontWeight: 600,
+                      }}
+                    >
+                      {item.quantity}
+                    </span>
+                    <button
+                      onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                      style={{
+                        width: '32px',
+                        height: '32px',
+                        border: 'none',
+                        background: 'none',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '1rem',
+                        color: '#111111',
+                      }}
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  {/* Wishlist & Remove Actions */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <button
+                      onClick={() => toggleWishlist(item.product)}
+                      aria-label="Save to Wishlist"
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        color: isFav ? '#111111' : '#6F6F6A',
+                        padding: '6px',
+                      }}
+                    >
+                      <Heart size={16} fill={isFav ? '#111111' : 'none'} />
+                    </button>
 
                     <button
                       onClick={() => removeFromCart(item.product.id)}
                       aria-label="Remove item"
-                      style={{ color: 'var(--color-light-text)', padding: '6px' }}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        color: '#6F6F6A',
+                        padding: '6px',
+                      }}
                     >
-                      <Trash2 size={18} />
+                      <Trash2 size={16} />
                     </button>
                   </div>
-
-                  {/* Quantity & Total Price */}
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '16px' }}>
-                    <div style={{ display: 'inline-flex', alignItems: 'center', border: '1px solid var(--color-border)', borderRadius: '8px', backgroundColor: '#FFFFFF' }}>
-                      <button onClick={() => updateQuantity(item.product.id, item.quantity - 1)} style={{ padding: '6px 12px', color: 'var(--color-espresso)' }}>-</button>
-                      <span style={{ minWidth: '30px', textAlign: 'center', fontWeight: 600, fontSize: '0.9rem' }}>{item.quantity}</span>
-                      <button onClick={() => updateQuantity(item.product.id, item.quantity + 1)} style={{ padding: '6px 12px', color: 'var(--color-espresso)' }}>+</button>
-                    </div>
-
-                    <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--color-espresso)' }}>
-                        {formatPrice(item.product.price * item.quantity)}
-                      </div>
-                      {item.product.compareAtPrice && (
-                        <div style={{ fontSize: '0.85rem', color: 'var(--color-light-text)', textDecoration: 'line-through' }}>
-                          {formatPrice(item.product.compareAtPrice * item.quantity)}
-                        </div>
-                      )}
-                    </div>
-                  </div>
                 </div>
-              </div>
-            ))}
-
-            {/* Gift Note Box */}
-            <div style={{ padding: '20px 24px', backgroundColor: 'var(--bg-cream)', borderRadius: 'var(--radius-card)', border: '1px solid var(--color-border)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-                <MessageSquare size={16} color="var(--color-champagne)" />
-                <h4 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--color-espresso)' }}>Complimentary Gift Message</h4>
-              </div>
-              <textarea
-                placeholder="Include a personalized handwritten greeting card with your parcel..."
-                value={giftNote}
-                onChange={e => setGiftNote(e.target.value)}
-                rows={2}
-                style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: '#FFFFFF', resize: 'vertical' }}
-              />
-            </div>
+              );
+            })}
           </div>
 
-          {/* Right: Order Summary */}
+          {/* ======================================================= */}
+          {/* RIGHT: ORDER SUMMARY (Screen 6 in Mockup)               */}
+          {/* ======================================================= */}
           <div
             style={{
-              padding: '32px',
-              backgroundColor: 'var(--bg-cream)',
-              borderRadius: 'var(--radius-editorial)',
-              border: '1px solid var(--color-border)',
-              boxShadow: 'var(--shadow-subtle)',
-              position: 'sticky',
-              top: '90px'
+              backgroundColor: '#F8F7F3',
+              border: '1px solid #E8E7E2',
+              padding: 'clamp(24px, 3vw, 36px)',
             }}
           >
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', fontWeight: 600, marginBottom: '20px' }}>
+            <h2
+              style={{
+                fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
+                fontSize: '1.45rem',
+                fontWeight: 600,
+                color: '#111111',
+                margin: '0 0 20px',
+                borderBottom: '1px solid #E8E7E2',
+                paddingBottom: '14px',
+              }}
+            >
               Order Summary
-            </h3>
+            </h2>
+
+            {/* Calculations List */}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px',
+                fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                fontSize: '0.86rem',
+                marginBottom: '20px',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#6F6F6A' }}>Subtotal</span>
+                <span style={{ fontWeight: 600, color: '#111111' }}>{formatPrice(cartSubtotal)}</span>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#6F6F6A' }}>Shipping</span>
+                <span style={{ fontWeight: 600, color: shippingFee === 0 ? '#111111' : '#111111' }}>
+                  {shippingFee === 0 ? 'Free' : formatPrice(shippingFee)}
+                </span>
+              </div>
+
+              {discountApplied > 0 && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#111111' }}>
+                  <span>Discount</span>
+                  <span style={{ fontWeight: 600 }}>-{formatPrice(discountApplied)}</span>
+                </div>
+              )}
+
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  borderTop: '1px solid #E8E7E2',
+                  paddingTop: '16px',
+                  marginTop: '4px',
+                  fontSize: '1.05rem',
+                  fontWeight: 600,
+                  color: '#111111',
+                }}
+              >
+                <span>Total</span>
+                <span>{formatPrice(finalTotal)}</span>
+              </div>
+            </div>
 
             {/* Coupon Code Input */}
-            <form onSubmit={handleApplyCoupon} style={{ marginBottom: '20px' }}>
+            <form onSubmit={handleApplyCoupon} style={{ marginBottom: '24px' }}>
               <div style={{ display: 'flex', gap: '8px' }}>
                 <input
                   type="text"
-                  placeholder="Coupon code (e.g. FIRST10)"
+                  placeholder="Apply Coupon"
                   value={couponCode}
-                  onChange={e => setCouponCode(e.target.value)}
-                  style={{ flex: 1, padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: '#FFFFFF', fontSize: '0.85rem' }}
+                  onChange={(e) => setCouponCode(e.target.value)}
+                  style={{
+                    flex: 1,
+                    padding: '10px 14px',
+                    border: '1px solid #E8E7E2',
+                    backgroundColor: '#FFFFFF',
+                    fontSize: '0.8rem',
+                    fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                    outline: 'none',
+                    textTransform: 'uppercase',
+                  }}
                 />
-                <button type="submit" className="btn-secondary" style={{ padding: '10px 16px', fontSize: '0.82rem' }}>
-                  Apply
+                <button
+                  type="submit"
+                  style={{
+                    padding: '10px 18px',
+                    backgroundColor: '#111111',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                    fontSize: '0.72rem',
+                    fontWeight: 600,
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    cursor: 'pointer',
+                  }}
+                >
+                  APPLY
                 </button>
               </div>
               {couponMessage && (
-                <div style={{ fontSize: '0.78rem', color: discountApplied > 0 ? 'var(--color-success)' : 'var(--color-copper)', marginTop: '6px' }}>
-                  {couponMessage}
-                </div>
+                <p
+                  style={{
+                    fontSize: '0.75rem',
+                    color: couponMessage.success ? '#111111' : '#B00020',
+                    margin: '8px 0 0',
+                    fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                  }}
+                >
+                  {couponMessage.text}
+                </p>
               )}
             </form>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', paddingBottom: '20px', borderBottom: '1px solid var(--color-border)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
-                <span style={{ color: 'var(--color-muted-text)' }}>Subtotal</span>
-                <span style={{ fontWeight: 600 }}>{formatPrice(cartSubtotal)}</span>
-              </div>
-              {discountApplied > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: 'var(--color-success)' }}>
-                  <span>Privilege Discount (10%)</span>
-                  <span>-{formatPrice(discountApplied)}</span>
-                </div>
-              )}
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
-                <span style={{ color: 'var(--color-muted-text)' }}>Insured Doorstep Shipping</span>
-                <span style={{ fontWeight: 600, color: shippingFee === 0 ? 'var(--color-success)' : 'var(--color-espresso)' }}>
-                  {shippingFee === 0 ? 'FREE' : formatPrice(shippingFee)}
-                </span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
-                <span style={{ color: 'var(--color-muted-text)' }}>Estimated GST (3% Silver Bullion)</span>
-                <span style={{ fontWeight: 600, color: 'var(--color-muted-text)' }}>Included in Price</span>
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', margin: '20px 0 24px' }}>
-              <span style={{ fontSize: '1.1rem', fontWeight: 600 }}>Grand Total</span>
-              <span style={{ fontSize: '1.6rem', fontWeight: 700, color: 'var(--color-espresso)' }}>
-                {formatPrice(finalTotal)}
-              </span>
-            </div>
-
+            {/* Checkout Button */}
             <Link
               href="/checkout"
-              className="btn-primary"
-              style={{ width: '100%', padding: '16px', fontSize: '0.95rem' }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                width: '100%',
+                padding: '16px 0',
+                backgroundColor: '#111111',
+                color: '#FFFFFF',
+                fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                fontSize: '0.78rem',
+                fontWeight: 600,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                marginBottom: '24px',
+                transition: 'background-color 0.2s ease',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#252525')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#111111')}
             >
-              <span>Proceed to Checkout</span>
-              <ArrowRight size={18} />
+              <span>PROCEED TO CHECKOUT</span>
+              <ArrowRight size={14} />
             </Link>
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '18px', color: 'var(--color-muted-text)', fontSize: '0.78rem' }}>
-              <ShieldCheck size={16} color="var(--color-champagne)" />
-              <span>100% Encrypted & Insured Transit Protection</span>
+            {/* 3 Trust Icons (Mockup Screen 6) */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: '8px',
+                borderTop: '1px solid #E8E7E2',
+                paddingTop: '20px',
+                textAlign: 'center',
+              }}
+            >
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                <Lock size={15} color="#111111" />
+                <span style={{ fontSize: '0.68rem', color: '#6F6F6A', fontFamily: 'var(--font-ui), "Jost", sans-serif' }}>
+                  Secure Checkout
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                <RotateCcw size={15} color="#111111" />
+                <span style={{ fontSize: '0.68rem', color: '#6F6F6A', fontFamily: 'var(--font-ui), "Jost", sans-serif' }}>
+                  Easy Returns
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                <ShieldCheck size={15} color="#111111" />
+                <span style={{ fontSize: '0.68rem', color: '#6F6F6A', fontFamily: 'var(--font-ui), "Jost", sans-serif' }}>
+                  925 Silver
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -299,14 +539,8 @@ export default function CartPage() {
 
       <style jsx>{`
         @media (max-width: 900px) {
-          .cart-grid {
+          .cart-split-grid {
             grid-template-columns: 1fr !important;
-          }
-        }
-        @media (max-width: 600px) {
-          .cart-item-row {
-            flex-direction: column !important;
-            align-items: flex-start !important;
           }
         }
       `}</style>

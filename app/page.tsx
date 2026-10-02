@@ -1,53 +1,56 @@
 import React from 'react';
 import HeroSlider from '@/components/home/HeroSlider';
-import CategorySection from '@/components/home/CategorySection';
 import TrustStrip from '@/components/home/TrustStrip';
+import CategorySection from '@/components/home/CategorySection';
+import EditorialBanner from '@/components/home/EditorialBanner';
 import BestSellersSection from '@/components/home/BestSellersSection';
 import NewArrivalsSection from '@/components/home/NewArrivalsSection';
-import EditorialBanner from '@/components/home/EditorialBanner';
+import MenJewellerySection from '@/components/home/MenJewellerySection';
+import MinimalCollectionSection from '@/components/home/MinimalCollectionSection';
 import OccasionSection from '@/components/home/OccasionSection';
-import BrandStorySection from '@/components/home/BrandStorySection';
-import ReviewsSection from '@/components/home/ReviewsSection';
+import SocialAndReviewsSection from '@/components/home/SocialAndReviewsSection';
 import NewsletterSection from '@/components/home/NewsletterSection';
+
+import RootedInCraftSection from '@/components/home/RootedInCraftSection';
 
 export default function HomePage() {
   return (
     <>
-      {/* 01 Floating Mobile Navbar is in layout.tsx */}
-
-      {/* 02 Hero Slider */}
+      {/* 01 Full-Screen Editorial Silver Jewellery Hero */}
       <HeroSlider />
 
-      {/* 03 Shop By Category / Collections */}
-      <CategorySection />
-
-      {/* 04 Trust Strip (Floating overlap bridge between Collections & Best Sellers) */}
+      {/* 02 Hallmark Trust / Benefits Strip */}
       <TrustStrip />
 
-      {/* 05 Best Sellers */}
-      <BestSellersSection />
+      {/* 03 Shop by Category Asymmetric Grid */}
+      <CategorySection />
 
-      {/* 06 New Arrivals */}
-      <NewArrivalsSection />
-
-      {/* 07 Editorial Campaign */}
+      {/* 04 The Art of Silver Full-Width Black Campaign Banner */}
       <EditorialBanner />
 
-      {/* 08 Curated Occasions */}
+      {/* 05 Best Sellers Product Slider (Live MongoDB) */}
+      <BestSellersSection />
+
+      {/* 06 New Arrivals Product Showcase (Live MongoDB) */}
+      <NewArrivalsSection />
+
+      {/* 07 Silver for Him (Men's Jewellery) */}
+      <MenJewellerySection />
+
+      {/* 08 The Minimal Collection (Less. But Better.) */}
+      <MinimalCollectionSection />
+
+      {/* 09 Jewellery for Every Moment (Curated Occasions) */}
       <OccasionSection />
 
-      {/* 09 Why Choose MK Silver Hub */}
-      <BrandStorySection />
+      {/* 10 Rooted In Craft Heritage Section */}
+      <RootedInCraftSection />
 
-      {/* 10 Testimonials */}
-      <ReviewsSection />
+      {/* 11 Community Stories & Customer Testimonials Split */}
+      <SocialAndReviewsSection />
 
-      {/* 11 Newsletter */}
+      {/* 12 Stay in the Loop (Newsletter) */}
       <NewsletterSection />
-
-      {/* 12 Compact Mobile Footer is in layout.tsx */}
-      {/* 13 Floating WhatsApp is in layout.tsx */}
-      {/* 14 Fixed Bottom Navigation is in layout.tsx */}
     </>
   );
 }

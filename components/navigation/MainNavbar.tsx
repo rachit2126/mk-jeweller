@@ -2,34 +2,49 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Search, Heart, ShoppingBag, User, Menu, ChevronDown, ChevronRight, ArrowRight } from 'lucide-react';
+import { Search, Heart, ShoppingBag, User, Menu } from 'lucide-react';
 import BrandLogo from '@/components/ui/BrandLogo';
 import MobileDrawer from './MobileDrawer';
 import { useCommerce } from '@/components/commerce/CommerceContext';
 
 import ShopMegaMenu from './ShopMegaMenu';
-import CollectionsMegaMenu from './CollectionsMegaMenu';
 import AccountDropdown from './AccountDropdown';
 import WishlistPreview from './WishlistPreview';
 import CartPreview from './CartPreview';
 import SearchOverlay from './SearchOverlay';
 
+const CATEGORY_NAV_ITEMS = [
+  { label: 'EARRINGS', href: '/shop?category=earrings', hasMega: true },
+  { label: 'NECKLACES', href: '/shop?category=necklaces', hasMega: true },
+  { label: 'RINGS', href: '/shop?category=rings', hasMega: true },
+  { label: 'BRACELETS', href: '/shop?category=bracelets', hasMega: true },
+  { label: 'BANGLES', href: '/shop?category=bangles', hasMega: true },
+  { label: 'ANKLETS', href: '/shop?category=anklets', hasMega: true },
+  { label: 'PENDANTS', href: '/shop?category=pendants', hasMega: true },
+  { label: 'MEN', href: '/shop?category=men', hasMega: true },
+  { label: 'BRIDAL', href: '/collections/bridal', hasMega: true },
+  { label: 'COLLECTIONS', href: '/collections', hasMega: true },
+  { label: 'NEW ARRIVALS', href: '/shop?sort=newest', hasMega: false },
+  { label: 'BEST SELLERS', href: '/shop?isBestSeller=true', hasMega: false },
+  { label: 'ABOUT', href: '/about', hasMega: false },
+];
+
 export default function MainNavbar() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [activeMenu, setActiveMenu] = useState<'shop' | 'collections' | 'account' | 'wishlist' | 'cart' | 'search' | null>(null);
+  const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
+  const [activeMenu, setActiveMenu] = useState<'account' | 'wishlist' | 'cart' | 'search' | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [bagAnimated, setBagAnimated] = useState(false);
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const navbarRef = useRef<HTMLDivElement>(null);
   const prevCartCountRef = useRef(0);
-  const { cartCount, wishlistCount } = useCommerce();
+  const { cartCount, wishlistCount, toggleCartDrawer, toggleSearchModal } = useCommerce();
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 25);
+      setIsScrolled(window.scrollY > 30);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -38,6 +53,7 @@ export default function MainNavbar() {
   // Close menus on page navigation
   useEffect(() => {
     setActiveMenu(null);
+    setIsMegaMenuOpen(false);
   }, [pathname]);
 
   // Click outside and Escape key handler
@@ -45,12 +61,14 @@ export default function MainNavbar() {
     const handleClickOutside = (e: MouseEvent) => {
       if (navbarRef.current && !navbarRef.current.contains(e.target as Node)) {
         setActiveMenu(null);
+        setIsMegaMenuOpen(false);
       }
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setActiveMenu(null);
+        setIsMegaMenuOpen(false);
       }
     };
 
@@ -62,7 +80,7 @@ export default function MainNavbar() {
     };
   }, []);
 
-  // Trigger subtle bounce on Bag icon when an item is added
+  // Trigger bounce on Bag icon when an item is added
   useEffect(() => {
     if (cartCount > prevCartCountRef.current) {
       setBagAnimated(true);
@@ -72,16 +90,19 @@ export default function MainNavbar() {
     prevCartCountRef.current = cartCount;
   }, [cartCount]);
 
-  // Dropdown open/close with graceful hover delay
-  const handleMouseEnter = (menu: 'shop' | 'collections') => {
+  const handleNavMouseEnter = (hasMega: boolean) => {
     if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
-    setActiveMenu(menu);
+    if (hasMega) {
+      setIsMegaMenuOpen(true);
+    } else {
+      setIsMegaMenuOpen(false);
+    }
   };
 
-  const handleMouseLeave = () => {
+  const handleNavMouseLeave = () => {
     dropdownTimeoutRef.current = setTimeout(() => {
-      setActiveMenu((prev) => (prev === 'shop' || prev === 'collections' ? null : prev));
-    }, 240);
+      setIsMegaMenuOpen(false);
+    }, 250);
   };
 
   const handleMegaMenuMouseEnter = () => {
@@ -89,61 +110,55 @@ export default function MainNavbar() {
   };
 
   const toggleMenu = (menu: 'account' | 'wishlist' | 'cart' | 'search') => {
+    if (menu === 'cart') {
+      toggleCartDrawer();
+      return;
+    }
+    if (menu === 'search') {
+      toggleSearchModal();
+      return;
+    }
     setActiveMenu((prev) => (prev === menu ? null : menu));
   };
 
-  const isHomePage = pathname === '/';
   const isAuthOrAdmin = pathname?.startsWith('/admin') || pathname === '/login' || pathname === '/register' || pathname === '/forgot-password';
-
   if (isAuthOrAdmin) return null;
 
   return (
     <>
       <header
+        ref={navbarRef}
         style={{
-          position: isHomePage ? (isScrolled ? 'fixed' : 'absolute') : 'sticky',
-          top: isHomePage ? (isScrolled ? '12px' : '48px') : '12px',
+          position: 'sticky',
+          top: 0,
           left: 0,
           right: 0,
           zIndex: 100,
           width: '100%',
-          pointerEvents: 'none',
-          margin: isHomePage ? 0 : '12px 0 20px 0',
-          padding: 0,
-          border: 'none',
-          transition: 'top 0.28s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.28s ease',
+          backgroundColor: isScrolled ? 'rgba(255, 255, 255, 0.98)' : '#FFFFFF',
+          backdropFilter: isScrolled ? 'blur(16px)' : 'none',
+          WebkitBackdropFilter: isScrolled ? 'blur(16px)' : 'none',
+          borderBottom: '1px solid #E8E7E2',
+          transition: 'all 0.25s ease',
+          boxShadow: isScrolled ? '0 4px 20px rgba(0, 0, 0, 0.04)' : 'none',
         }}
       >
+        {/* ROW 1: MAIN HEADER (Search Left, Logo Center, Account/Wishlist/Bag Right) */}
         <div
-          ref={navbarRef}
-          className="floating-navbar-pill"
           style={{
-            pointerEvents: 'auto',
-            width: 'min(92%, 1400px)',
+            maxWidth: '1440px',
             margin: '0 auto',
-            height: isScrolled ? '68px' : '76px',
-            borderRadius: '24px',
-            backgroundColor: isScrolled
-              ? 'rgba(255, 249, 243, 0.96)'
-              : 'rgba(255, 255, 255, 0.90)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            border: isScrolled
-              ? '1px solid rgba(232, 216, 208, 0.92)'
-              : '1px solid rgba(232, 216, 208, 0.75)',
-            boxShadow: isScrolled
-              ? '0 14px 40px rgba(59, 43, 43, 0.10)'
-              : '0 10px 32px rgba(59, 43, 43, 0.06)',
+            height: isScrolled ? '58px' : '68px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '0 clamp(18px, 2.5vw, 32px)',
+            padding: '0 clamp(16px, 3vw, 40px)',
+            transition: 'height 0.25s ease',
             position: 'relative',
-            transition: 'all 0.28s cubic-bezier(0.22, 1, 0.36, 1)',
           }}
         >
           {/* Mobile Left: Menu Toggle Button */}
-          <div className="mobile-nav-toggle" style={{ display: 'none' }}>
+          <div className="mobile-nav-toggle">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
               aria-label="Open navigation menu"
@@ -154,116 +169,67 @@ export default function MainNavbar() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#3B2B2B',
+                color: '#111111',
                 cursor: 'pointer',
               }}
             >
-              <Menu size={22} strokeWidth={1.35} />
+              <Menu size={22} strokeWidth={1.5} />
             </button>
           </div>
 
-          {/* Brand Logo */}
-          <div className="brand-logo-container desktop-logo" style={{ flexShrink: 0 }}>
-            <BrandLogo size={isScrolled ? 'compact' : 'normal'} />
-          </div>
-          <div className="brand-logo-container mobile-logo" style={{ flexShrink: 0, display: 'none' }}>
-            <BrandLogo size="compact" />
+          {/* Desktop Left: Search Bar & Icon */}
+          <div className="hidden-mobile" style={{ display: 'flex', alignItems: 'center' }}>
+            <button
+              onClick={() => toggleMenu('search')}
+              aria-label="Search jewellery"
+              style={{
+                background: 'transparent',
+                border: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+                color: '#6F6F6A',
+                padding: '6px 0',
+                fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                fontSize: '0.82rem',
+              }}
+            >
+              <Search size={18} strokeWidth={1.4} color="#111111" />
+              <span className="search-text-label">Search jewellery...</span>
+            </button>
           </div>
 
-          {/* Center Navigation Links (Minimalist 4-Item Architecture with Warm Animations) */}
-          <nav
-            className="desktop-nav-menu"
+          {/* Center: Brand Logo */}
+          <div
             style={{
+              position: 'absolute',
+              left: '50%',
+              transform: 'translateX(-50%)',
               display: 'flex',
               alignItems: 'center',
-              gap: 'clamp(26px, 2.6vw, 46px)',
-              height: '100%',
+              justifyContent: 'center',
             }}
           >
-            {/* 1. SHOP (Mega Menu Trigger) */}
-            <div
-              onMouseEnter={() => handleMouseEnter('shop')}
-              onMouseLeave={handleMouseLeave}
-              style={{ height: '100%', display: 'flex', alignItems: 'center' }}
-            >
-              <Link
-                href="/shop"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setActiveMenu((prev) => (prev === 'shop' ? null : 'shop'));
-                }}
-                className={`nav-btn-link ${pathname.startsWith('/shop') || activeMenu === 'shop' ? 'active' : ''}`}
-              >
-                <span>SHOP</span>
-                <ChevronDown
-                  size={12}
-                  strokeWidth={1.5}
-                  className={`nav-chevron ${activeMenu === 'shop' ? 'open' : ''}`}
-                />
-              </Link>
-            </div>
+            <BrandLogo size={isScrolled ? 'compact' : 'normal'} layout="horizontal" />
+          </div>
 
-            {/* 2. COLLECTIONS (Mega Menu Trigger) */}
-            <div
-              onMouseEnter={() => handleMouseEnter('collections')}
-              onMouseLeave={handleMouseLeave}
-              style={{ height: '100%', display: 'flex', alignItems: 'center' }}
-            >
-              <Link
-                href="/collections"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setActiveMenu((prev) => (prev === 'collections' ? null : 'collections'));
-                }}
-                className={`nav-btn-link ${pathname.startsWith('/collections') || activeMenu === 'collections' ? 'active' : ''}`}
-              >
-                <span>COLLECTIONS</span>
-                <ChevronDown
-                  size={12}
-                  strokeWidth={1.5}
-                  className={`nav-chevron ${activeMenu === 'collections' ? 'open' : ''}`}
-                />
-              </Link>
-            </div>
-
-            {/* 3. GIFTS (Direct Link) */}
-            <div style={{ height: '100%', display: 'flex', alignItems: 'center' }}>
-              <Link
-                href="/gifts"
-                className={`nav-btn-link ${pathname === '/gifts' ? 'active' : ''}`}
-              >
-                <span>GIFTS</span>
-              </Link>
-            </div>
-
-            {/* 4. ABOUT (Direct Link) */}
-            <div style={{ height: '100%', display: 'flex', alignItems: 'center' }}>
-              <Link
-                href="/about"
-                className={`nav-btn-link ${pathname === '/about' ? 'active' : ''}`}
-              >
-                <span>ABOUT</span>
-              </Link>
-            </div>
-          </nav>
-
-          {/* Right Action Icons */}
+          {/* Right Action Icons (Account, Wishlist, Bag) */}
           <div
-            className="nav-actions-right"
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: 'clamp(8px, 1.2vw, 16px)',
+              gap: 'clamp(10px, 1.3vw, 18px)',
               flexShrink: 0,
             }}
           >
-            {/* Search */}
+            {/* Mobile Search Icon */}
             <button
               onClick={() => toggleMenu('search')}
-              aria-label="Search catalogue"
-              className={`nav-action-icon-btn nav-icon-search ${activeMenu === 'search' ? 'active-icon' : ''}`}
+              aria-label="Search jewellery"
+              className="nav-icon-btn mobile-only-icon"
             >
-              <Search size={19} strokeWidth={1.3} />
+              <Search size={19} strokeWidth={1.4} />
             </button>
 
             {/* Account */}
@@ -271,9 +237,9 @@ export default function MainNavbar() {
               <button
                 onClick={() => toggleMenu('account')}
                 aria-label="Account and orders"
-                className={`nav-action-icon-btn nav-icon-account ${activeMenu === 'account' ? 'active-icon' : ''}`}
+                className="nav-icon-btn"
               >
-                <User size={19} strokeWidth={1.3} />
+                <User size={19} strokeWidth={1.4} />
               </button>
               {activeMenu === 'account' && (
                 <div
@@ -294,29 +260,11 @@ export default function MainNavbar() {
               <button
                 onClick={() => toggleMenu('wishlist')}
                 aria-label={`Wishlist (${wishlistCount} items)`}
-                className={`nav-action-icon-btn nav-icon-wishlist ${activeMenu === 'wishlist' ? 'active-icon' : ''}`}
+                className="nav-icon-btn"
               >
-                <Heart size={19} strokeWidth={1.3} className="wishlist-heart-svg" />
+                <Heart size={19} strokeWidth={1.4} />
                 {wishlistCount > 0 && (
-                  <span
-                    style={{
-                      position: 'absolute',
-                      top: '4px',
-                      right: '3px',
-                      backgroundColor: '#B76E79',
-                      color: '#FFFFFF',
-                      fontSize: '0.55rem',
-                      fontWeight: 600,
-                      minWidth: '15px',
-                      height: '15px',
-                      borderRadius: '50%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      padding: '0 2px',
-                      lineHeight: 1,
-                    }}
-                  >
+                  <span className="nav-badge">
                     {wishlistCount}
                   </span>
                 )}
@@ -340,32 +288,12 @@ export default function MainNavbar() {
               <button
                 onClick={() => toggleMenu('cart')}
                 aria-label={`Shopping bag with ${cartCount} items`}
-                className={`nav-action-icon-btn nav-icon-bag ${bagAnimated ? 'bag-bounce' : ''} ${activeMenu === 'cart' ? 'active-icon' : ''}`}
+                className={`nav-icon-btn ${bagAnimated ? 'bag-bounce' : ''}`}
               >
-                <ShoppingBag size={19} strokeWidth={1.3} />
-                {cartCount > 0 && (
-                  <span
-                    style={{
-                      position: 'absolute',
-                      top: '4px',
-                      right: '2px',
-                      backgroundColor: '#B76E79',
-                      color: '#FFFFFF',
-                      fontSize: '0.55rem',
-                      fontWeight: 600,
-                      minWidth: '15px',
-                      height: '15px',
-                      borderRadius: '50%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      padding: '0 2px',
-                      lineHeight: 1,
-                    }}
-                  >
-                    {cartCount}
-                  </span>
-                )}
+                <ShoppingBag size={19} strokeWidth={1.4} />
+                <span className="nav-badge">
+                  {cartCount}
+                </span>
               </button>
               {activeMenu === 'cart' && (
                 <div
@@ -381,250 +309,180 @@ export default function MainNavbar() {
               )}
             </div>
           </div>
-
-          {/* SHOP MEGA MENU */}
-          {activeMenu === 'shop' && (
-            <div
-              onMouseEnter={handleMegaMenuMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              className="desktop-mega-wrapper"
-              style={{
-                position: 'absolute',
-                top: 'calc(100% + 10px)',
-                left: 0,
-                width: '100%',
-                zIndex: 120,
-              }}
-            >
-              <ShopMegaMenu onClose={() => setActiveMenu(null)} />
-            </div>
-          )}
-
-          {/* COLLECTIONS MEGA MENU */}
-          {activeMenu === 'collections' && (
-            <div
-              onMouseEnter={handleMegaMenuMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              className="desktop-mega-wrapper"
-              style={{
-                position: 'absolute',
-                top: 'calc(100% + 10px)',
-                left: 0,
-                width: '100%',
-                zIndex: 120,
-              }}
-            >
-              <CollectionsMegaMenu onClose={() => setActiveMenu(null)} />
-            </div>
-          )}
-
-          {/* SEARCH OVERLAY */}
-          {activeMenu === 'search' && (
-            <div
-              className="desktop-mega-wrapper"
-              style={{
-                position: 'absolute',
-                top: 'calc(100% + 10px)',
-                left: 0,
-                width: '100%',
-                zIndex: 120,
-              }}
-            >
-              <SearchOverlay onClose={() => setActiveMenu(null)} />
-            </div>
-          )}
         </div>
+
+        {/* ROW 2: CATEGORY NAVIGATION ROW BELOW (Screen 1 & 2 in Mockup) */}
+        <div
+          className="desktop-category-bar"
+          style={{
+            borderTop: '1px solid #F2F0EA',
+            backgroundColor: '#FFFFFF',
+            width: '100%',
+          }}
+        >
+          <div
+            style={{
+              maxWidth: '1440px',
+              margin: '0 auto',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 'clamp(14px, 1.8vw, 28px)',
+              padding: '0 24px',
+              height: isScrolled ? '36px' : '42px',
+              transition: 'height 0.25s ease',
+            }}
+          >
+            {CATEGORY_NAV_ITEMS.map((item) => (
+              <div
+                key={item.label}
+                onMouseEnter={() => handleNavMouseEnter(item.hasMega)}
+                onMouseLeave={handleNavMouseLeave}
+                style={{ height: '100%', display: 'flex', alignItems: 'center' }}
+              >
+                <Link
+                  href={item.href}
+                  className={`nav-sub-link ${pathname === item.href || (item.hasMega && isMegaMenuOpen && pathname.startsWith(item.href.split('?')[0])) ? 'active' : ''}`}
+                >
+                  {item.label}
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* MEGA MENU DROPDOWN (Matches Screen 2 in Mockup) */}
+        {isMegaMenuOpen && (
+          <div
+            onMouseEnter={handleMegaMenuMouseEnter}
+            onMouseLeave={handleNavMouseLeave}
+            style={{
+              position: 'absolute',
+              top: '100%',
+              left: 0,
+              width: '100%',
+              zIndex: 120,
+            }}
+          >
+            <ShopMegaMenu onClose={() => setIsMegaMenuOpen(false)} />
+          </div>
+        )}
+
+        {/* Global Search Overlay (if active) */}
+        {activeMenu === 'search' && (
+          <SearchOverlay onClose={() => setActiveMenu(null)} />
+        )}
       </header>
 
-      {/* Clean Mobile Drawer Navigation */}
+      {/* Mobile Drawer */}
       <MobileDrawer
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
       />
 
       <style jsx>{`
-        .nav-btn-link {
-          position: relative;
+        .nav-sub-link {
+          font-family: var(--font-ui), "Jost", -apple-system, sans-serif;
+          font-size: 0.72rem;
+          font-weight: 500;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: #252525;
+          text-decoration: none;
           display: inline-flex;
           align-items: center;
-          gap: 5px;
-          font-family: var(--font-ui), 'Jost', sans-serif;
-          font-size: 0.78rem;
-          font-weight: 500;
-          letter-spacing: 0.14em;
-          color: #3B2B2B;
-          text-decoration: none;
-          padding: 8px 2px;
-          transition: color 240ms cubic-bezier(0.22, 1, 0.36, 1), transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+          padding: 6px 2px;
+          position: relative;
+          transition: color 0.15s ease;
         }
-        .nav-btn-link::after {
+
+        .nav-sub-link:hover,
+        .nav-sub-link.active {
+          color: #111111;
+        }
+
+        .nav-sub-link::after {
           content: '';
           position: absolute;
           bottom: 2px;
-          left: 0;
-          right: 0;
+          left: 50%;
+          transform: translateX(-50%) scaleX(0);
+          width: 100%;
           height: 1.5px;
-          background-color: #B76E79;
-          border-radius: 2px;
-          transform: scaleX(0);
-          transform-origin: center;
-          transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .nav-btn-link:hover {
-          color: #B76E79 !important;
-          transform: translateY(-1.5px);
-        }
-        .nav-btn-link:hover::after,
-        .nav-btn-link.active::after {
-          transform: scaleX(1);
-        }
-        .nav-btn-link.active {
-          color: #B76E79;
+          background-color: #111111;
+          transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        .nav-chevron {
-          opacity: 0.65;
-          transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1), opacity 200ms ease;
-        }
-        .nav-chevron.open {
-          transform: rotate(180deg);
-          opacity: 1;
+        .nav-sub-link:hover::after,
+        .nav-sub-link.active::after {
+          transform: translateX(-50%) scaleX(1);
         }
 
-        /* Dropdown Animation */
-        @keyframes dropdownSlideIn {
-          from {
-            opacity: 0;
-            transform: translate(-50%, -8px);
-          }
-          to {
-            opacity: 1;
-            transform: translate(-50%, 0);
-          }
-        }
-        .dropdown-menu-card {
-          animation: dropdownSlideIn 240ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        .shop-dropdown-row:hover {
-          background-color: #FFE3D3 !important;
-          color: #B76E79 !important;
-          transform: translateX(2px);
-        }
-        .shop-dropdown-row:hover .shop-chevron-right {
-          color: #B76E79 !important;
-          transform: translateX(2px);
-        }
-
-        /* Action Icon Animations */
-        .nav-action-icon-btn {
+        .nav-icon-btn {
           background: transparent;
           border: none;
-          color: #3B2B2B;
+          padding: 7px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          color: #111111;
+          cursor: pointer;
+          position: relative;
+          border-radius: 50%;
+          transition: background-color 0.2s ease, transform 0.15s ease;
+        }
+
+        .nav-icon-btn:hover {
+          background-color: #F8F7F3;
+        }
+
+        .nav-badge {
+          position: absolute;
+          top: 0px;
+          right: 0px;
+          background-color: #111111;
+          color: #FFFFFF;
+          font-size: 0.6rem;
+          font-weight: 600;
+          width: 15px;
+          height: 15px;
+          border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 8px;
-          cursor: pointer;
-          position: relative;
-          text-decoration: none;
-          transition: color 200ms cubic-bezier(0.22, 1, 0.36, 1), transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+          line-height: 1;
         }
 
-        .nav-icon-search:hover {
-          color: #B76E79 !important;
-          transform: scale(1.06) rotate(-3deg);
-        }
-
-        .nav-icon-account:hover {
-          color: #B76E79 !important;
-          transform: scale(1.06) translateY(-1px);
-        }
-
-        .nav-icon-wishlist:hover {
-          color: #B76E79 !important;
-          transform: scale(1.06);
-        }
-        .nav-icon-wishlist:hover :global(.wishlist-heart-svg) {
-          transform: scale(1.14);
-          transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .nav-icon-bag:hover {
-          color: #B76E79 !important;
-          transform: scale(1.06) translateY(-1.5px);
-        }
-
-        .nav-action-icon-btn.active-icon {
-          color: #B76E79 !important;
-          background-color: #FFE3D3;
-          border-radius: 50%;
+        .bag-bounce {
+          animation: bagBounceAnim 0.35s ease;
         }
 
         @keyframes bagBounceAnim {
           0% { transform: scale(1); }
-          40% { transform: scale(1.2); }
-          75% { transform: scale(0.95); }
+          50% { transform: scale(1.22); }
           100% { transform: scale(1); }
         }
-        .bag-bounce {
-          animation: bagBounceAnim 300ms cubic-bezier(0.22, 1, 0.36, 1);
+
+        .mobile-only-icon {
+          display: none;
         }
 
-        @media (max-width: 990px) {
-          .floating-navbar-pill {
-            width: 92% !important;
-            height: 58px !important;
-            border-radius: 20px !important;
-            padding: 0 16px !important;
-          }
-          .desktop-nav-menu {
-            display: none !important;
-          }
-          .desktop-mega-wrapper {
-            display: none !important;
-          }
-          .mobile-nav-toggle {
-            display: flex !important;
-          }
-          .desktop-logo {
-            display: none !important;
-          }
-          .mobile-logo {
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-          }
-          .brand-logo-container {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-          }
+        .mobile-nav-toggle {
+          display: none;
         }
-        @media (max-width: 640px) {
+
+        @media (max-width: 1024px) {
+          .desktop-category-bar {
+            display: none !important;
+          }
           .hidden-mobile {
             display: none !important;
           }
-          .floating-navbar-pill {
-            padding: 0 10px !important;
-            height: 56px !important;
+          .mobile-only-icon {
+            display: inline-flex !important;
           }
-          .nav-action-icon-btn {
-            padding: 4px !important;
-          }
-        }
-        @media (max-width: 400px) {
-          .nav-actions-right {
-            gap: 2px !important;
-          }
-        }
-        @media (max-width: 360px) {
-          .floating-navbar-pill {
-            padding: 0 6px !important;
-            width: 96% !important;
-          }
-          .nav-action-icon-btn {
-            padding: 2px !important;
+          .mobile-nav-toggle {
+            display: block !important;
           }
         }
       `}</style>

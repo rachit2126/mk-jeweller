@@ -91,10 +91,10 @@ export default function WhatsAppFloat() {
         .whatsapp-tooltip {
           pointer-events: auto;
           background-color: #FFFFFF;
-          box-shadow: 0 8px 24px rgba(59, 43, 43, 0.12);
-          padding: 7px 12px;
-          border-radius: 12px;
-          border: 1px solid #E8D8D0;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+          padding: 8px 12px;
+          border-radius: 4px;
+          border: 1px solid #E8E7E2;
           display: flex;
           align-items: center;
           gap: 8px;
@@ -109,33 +109,33 @@ export default function WhatsAppFloat() {
         }
 
         .tooltip-title {
-          font-size: 0.76rem;
+          font-size: 0.74rem;
           font-weight: 600;
-          color: #342727;
+          color: #111111;
           line-height: 1.2;
         }
 
         .tooltip-sub {
           font-size: 0.65rem;
-          color: #806D68;
+          color: #6F6F6A;
           line-height: 1.2;
         }
 
         .tooltip-close-btn {
           background: none;
           border: none;
-          color: #806D68;
+          color: #6F6F6A;
           padding: 2px;
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
-          border-radius: 4px;
+          border-radius: 2px;
           transition: color 0.15s ease;
         }
 
         .tooltip-close-btn:hover {
-          color: #342727;
+          color: #111111;
         }
 
         @keyframes floatIn {
