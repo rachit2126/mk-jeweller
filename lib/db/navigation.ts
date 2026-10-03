@@ -3,11 +3,13 @@ import { DbNavigationItem } from './types';
 
 let cachedNavTree: DbNavigationItem[] | null = null;
 let navTreeCachedAt = 0;
+let pendingNavPromise: Promise<DbNavigationItem[]> | null = null;
 const NAV_CACHE_TTL = 60 * 1000; // 60s in-memory cache
 
 export function invalidateNavigationCache() {
   cachedNavTree = null;
   navTreeCachedAt = 0;
+  pendingNavPromise = null;
 }
 
 export async function getNavigationTree(): Promise<DbNavigationItem[]> {
@@ -16,12 +18,17 @@ export async function getNavigationTree(): Promise<DbNavigationItem[]> {
     return cachedNavTree;
   }
 
-  try {
-    if (!isMongoConfigured()) {
-      return cachedNavTree || [];
-    }
-    const db = await connectDB();
-    const navCol = db.collection('navigation');
+  if (pendingNavPromise) {
+    return pendingNavPromise;
+  }
+
+  pendingNavPromise = (async () => {
+    try {
+      if (!isMongoConfigured()) {
+        return cachedNavTree || [];
+      }
+      const db = await connectDB();
+      const navCol = db.collection('navigation');
 
     const allItems = await navCol
       .find({
@@ -107,5 +114,10 @@ export async function getNavigationTree(): Promise<DbNavigationItem[]> {
   } catch (error) {
     console.error('[getNavigationTree error]:', error);
     return cachedNavTree || [];
+  } finally {
+    pendingNavPromise = null;
   }
+  })();
+
+  return pendingNavPromise;
 }

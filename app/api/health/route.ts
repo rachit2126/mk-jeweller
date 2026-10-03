@@ -28,7 +28,7 @@ export async function GET() {
   // 2. Test Live Database Connectivity
   try {
     const db = await connectDB();
-    const count = await db.collection('products').countDocuments({}, { limit: 1 });
+    const count = await db.collection('products').countDocuments({}, { limit: 1, maxTimeMS: 3000 });
 
     return NextResponse.json({
       status: 'ok',
