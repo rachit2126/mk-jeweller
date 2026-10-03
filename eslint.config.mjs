@@ -21,6 +21,7 @@ const eslintConfig = defineConfig([
     "scripts/**",
     ".wrangler/**",
     ".worker-next/**",
+    "dist/**",
   ]),
 ]);
 
