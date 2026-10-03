@@ -3,149 +3,39 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { X, Plus, Minus, Search, Heart, User, ShoppingBag, MessageCircle } from 'lucide-react';
+import { X, Plus, Minus, Search, Heart, User, ShoppingBag, MessageCircle, ArrowRight } from 'lucide-react';
 import BrandLogo from '@/components/ui/BrandLogo';
+import { useNavigation } from './NavigationContext';
 
 interface MobileDrawerProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-interface AccordionCategory {
-  title: string;
-  href: string;
-  items: { label: string; href: string }[];
-}
-
-const ACCORDION_CATEGORIES: AccordionCategory[] = [
-  {
-    title: 'EARRINGS',
-    href: '/shop?category=earrings',
-    items: [
-      { label: 'All Earrings', href: '/shop?category=earrings' },
-      { label: 'Studs', href: '/shop?category=earrings&sub=studs' },
-      { label: 'Hoops', href: '/shop?category=earrings&sub=hoops' },
-      { label: 'Drop Earrings', href: '/shop?category=earrings&sub=drop' },
-      { label: 'Jhumki', href: '/shop?category=earrings&sub=jhumki' },
-      { label: 'Everyday Earrings', href: '/shop?category=earrings&sub=everyday' },
-      { label: 'Statement Earrings', href: '/shop?category=earrings&sub=statement' },
-    ],
-  },
-  {
-    title: 'NECKLACES',
-    href: '/shop?category=necklaces',
-    items: [
-      { label: 'All Necklaces', href: '/shop?category=necklaces' },
-      { label: 'Pendant Necklaces', href: '/shop?category=necklaces&sub=pendant' },
-      { label: 'Chains', href: '/shop?category=necklaces&sub=chains' },
-      { label: 'Chokers', href: '/shop?category=necklaces&sub=chokers' },
-      { label: 'Layered Necklaces', href: '/shop?category=necklaces&sub=layered' },
-      { label: 'Everyday Necklaces', href: '/shop?category=necklaces&sub=everyday' },
-      { label: 'Bridal Necklaces', href: '/shop?category=necklaces&sub=bridal' },
-    ],
-  },
-  {
-    title: 'RINGS',
-    href: '/shop?category=rings',
-    items: [
-      { label: 'All Rings', href: '/shop?category=rings' },
-      { label: 'Everyday Rings', href: '/shop?category=rings&sub=everyday' },
-      { label: 'Silver Rings', href: '/shop?category=rings&sub=silver' },
-      { label: 'Solitaire Rings', href: '/shop?category=rings&sub=solitaire' },
-      { label: 'Statement Rings', href: '/shop?category=rings&sub=statement' },
-      { label: 'Couple Rings', href: '/shop?category=rings&sub=couple' },
-      { label: 'Bridal Rings', href: '/shop?category=rings&sub=bridal' },
-    ],
-  },
-  {
-    title: 'BRACELETS',
-    href: '/shop?category=bracelets',
-    items: [
-      { label: 'All Bracelets', href: '/shop?category=bracelets' },
-      { label: 'Chain Bracelets', href: '/shop?category=bracelets&sub=chain' },
-      { label: 'Cuff Bracelets', href: '/shop?category=bracelets&sub=cuff' },
-      { label: 'Charm Bracelets', href: '/shop?category=bracelets&sub=charm' },
-      { label: 'Everyday Bracelets', href: '/shop?category=bracelets&sub=everyday' },
-    ],
-  },
-  {
-    title: 'BANGLES',
-    href: '/shop?category=bangles',
-    items: [
-      { label: 'All Bangles', href: '/shop?category=bangles' },
-      { label: 'Silver Bangles', href: '/shop?category=bangles&sub=silver' },
-      { label: 'Kada', href: '/shop?category=bangles&sub=kada' },
-      { label: 'Stacking Bangles', href: '/shop?category=bangles&sub=stacking' },
-      { label: 'Traditional Bangles', href: '/shop?category=bangles&sub=traditional' },
-    ],
-  },
-  {
-    title: 'ANKLETS',
-    href: '/shop?category=anklets',
-    items: [
-      { label: 'All Anklets', href: '/shop?category=anklets' },
-      { label: 'Everyday Anklets', href: '/shop?category=anklets&sub=everyday' },
-      { label: 'Silver Anklets', href: '/shop?category=anklets&sub=silver' },
-      { label: 'Bridal Anklets', href: '/shop?category=anklets&sub=bridal' },
-    ],
-  },
-  {
-    title: 'PENDANTS',
-    href: '/shop?category=pendants',
-    items: [
-      { label: 'All Pendants', href: '/shop?category=pendants' },
-      { label: 'Solitaire Pendants', href: '/shop?category=pendants&sub=solitaire' },
-      { label: 'Floral Pendants', href: '/shop?category=pendants&sub=floral' },
-      { label: 'Spiritual Pendants', href: '/shop?category=pendants&sub=spiritual' },
-    ],
-  },
-  {
-    title: 'MEN',
-    href: '/shop?category=men',
-    items: [
-      { label: 'All Men’s Jewellery', href: '/shop?category=men' },
-      { label: 'Chains', href: '/shop?category=men&sub=chains' },
-      { label: 'Bracelets', href: '/shop?category=men&sub=bracelets' },
-      { label: 'Pendants', href: '/shop?category=men&sub=pendants' },
-      { label: 'Rings', href: '/shop?category=men&sub=rings' },
-      { label: 'Cufflinks', href: '/shop?category=men&sub=cufflinks' },
-    ],
-  },
-  {
-    title: 'BRIDAL',
-    href: '/collections/bridal',
-    items: [
-      { label: 'Bridal Edit', href: '/collections/bridal' },
-      { label: 'Bridal Sets', href: '/shop?category=bridal&sub=sets' },
-      { label: 'Necklaces', href: '/shop?category=necklaces&sub=bridal' },
-      { label: 'Earrings', href: '/shop?category=earrings&sub=bridal' },
-      { label: 'Rings', href: '/shop?category=rings&sub=bridal' },
-    ],
-  },
-  {
-    title: 'COLLECTIONS',
-    href: '/collections',
-    items: [
-      { label: 'All Collections', href: '/collections' },
-      { label: 'Minimal', href: '/collections/minimal' },
-      { label: 'Everyday', href: '/collections/everyday' },
-      { label: 'Festive', href: '/collections/festive' },
-      { label: 'Bridal', href: '/collections/bridal' },
-      { label: 'Heritage', href: '/collections/heritage' },
-    ],
-  },
-];
-
-const DIRECT_ITEMS = [
-  { label: 'NEW ARRIVALS', href: '/shop?sort=newest' },
-  { label: 'BEST SELLERS', href: '/shop?isBestSeller=true' },
-  { label: 'ABOUT', href: '/about' },
-];
 
 export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
   const router = useRouter();
+  const { navbarItems, categories, loading } = useNavigation();
   const [openSection, setOpenSection] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Fallback to categories if navbarItems is not yet loaded
+  const itemsToRender = (navbarItems && navbarItems.length > 0)
+    ? navbarItems
+    : (categories && categories.length > 0)
+      ? categories.map((c) => ({
+          id: c.id,
+          label: c.name,
+          slug: c.slug,
+          url: `/shop?category=${encodeURIComponent(c.slug)}`,
+          children: (c.children || []).map((sub) => ({
+            id: sub.id,
+            label: sub.name,
+            slug: sub.slug,
+            url: `/shop?category=${encodeURIComponent(c.slug)}&subcategory=${encodeURIComponent(sub.slug)}`,
+          })),
+        }))
+      : [];
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -163,8 +53,8 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
     };
   }, [isOpen, onClose]);
 
-  const toggleSection = (title: string) => {
-    setOpenSection((prev) => (prev === title ? null : title));
+  const toggleSection = (id: string) => {
+    setOpenSection((prev) => (prev === id ? null : id));
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -192,10 +82,9 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          backgroundColor: 'rgba(0, 0, 0, 0.45)',
           backdropFilter: 'blur(4px)',
-          WebkitBackdropFilter: 'blur(4px)',
-          animation: 'fadeIn 0.2s ease',
+          animation: 'fadeIn 0.25s ease',
         }}
       />
 
@@ -216,7 +105,7 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
           fontFamily: 'var(--font-ui), "Jost", sans-serif',
         }}
       >
-        {/* Drawer Top Header (Mockup Screen 3) */}
+        {/* Drawer Top Header */}
         <div
           style={{
             padding: '16px 20px',
@@ -282,188 +171,236 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
           </form>
         </div>
 
-        {/* Accordion Categories List (Screen 3 in Mockup) */}
+        {/* Categories List (Dynamic Single Source of Truth Navigation) */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '8px 0' }}>
-          {ACCORDION_CATEGORIES.map((cat) => {
-            const isOpen = openSection === cat.title;
-
-            return (
-              <div key={cat.title} style={{ borderBottom: '1px solid #F2F0EA' }}>
-                <button
-                  onClick={() => toggleSection(cat.title)}
+          {loading && itemsToRender.length === 0 ? (
+            <div style={{ padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div
+                  key={i}
                   style={{
-                    width: '100%',
-                    padding: '14px 20px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    background: 'transparent',
-                    border: 'none',
-                    textAlign: 'left',
-                    fontFamily: 'var(--font-ui), "Jost", sans-serif',
-                    fontSize: '0.78rem',
-                    fontWeight: 600,
-                    letterSpacing: '0.12em',
-                    color: '#111111',
-                    cursor: 'pointer',
+                    height: '24px',
+                    backgroundColor: '#F8F7F3',
+                    borderRadius: '2px',
+                    animation: 'pulse 1.5s infinite ease-in-out',
                   }}
-                >
-                  <span>{cat.title}</span>
-                  {isOpen ? (
-                    <Minus size={14} color="#111111" />
-                  ) : (
-                    <Plus size={14} color="#6F6F6A" />
-                  )}
-                </button>
+                />
+              ))}
+            </div>
+          ) : itemsToRender.length === 0 ? (
+            <div style={{ padding: '24px 20px', textAlign: 'center', color: '#6F6F6A', fontSize: '0.85rem' }}>
+              No navigation items available
+            </div>
+          ) : (
+            itemsToRender.map((item) => {
+              const children = (item.children || []) as any[];
+              const hasChildren = children.length > 0;
+              const isSectionOpen = openSection === item.id;
 
-                {isOpen && (
-                  <div
-                    style={{
-                      backgroundColor: '#F8F7F3',
-                      padding: '8px 20px 14px 24px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '10px',
-                    }}
-                  >
-                    {cat.items.map((sub) => (
-                      <Link
-                        key={sub.label}
-                        href={sub.href}
-                        onClick={onClose}
+              if (hasChildren) {
+                return (
+                  <div key={item.id || item.slug} style={{ borderBottom: '1px solid #F2F0EA' }}>
+                    <button
+                      onClick={() => toggleSection(item.id)}
+                      style={{
+                        width: '100%',
+                        padding: '14px 20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        background: 'transparent',
+                        border: 'none',
+                        textAlign: 'left',
+                        fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                        fontSize: '0.78rem',
+                        fontWeight: 600,
+                        letterSpacing: '0.12em',
+                        color: '#111111',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <span>{(item.label || '').toUpperCase()}</span>
+                      {isSectionOpen ? (
+                        <Minus size={14} color="#111111" />
+                      ) : (
+                        <Plus size={14} color="#6F6F6A" />
+                      )}
+                    </button>
+
+                    {isSectionOpen && (
+                      <div
                         style={{
-                          fontFamily: 'var(--font-ui), "Jost", sans-serif',
-                          fontSize: '0.82rem',
-                          color: '#252525',
-                          textDecoration: 'none',
-                          padding: '3px 0',
-                          display: 'block',
+                          backgroundColor: '#F8F7F3',
+                          padding: '8px 20px 14px 24px',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '10px',
                         }}
                       >
-                        {sub.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          })}
+                        {/* View All Parent */}
+                        <Link
+                          href={item.url || `/shop?category=${encodeURIComponent(item.slug || '')}`}
+                          onClick={onClose}
+                          style={{
+                            fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                            fontSize: '0.8rem',
+                            fontWeight: 600,
+                            color: '#111111',
+                            textDecoration: 'none',
+                            padding: '3px 0',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '4px',
+                          }}
+                        >
+                          <span>View All {item.label}</span>
+                          <ArrowRight size={11} />
+                        </Link>
 
-          {/* Direct Items: NEW ARRIVALS, BEST SELLERS, ABOUT */}
-          {DIRECT_ITEMS.map((item) => (
-            <div key={item.label} style={{ borderBottom: '1px solid #F2F0EA' }}>
-              <Link
-                href={item.href}
-                onClick={onClose}
-                style={{
-                  display: 'block',
-                  padding: '14px 20px',
-                  fontFamily: 'var(--font-ui), "Jost", sans-serif',
-                  fontSize: '0.78rem',
-                  fontWeight: 600,
-                  letterSpacing: '0.12em',
-                  color: '#111111',
-                  textDecoration: 'none',
-                }}
-              >
-                {item.label}
-              </Link>
-            </div>
-          ))}
+                        {/* Real Children */}
+                        {children.map((sub: any) => (
+                          <Link
+                            key={sub.id || sub.slug}
+                            href={sub.url || `/shop?category=${encodeURIComponent(item.slug || '')}&subcategory=${encodeURIComponent(sub.slug || '')}`}
+                            onClick={onClose}
+                            style={{
+                              fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                              fontSize: '0.82rem',
+                              color: '#555550',
+                              textDecoration: 'none',
+                              padding: '3px 0',
+                              display: 'block',
+                            }}
+                          >
+                            {sub.label || sub.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              // Direct link (no children)
+              return (
+                <div key={item.id || item.slug} style={{ borderBottom: '1px solid #F2F0EA' }}>
+                  <Link
+                    href={item.url || `/shop?category=${encodeURIComponent(item.slug || '')}`}
+                    onClick={onClose}
+                    style={{
+                      display: 'block',
+                      padding: '14px 20px',
+                      fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                      fontSize: '0.78rem',
+                      fontWeight: 600,
+                      letterSpacing: '0.12em',
+                      color: '#111111',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    {(item.label || '').toUpperCase()}
+                  </Link>
+                </div>
+              );
+            })
+          )}
+
+          {/* Quick Account Links */}
+          <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <Link
+              href="/account"
+              onClick={onClose}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                fontSize: '0.82rem',
+                color: '#111111',
+                textDecoration: 'none',
+              }}
+            >
+              <User size={16} strokeWidth={1.5} />
+              <span>My Account</span>
+            </Link>
+
+            <Link
+              href="/account/wishlist"
+              onClick={onClose}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                fontSize: '0.82rem',
+                color: '#111111',
+                textDecoration: 'none',
+              }}
+            >
+              <Heart size={16} strokeWidth={1.5} />
+              <span>Wishlist</span>
+            </Link>
+
+            <Link
+              href="/cart"
+              onClick={onClose}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                fontSize: '0.82rem',
+                color: '#111111',
+                textDecoration: 'none',
+              }}
+            >
+              <ShoppingBag size={16} strokeWidth={1.5} />
+              <span>Shopping Bag</span>
+            </Link>
+          </div>
         </div>
 
-        {/* Drawer Bottom Quick Actions */}
+        {/* Drawer Bottom Contact / WhatsApp */}
         <div
           style={{
             padding: '18px 20px',
             borderTop: '1px solid #E8E7E2',
             backgroundColor: '#F8F7F3',
             display: 'flex',
-            flexDirection: 'column',
-            gap: '12px',
+            alignItems: 'center',
+            justifyContent: 'space-between',
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
-            <Link
-              href="/account"
-              onClick={onClose}
-              style={{
-                flex: 1,
-                padding: '9px 12px',
-                backgroundColor: '#FFFFFF',
-                border: '1px solid #E8E7E2',
-                color: '#111111',
-                fontSize: '0.74rem',
-                fontWeight: 500,
-                textDecoration: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-              }}
-            >
-              <User size={14} />
-              <span>Account</span>
-            </Link>
-
-            <Link
-              href="/wishlist"
-              onClick={onClose}
-              style={{
-                flex: 1,
-                padding: '9px 12px',
-                backgroundColor: '#FFFFFF',
-                border: '1px solid #E8E7E2',
-                color: '#111111',
-                fontSize: '0.74rem',
-                fontWeight: 500,
-                textDecoration: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-              }}
-            >
-              <Heart size={14} />
-              <span>Wishlist</span>
-            </Link>
+          <div>
+            <span style={{ display: 'block', fontSize: '0.68rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#6F6F6A' }}>
+              NEED ASSISTANCE?
+            </span>
+            <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#111111' }}>
+              Jaipur Concierge
+            </span>
           </div>
 
           <a
-            href="https://wa.me/917425058118"
+            href="https://wa.me/919876543210?text=Hello%20MK%20Silver%20Hub"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="Contact MK Silver Hub on WhatsApp"
             style={{
-              padding: '10px 14px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
               backgroundColor: '#111111',
               color: '#FFFFFF',
-              fontSize: '0.74rem',
+              padding: '8px 14px',
+              borderRadius: '2px',
+              fontSize: '0.72rem',
               fontWeight: 600,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
               textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
             }}
           >
-            <MessageCircle size={15} />
-            <span>Chat on WhatsApp</span>
+            <MessageCircle size={14} />
+            <span>WhatsApp</span>
           </a>
         </div>
       </div>
-
-      <style jsx global>{`
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes slideInLeft {
-          from { transform: translateX(-100%); }
-          to { transform: translateX(0); }
-        }
-      `}</style>
     </div>
   );
 }

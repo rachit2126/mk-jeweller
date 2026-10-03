@@ -1,5 +1,5 @@
 import React from 'react';
-import HeroSlider from '@/components/home/HeroSlider';
+import StaticHero from '@/components/home/StaticHero';
 import TrustStrip from '@/components/home/TrustStrip';
 import CategorySection from '@/components/home/CategorySection';
 import EditorialBanner from '@/components/home/EditorialBanner';
@@ -8,7 +8,6 @@ import NewArrivalsSection from '@/components/home/NewArrivalsSection';
 import MenJewellerySection from '@/components/home/MenJewellerySection';
 import MinimalCollectionSection from '@/components/home/MinimalCollectionSection';
 import OccasionSection from '@/components/home/OccasionSection';
-import SocialAndReviewsSection from '@/components/home/SocialAndReviewsSection';
 import NewsletterSection from '@/components/home/NewsletterSection';
 
 import RootedInCraftSection from '@/components/home/RootedInCraftSection';
@@ -16,8 +15,8 @@ import RootedInCraftSection from '@/components/home/RootedInCraftSection';
 export default function HomePage() {
   return (
     <>
-      {/* 01 Full-Screen Editorial Silver Jewellery Hero */}
-      <HeroSlider />
+      {/* 01 Static Premium Oxidised Silver Hero */}
+      <StaticHero />
 
       {/* 02 Hallmark Trust / Benefits Strip */}
       <TrustStrip />
@@ -46,10 +45,7 @@ export default function HomePage() {
       {/* 10 Rooted In Craft Heritage Section */}
       <RootedInCraftSection />
 
-      {/* 11 Community Stories & Customer Testimonials Split */}
-      <SocialAndReviewsSection />
-
-      {/* 12 Stay in the Loop (Newsletter) */}
+      {/* 11 Stay in the Loop (Newsletter) */}
       <NewsletterSection />
     </>
   );

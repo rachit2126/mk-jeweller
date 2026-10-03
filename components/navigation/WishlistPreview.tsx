@@ -24,47 +24,14 @@ interface DisplayWishlistItem {
   originalProduct?: Product;
 }
 
-// Fallback sample items matching reference image if wishlist is empty
-const SAMPLE_WISHLIST: DisplayWishlistItem[] = [
-  {
-    id: 'sample-w-1',
-    slug: 'floral-silver-earrings',
-    name: 'Floral Stud Earrings',
-    price: 2499,
-    image: 'https://images.unsplash.com/photo-1630019852942-f89202989a59?q=80&w=200&auto=format&fit=crop',
-  },
-  {
-    id: 'sample-w-2',
-    slug: 'pearl-blossom-necklace',
-    name: 'Silver Pendant Necklace',
-    price: 3999,
-    image: '/images/products/necklaces-pearl-blossom-collar-01.png',
-  },
-  {
-    id: 'sample-w-3',
-    slug: 'minimal-silver-ring',
-    name: 'Minimal Silver Ring',
-    price: 1999,
-    image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=200&auto=format&fit=crop',
-  },
-];
-
 export default function WishlistPreview({ isOpen = true, onClose }: WishlistPreviewProps) {
   const shouldReduceMotion = useReducedMotion();
   const { wishlist, toggleWishlist, wishlistCount } = useCommerce();
 
   if (!isOpen) return null;
 
-  const displayItems: DisplayWishlistItem[] = wishlist.length > 0
-    ? wishlist.slice(0, 4).map(item => ({
-        id: item.id,
-        slug: item.slug,
-        name: item.name,
-        price: item.price,
-        image: item.images?.[0] || '/images/collection-rings.jpg',
-        originalProduct: item,
-      }))
-    : SAMPLE_WISHLIST;
+  const hasItems = wishlist.length > 0;
+  const displayItems = wishlist.slice(0, 4);
 
   return (
     <motion.div
@@ -80,59 +47,73 @@ export default function WishlistPreview({ isOpen = true, onClose }: WishlistPrev
         <div className="wishlist-header">
           <div className="header-left">
             <h4 className="wishlist-title">My Wishlist</h4>
-            <span className="wishlist-count-badge">({wishlistCount || displayItems.length})</span>
+            <span className="wishlist-count-badge">({wishlistCount})</span>
           </div>
-          <Link href="/wishlist" onClick={onClose} className="view-all-link">
-            <span>View All</span>
-            <ArrowRight size={12} />
-          </Link>
+          {hasItems && (
+            <Link href="/wishlist" onClick={onClose} className="view-all-link">
+              <span>View All</span>
+              <ArrowRight size={12} />
+            </Link>
+          )}
         </div>
 
-        {/* Items List */}
-        <div className="wishlist-items-list">
-          {displayItems.map((item) => (
-            <div key={item.id} className="wishlist-item-row">
-              <Link href={`/product/${item.slug}`} onClick={onClose} className="item-thumb-link">
-                <div className="item-thumb">
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    fill
-                    sizes="48px"
-                    style={{ objectFit: 'cover' }}
-                  />
+        {hasItems ? (
+          <>
+            {/* Items List */}
+            <div className="wishlist-items-list">
+              {displayItems.map((item) => (
+                <div key={item.id} className="wishlist-item-row">
+                  <Link href={`/product/${item.slug}`} onClick={onClose} className="item-thumb-link">
+                    <div className="item-thumb">
+                      <Image
+                        src={item.images?.[0] || '/images/collection-rings.jpg'}
+                        alt={item.name}
+                        fill
+                        sizes="48px"
+                        style={{ objectFit: 'cover' }}
+                      />
+                    </div>
+                  </Link>
+
+                  <div className="item-details">
+                    <Link href={`/product/${item.slug}`} onClick={onClose} className="item-name">
+                      {item.name}
+                    </Link>
+                    <div className="item-price">{formatPrice(item.price)}</div>
+                  </div>
+
+                  <button
+                    onClick={() => toggleWishlist(item)}
+                    className="item-remove-btn"
+                    aria-label={`Remove ${item.name} from wishlist`}
+                  >
+                    <Trash2 size={14} />
+                  </button>
                 </div>
-              </Link>
-
-              <div className="item-details">
-                <Link href={`/product/${item.slug}`} onClick={onClose} className="item-name">
-                  {item.name}
-                </Link>
-                <div className="item-price">{formatPrice(item.price)}</div>
-              </div>
-
-              <button
-                onClick={() => {
-                  if ('originalProduct' in item && item.originalProduct) {
-                    toggleWishlist(item.originalProduct);
-                  }
-                }}
-                className="item-remove-btn"
-                aria-label={`Remove ${item.name} from wishlist`}
-              >
-                <Trash2 size={14} />
-              </button>
+              ))}
             </div>
-          ))}
-        </div>
 
-        {/* Footer CTA */}
-        <div className="wishlist-footer">
-          <Link href="/wishlist" onClick={onClose} className="view-wishlist-cta">
-            <span>View Wishlist</span>
-            <ArrowRight size={13} />
-          </Link>
-        </div>
+            {/* Footer CTA */}
+            <div className="wishlist-footer">
+              <Link href="/wishlist" onClick={onClose} className="view-wishlist-cta">
+                <span>View Full Wishlist</span>
+                <ArrowRight size={13} />
+              </Link>
+            </div>
+          </>
+        ) : (
+          <div className="empty-wishlist-state">
+            <div className="empty-wishlist-icon">
+              <Heart size={26} strokeWidth={1.5} />
+            </div>
+            <p className="empty-wishlist-title">Your wishlist is empty</p>
+            <p className="empty-wishlist-desc">Save pieces you love by clicking the heart icon on any product.</p>
+            <Link href="/shop" onClick={onClose} className="discover-btn">
+              <span>Discover Pieces</span>
+              <ArrowRight size={12} />
+            </Link>
+          </div>
+        )}
       </div>
 
       <style jsx>{`
@@ -144,12 +125,10 @@ export default function WishlistPreview({ isOpen = true, onClose }: WishlistPrev
 
         .wishlist-card {
           width: 370px;
-          background: rgba(255, 249, 243, 0.98);
-          backdrop-filter: blur(24px);
-          -webkit-backdrop-filter: blur(24px);
-          border: 1.5px solid rgba(232, 216, 208, 0.85);
-          border-radius: 20px;
-          box-shadow: 0 20px 48px rgba(65, 40, 35, 0.12), 0 4px 12px rgba(183, 110, 121, 0.08);
+          background: #FFFFFF;
+          border: 1px solid #E8E7E2;
+          border-radius: 16px;
+          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
           padding: 18px;
         }
 
@@ -158,7 +137,7 @@ export default function WishlistPreview({ isOpen = true, onClose }: WishlistPrev
           align-items: center;
           justify-content: space-between;
           padding-bottom: 12px;
-          border-bottom: 1px solid rgba(232, 216, 208, 0.6);
+          border-bottom: 1px solid #F0EFEA;
           margin-bottom: 10px;
         }
 
@@ -172,14 +151,14 @@ export default function WishlistPreview({ isOpen = true, onClose }: WishlistPrev
           font-family: var(--font-display), 'Cormorant Garamond', Georgia, serif;
           font-size: 1.15rem;
           font-weight: 600;
-          color: #2D201E;
+          color: #111111;
           margin: 0;
         }
 
         .wishlist-count-badge {
           font-family: var(--font-ui), 'Jost', sans-serif;
           font-size: 0.76rem;
-          color: #806D68;
+          color: #6F6F6A;
           font-weight: 500;
         }
 
@@ -190,13 +169,13 @@ export default function WishlistPreview({ isOpen = true, onClose }: WishlistPrev
           font-family: var(--font-ui), 'Jost', sans-serif;
           font-size: 0.75rem;
           font-weight: 600;
-          color: #B76E79;
+          color: #111111;
           text-decoration: none;
           transition: transform 180ms ease, color 180ms ease;
         }
 
         .view-all-link:hover {
-          color: #9C5762;
+          color: #6F6F6A;
           transform: translateX(2px);
         }
 
@@ -214,15 +193,14 @@ export default function WishlistPreview({ isOpen = true, onClose }: WishlistPrev
           align-items: center;
           gap: 12px;
           padding: 8px;
-          border-radius: 12px;
-          background: #FFFFFF;
-          border: 1px solid rgba(232, 216, 208, 0.5);
-          transition: background-color 180ms ease, border-color 180ms ease;
+          border-radius: 10px;
+          background: #FAF9F6;
+          border: 1px solid #E8E7E2;
+          transition: border-color 180ms ease;
         }
 
         .wishlist-item-row:hover {
-          border-color: rgba(183, 110, 121, 0.35);
-          background-color: #FFFDFC;
+          border-color: #BFC1C4;
         }
 
         .item-thumb-link {
@@ -233,9 +211,9 @@ export default function WishlistPreview({ isOpen = true, onClose }: WishlistPrev
           position: relative;
           width: 48px;
           height: 48px;
-          border-radius: 10px;
+          border-radius: 8px;
           overflow: hidden;
-          background: #FCECE9;
+          background: #F0EFEA;
         }
 
         .item-details {
@@ -249,7 +227,7 @@ export default function WishlistPreview({ isOpen = true, onClose }: WishlistPrev
           font-family: var(--font-ui), 'Jost', sans-serif;
           font-size: 0.82rem;
           font-weight: 500;
-          color: #2D201E;
+          color: #111111;
           text-decoration: none;
           white-space: nowrap;
           overflow: hidden;
@@ -258,23 +236,23 @@ export default function WishlistPreview({ isOpen = true, onClose }: WishlistPrev
         }
 
         .item-name:hover {
-          color: #B76E79;
+          color: #6F6F6A;
         }
 
         .item-price {
           font-family: var(--font-ui), 'Jost', sans-serif;
           font-size: 0.8rem;
           font-weight: 600;
-          color: #B76E79;
+          color: #111111;
           margin-top: 2px;
         }
 
         .item-remove-btn {
           background: transparent;
           border: none;
-          color: #806D68;
+          color: #6F6F6A;
           padding: 6px;
-          border-radius: 8px;
+          border-radius: 6px;
           cursor: pointer;
           display: flex;
           align-items: center;
@@ -283,14 +261,14 @@ export default function WishlistPreview({ isOpen = true, onClose }: WishlistPrev
         }
 
         .item-remove-btn:hover {
-          color: #B76E79;
-          background-color: #FCECE9;
+          color: #DC2626;
+          background-color: #FEE2E2;
         }
 
         .wishlist-footer {
           margin-top: 14px;
           padding-top: 10px;
-          border-top: 1px solid rgba(232, 216, 208, 0.6);
+          border-top: 1px solid #F0EFEA;
         }
 
         .view-wishlist-cta {
@@ -299,22 +277,80 @@ export default function WishlistPreview({ isOpen = true, onClose }: WishlistPrev
           justify-content: center;
           gap: 7px;
           width: 100%;
-          background: #B76E79;
+          background: #111111;
           color: #FFFFFF;
-          padding: 9px 16px;
-          border-radius: 999px;
+          padding: 10px 16px;
+          border-radius: 8px;
           text-decoration: none;
           font-family: var(--font-ui), 'Jost', sans-serif;
           font-size: 0.82rem;
-          font-weight: 600;
-          letter-spacing: 0.03em;
-          box-shadow: 0 4px 14px rgba(183, 110, 121, 0.25);
+          font-weight: 500;
+          letter-spacing: 0.02em;
           transition: background-color 180ms ease, transform 180ms ease;
         }
 
         .view-wishlist-cta:hover {
-          background: #9C5762;
+          background: #252525;
           transform: translateY(-1px);
+        }
+
+        /* EMPTY STATE */
+        .empty-wishlist-state {
+          padding: 28px 16px 16px;
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .empty-wishlist-icon {
+          width: 52px;
+          height: 52px;
+          border-radius: 50%;
+          background: #FAF9F6;
+          border: 1px solid #E8E7E2;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #6F6F6A;
+          margin-bottom: 12px;
+        }
+
+        .empty-wishlist-title {
+          font-family: var(--font-display), 'Cormorant Garamond', Georgia, serif;
+          font-size: 1.15rem;
+          font-weight: 600;
+          color: #111111;
+          margin: 0 0 6px;
+        }
+
+        .empty-wishlist-desc {
+          font-family: var(--font-ui), 'Jost', sans-serif;
+          font-size: 0.78rem;
+          color: #6F6F6A;
+          line-height: 1.4;
+          margin: 0 0 18px;
+          max-width: 240px;
+        }
+
+        :global(.discover-btn) {
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 6px !important;
+          background: #111111 !important;
+          color: #FFFFFF !important;
+          padding: 9px 18px !important;
+          border-radius: 8px !important;
+          text-decoration: none !important;
+          font-family: var(--font-ui), 'Jost', sans-serif !important;
+          font-size: 0.8rem !important;
+          font-weight: 500 !important;
+          transition: background 150ms ease !important;
+        }
+
+        :global(.discover-btn:hover) {
+          background: #252525 !important;
         }
       `}</style>
     </motion.div>

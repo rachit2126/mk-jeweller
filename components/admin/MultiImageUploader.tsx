@@ -788,8 +788,8 @@ export default function MultiImageUploader({
           align-items: center;
           gap: 6px;
           padding: 8px 16px;
-          border-radius: 9px;
-          background-color: #B76E79;
+          border-radius: 6px;
+          background-color: #111111;
           color: #FFFFFF;
           border: none;
           font-family: var(--font-ui), 'Jost', sans-serif;
@@ -797,18 +797,17 @@ export default function MultiImageUploader({
           font-weight: 600;
           cursor: pointer;
           transition: background-color 0.18s ease;
-          box-shadow: 0 4px 12px rgba(183, 110, 121, 0.25);
         }
 
         .btn-add-images:hover {
-          background-color: #9C5762;
+          background-color: #252525;
         }
 
         /* DRAG & DROP ZONE */
         .luxury-upload-dropzone {
-          border: 1.5px dashed #D9B98A;
-          background-color: #FFFDF9;
-          border-radius: 14px;
+          border: 1.5px dashed #D8D5CE;
+          background-color: #F8F7F3;
+          border-radius: 8px;
           padding: 24px 20px;
           display: flex;
           flex-direction: column;
@@ -816,20 +815,19 @@ export default function MultiImageUploader({
           justify-content: center;
           text-align: center;
           cursor: pointer;
-          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+          transition: all 0.18s ease;
           outline: none;
         }
 
         .luxury-upload-dropzone:hover,
         .luxury-upload-dropzone:focus-visible {
-          border-color: #B76E79;
-          background-color: #FFF8F6;
-          box-shadow: 0 4px 16px rgba(183, 110, 121, 0.08);
+          border-color: #111111;
+          background-color: #F2F0EA;
         }
 
         .luxury-upload-dropzone.dragging-over {
-          border-color: #B76E79;
-          background-color: #FCE8DE;
+          border-color: #111111;
+          background-color: #E8E7E2;
           transform: scale(1.01);
         }
 
@@ -837,7 +835,8 @@ export default function MultiImageUploader({
           width: 48px;
           height: 48px;
           border-radius: 50%;
-          background-color: #F8ECE8;
+          background-color: #F2F0EA;
+          color: #111111;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -847,7 +846,7 @@ export default function MultiImageUploader({
 
         .luxury-upload-dropzone:hover .dropzone-icon-circle {
           transform: translateY(-2px);
-          background-color: #F6D6D9;
+          background-color: #E8E7E2;
         }
 
         .dropzone-text-group {
@@ -871,22 +870,22 @@ export default function MultiImageUploader({
         }
 
         .browse-link {
-          color: #B76E79;
+          color: #111111;
           font-weight: 600;
           text-decoration: underline;
         }
 
         .dropzone-formats-tag {
           font-size: 0.72rem;
-          color: #948580;
+          color: #8E8D88;
           margin-top: 4px;
         }
 
         /* BATCH PROGRESS */
         .batch-progress-card {
-          background-color: #F8F5F2;
-          border: 1px solid #EAE2DB;
-          border-radius: 12px;
+          background-color: #F8F7F3;
+          border: 1px solid #E8E7E2;
+          border-radius: 8px;
           padding: 12px 16px;
           display: flex;
           flex-direction: column;
@@ -898,20 +897,20 @@ export default function MultiImageUploader({
           align-items: center;
           justify-content: space-between;
           font-size: 0.78rem;
-          color: #342727;
+          color: #111111;
           font-weight: 600;
         }
 
         .progress-track-bar {
           height: 6px;
-          background-color: #E8D8D0;
+          background-color: #E8E7E2;
           border-radius: 999px;
           overflow: hidden;
         }
 
         .progress-fill-bar {
           height: 100%;
-          background: linear-gradient(90deg, #D9B98A 0%, #B76E79 100%);
+          background: #111111;
           border-radius: 999px;
           transition: width 0.3s ease;
         }
@@ -922,9 +921,9 @@ export default function MultiImageUploader({
           align-items: center;
           justify-content: space-between;
           padding: 8px 12px;
-          background-color: #FAF6F3;
-          border: 1px solid #EAE2DB;
-          border-radius: 10px;
+          background-color: #F8F7F3;
+          border: 1px solid #E8E7E2;
+          border-radius: 6px;
           flex-wrap: wrap;
           gap: 8px;
         }
@@ -938,16 +937,16 @@ export default function MultiImageUploader({
         .selected-count-label {
           font-size: 0.82rem;
           font-weight: 600;
-          color: #342727;
+          color: #111111;
         }
 
         .selection-active-badge {
           font-size: 0.7rem;
           font-weight: 600;
-          color: #B76E79;
-          background-color: #FCE8DE;
+          color: #111111;
+          background-color: #E8E7E2;
           padding: 2px 7px;
-          border-radius: 6px;
+          border-radius: 4px;
         }
 
         .bulk-right-buttons {
@@ -959,7 +958,7 @@ export default function MultiImageUploader({
         .btn-bulk-text {
           background: none;
           border: none;
-          color: #806D68;
+          color: #6F6F6A;
           font-size: 0.76rem;
           font-weight: 600;
           cursor: pointer;
@@ -967,7 +966,7 @@ export default function MultiImageUploader({
         }
 
         .btn-bulk-text:hover {
-          color: #B76E79;
+          color: #111111;
         }
 
         .btn-bulk-remove {
@@ -1034,13 +1033,13 @@ export default function MultiImageUploader({
         }
 
         .image-card-box.is-main-card {
-          border-color: #B76E79;
-          box-shadow: 0 0 0 1px #B76E79, 0 4px 14px rgba(183, 110, 121, 0.12);
+          border-color: #111111;
+          box-shadow: 0 0 0 1px #111111;
         }
 
         .image-card-box.is-selected {
-          border-color: #B76E79;
-          background-color: #FFFDFD;
+          border-color: #111111;
+          background-color: #FFFFFF;
         }
 
         .image-card-box.is-dragging {
@@ -1063,9 +1062,9 @@ export default function MultiImageUploader({
         .card-checkbox-label {
           width: 22px;
           height: 22px;
-          border-radius: 6px;
-          background: rgba(255, 255, 255, 0.9);
-          border: 1px solid #D9C8BE;
+          border-radius: 4px;
+          background: rgba(255, 255, 255, 0.95);
+          border: 1px solid var(--admin-border);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -1075,31 +1074,30 @@ export default function MultiImageUploader({
 
         .card-checkbox-input {
           cursor: pointer;
-          accent-color: #B76E79;
+          accent-color: #111111;
         }
 
         .badge-main-pill {
           display: inline-flex;
           align-items: center;
           gap: 3px;
-          background-color: #B76E79;
+          background-color: #111111;
           color: #FFFFFF;
           font-size: 0.65rem;
           font-weight: 700;
           padding: 2px 7px;
-          border-radius: 6px;
+          border-radius: 4px;
           letter-spacing: 0.04em;
-          box-shadow: 0 2px 6px rgba(183, 110, 121, 0.4);
         }
 
         .btn-set-main {
-          background-color: rgba(255, 255, 255, 0.92);
-          border: 1px solid #D9C8BE;
-          color: #342727;
+          background-color: rgba(255, 255, 255, 0.95);
+          border: 1px solid var(--admin-border);
+          color: #111111;
           font-size: 0.65rem;
           font-weight: 600;
           padding: 2px 7px;
-          border-radius: 6px;
+          border-radius: 4px;
           cursor: pointer;
           transition: all 0.15s ease;
           opacity: 0;
@@ -1111,16 +1109,16 @@ export default function MultiImageUploader({
         }
 
         .btn-set-main:hover {
-          background-color: #FCE8DE;
-          color: #B76E79;
-          border-color: #B76E79;
+          background-color: #F2F0EA;
+          color: #111111;
+          border-color: #111111;
         }
 
         .btn-remove-card {
           width: 22px;
           height: 22px;
           border-radius: 50%;
-          background: rgba(0, 0, 0, 0.65);
+          background: rgba(0, 0, 0, 0.7);
           color: #FFFFFF;
           border: none;
           display: flex;
@@ -1131,7 +1129,7 @@ export default function MultiImageUploader({
         }
 
         .btn-remove-card:hover {
-          background-color: #E53E3E;
+          background-color: #C0392B;
         }
 
         /* CARD IMAGE FRAME */
@@ -1139,7 +1137,7 @@ export default function MultiImageUploader({
           position: relative;
           width: 100%;
           padding-top: 100%; /* 1:1 Aspect Ratio */
-          background-color: #F8F5F2;
+          background-color: #F8F7F3;
           overflow: hidden;
         }
 
@@ -1174,10 +1172,10 @@ export default function MultiImageUploader({
         .btn-reorder-nav {
           width: 24px;
           height: 24px;
-          border-radius: 6px;
-          background: rgba(255, 255, 255, 0.92);
-          border: 1px solid #D9C8BE;
-          color: #342727;
+          border-radius: 4px;
+          background: rgba(255, 255, 255, 0.95);
+          border: 1px solid var(--admin-border);
+          color: #111111;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -1187,9 +1185,9 @@ export default function MultiImageUploader({
         }
 
         .btn-reorder-nav:hover:not(:disabled) {
-          background-color: #B76E79;
+          background-color: #111111;
           color: #FFFFFF;
-          border-color: #B76E79;
+          border-color: #111111;
         }
 
         .btn-reorder-nav:disabled {
@@ -1295,19 +1293,19 @@ export default function MultiImageUploader({
           display: inline-flex;
           align-items: center;
           gap: 4px;
-          background-color: #FAF4EF;
-          border: 1px solid #E8DED7;
-          color: #B76E79;
+          background-color: #F8F7F3;
+          border: 1px solid #E8E7E2;
+          color: #111111;
           font-size: 0.7rem;
           font-weight: 600;
           padding: 3px 8px;
-          border-radius: 6px;
+          border-radius: 4px;
         }
 
         .opt-preview-strip {
-          background-color: #F8F5F2;
-          border: 1px solid #EAE2DB;
-          border-radius: 10px;
+          background-color: #F8F7F3;
+          border: 1px solid #E8E7E2;
+          border-radius: 8px;
           padding: 10px 12px;
           display: flex;
           align-items: center;
@@ -1317,10 +1315,10 @@ export default function MultiImageUploader({
         .opt-preview-thumb {
           width: 44px;
           height: 44px;
-          border-radius: 8px;
+          border-radius: 6px;
           overflow: hidden;
           background: #FFFFFF;
-          border: 1px solid #E8D8D0;
+          border: 1px solid #E8E7E2;
           flex-shrink: 0;
         }
 
@@ -1340,15 +1338,15 @@ export default function MultiImageUploader({
         .opt-item-name {
           font-size: 0.8rem;
           font-weight: 600;
-          color: #342727;
+          color: #111111;
         }
 
         .opt-check-badge {
           display: inline-flex;
           align-items: center;
           gap: 3px;
-          background-color: #E6FFFA;
-          color: #234E52;
+          background-color: #EDF7F2;
+          color: #1E7E5E;
           font-size: 0.68rem;
           font-weight: 700;
           padding: 2px 6px;
@@ -1357,7 +1355,7 @@ export default function MultiImageUploader({
 
         .opt-metrics-row {
           font-size: 0.74rem;
-          color: #6F5A58;
+          color: #6F6F6A;
           display: flex;
           align-items: center;
           gap: 6px;
@@ -1365,11 +1363,11 @@ export default function MultiImageUploader({
         }
 
         .opt-dot {
-          color: #D9C8BE;
+          color: #D8D5CE;
         }
 
         .opt-savings-tag {
-          color: #2F855A;
+          color: #1E7E5E;
           font-weight: 600;
         }
 
@@ -1378,7 +1376,7 @@ export default function MultiImageUploader({
           align-items: center;
           justify-content: space-between;
           padding-top: 8px;
-          border-top: 1px solid #EAE2DB;
+          border-top: 1px solid #E8E7E2;
           gap: 8px;
           flex-wrap: wrap;
         }
@@ -1390,16 +1388,16 @@ export default function MultiImageUploader({
 
         .opt-size-pill {
           background-color: #FFFFFF;
-          border: 1px solid #E8D8D0;
+          border: 1px solid #E8E7E2;
           font-size: 0.68rem;
           padding: 2px 6px;
           border-radius: 4px;
-          color: #806D68;
+          color: #6F6F6A;
         }
 
         .opt-format-pill {
-          background-color: #FCE8DE;
-          color: #B76E79;
+          background-color: #F2F0EA;
+          color: #111111;
           font-size: 0.7rem;
           font-weight: 600;
           padding: 2px 8px;

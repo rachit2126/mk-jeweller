@@ -61,7 +61,7 @@ export default function WhatsAppFloat() {
           position: fixed;
           bottom: 24px;
           right: 24px;
-          z-index: 85;
+          z-index: 120;
           display: flex;
           flex-direction: column-reverse;
           align-items: flex-end;

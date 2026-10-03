@@ -7,20 +7,9 @@ export async function GET() {
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const db = await connectDB();
-  let settings: any = await db.collection('settings').findOne({});
+  const settings = await db.collection('settings').findOne({});
   if (!settings) {
-    const defaultSettings = {
-      storeName: 'MK Silver Hub',
-      supportEmail: 'care@mksilverhub.com',
-      supportPhone: '+91 98765 43210',
-      address: 'Johari Bazaar, Jaipur, Rajasthan 302003',
-      taxRate: 3.0,
-      currency: 'INR',
-      freeShippingThreshold: 999,
-      maintenanceMode: false,
-    };
-    const res = await db.collection('settings').insertOne(defaultSettings as any);
-    settings = { ...defaultSettings, _id: res.insertedId };
+    return NextResponse.json({ settings: null });
   }
 
   const { _id, ...safe } = settings;

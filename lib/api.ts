@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import { Product, Review } from './types';
 import { connectDB } from '@/lib/db/mongodb';
 
@@ -76,7 +77,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
 export async function getProductById(id: string): Promise<Product | null> {
   const db = await connectDB();
   const doc = await db.collection('products').findOne({
-    $or: [{ id }, { _id: (id && id.length === 24 ? new (require('mongodb').ObjectId)(id) : undefined) }],
+    $or: [{ id }, { _id: (id && id.length === 24 && ObjectId.isValid(id) ? new ObjectId(id) : undefined) }],
     isDeleted: { $ne: true },
   });
   return doc ? normalizeProduct(doc) : null;

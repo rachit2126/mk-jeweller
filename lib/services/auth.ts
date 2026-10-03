@@ -13,18 +13,61 @@ export interface UserSession {
   email: string;
   role: UserRole;
   avatar?: string;
+  phone?: string;
+  status?: string;
+  createdAt?: string;
+  addresses?: any[];
   expiresAt: number;
+}
+
+import crypto from 'crypto';
+
+function getAuthSecret(): string {
+  return (
+    process.env.AUTH_SECRET ||
+    process.env.SESSION_SECRET ||
+    process.env.NEXTAUTH_SECRET ||
+    'mk-silver-hub-production-signing-secret-key-2026'
+  );
+}
+
+function signPayload(payload: string): string {
+  return crypto.createHmac('sha256', getAuthSecret()).update(payload).digest('base64url');
 }
 
 // Encode session as safe base64url signed payload
 function encodeSession(session: UserSession): string {
   const json = JSON.stringify(session);
-  return Buffer.from(json).toString('base64url');
+  const payload = Buffer.from(json).toString('base64url');
+  const signature = signPayload(payload);
+  return `${payload}.${signature}`;
 }
 
 function decodeSession(token: string): UserSession | null {
   try {
-    const json = Buffer.from(token, 'base64url').toString('utf-8');
+    if (!token) return null;
+
+    let payload: string;
+
+    if (token.includes('.')) {
+      const parts = token.split('.');
+      if (parts.length !== 2) return null;
+      const [rawPayload, rawSig] = parts;
+      const expectedSig = signPayload(rawPayload);
+
+      // Constant-time comparison to prevent timing attacks
+      const bufA = Buffer.from(rawSig);
+      const bufB = Buffer.from(expectedSig);
+      if (bufA.length !== bufB.length || !crypto.timingSafeEqual(bufA, bufB)) {
+        return null;
+      }
+      payload = rawPayload;
+    } else {
+      // Backward-compatible fallback for currently active sessions during migration
+      payload = token;
+    }
+
+    const json = Buffer.from(payload, 'base64url').toString('utf-8');
     const session = JSON.parse(json) as UserSession;
     if (session.expiresAt && session.expiresAt < Date.now()) {
       return null;
@@ -96,6 +139,10 @@ export async function getCurrentUser(): Promise<UserSession | null> {
       email: user.email,
       role: (user.role as UserRole) || 'USER',
       avatar: user.avatar,
+      phone: user.phone || '',
+      status: user.status || 'active',
+      createdAt: user.createdAt || user.created_at || undefined,
+      addresses: Array.isArray(user.addresses) ? user.addresses : [],
       expiresAt: session.expiresAt,
     };
   } catch (error) {

@@ -20,7 +20,7 @@ interface CartStore {
   addLine: (product: Product, quantity?: number, variantId?: string, variantLabel?: string, customEngraving?: string) => void;
   removeLine: (lineId: string) => void;
   updateQty: (lineId: string, quantity: number) => void;
-  applyCoupon: (code: string) => { success: boolean; message: string };
+  applyCoupon: (code: string) => Promise<{ success: boolean; message: string }>;
   removeCoupon: () => void;
   clearCart: () => void;
 }
@@ -77,16 +77,25 @@ export const useCartStore = create<CartStore>()(
         }));
       },
 
-      applyCoupon: (code) => {
+      applyCoupon: async (code) => {
         const clean = code.trim().toUpperCase();
-        if (clean === 'FIRST10') {
-          const lines = get().lines;
-          const subtotal = lines.reduce((acc, l) => acc + l.product.price * l.quantity, 0);
-          const discount = Math.round(subtotal * 0.1);
-          set({ couponCode: clean, discountAmount: discount });
-          return { success: true, message: 'Privilege code FIRST10 applied (10% off).' };
+        const lines = get().lines;
+        const subtotal = lines.reduce((acc, l) => acc + l.product.price * l.quantity, 0);
+        try {
+          const res = await fetch('/api/coupons/validate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: clean, subtotal }),
+          });
+          const data = await res.json();
+          if (res.ok && data.valid) {
+            set({ couponCode: clean, discountAmount: data.discountAmount });
+            return { success: true, message: data.message || `Privilege code ${clean} applied.` };
+          }
+          return { success: false, message: data.message || 'Invalid coupon code.' };
+        } catch {
+          return { success: false, message: 'Unable to validate coupon code.' };
         }
-        return { success: false, message: 'Invalid coupon. Use code FIRST10.' };
       },
 
       removeCoupon: () => {

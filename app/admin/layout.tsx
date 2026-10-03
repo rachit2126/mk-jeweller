@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
+import { AdminStatsProvider } from '@/components/admin/AdminStatsContext';
 import { ShieldAlert, ArrowLeft, LogOut, ShoppingBag } from 'lucide-react';
 import './admin.css';
 
@@ -75,20 +76,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             align-items: center;
             justify-content: center;
             gap: 16px;
-            background-color: #FFF9F3;
+            background-color: #F8F7F3;
           }
           .admin-loader-spinner {
-            width: 38px;
-            height: 38px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            border: 3px solid #E8D8D0;
-            border-top-color: #B76E79;
+            border: 3px solid #E8E7E2;
+            border-top-color: #111111;
             animation: spin 0.8s linear infinite;
           }
           .admin-loader-text {
             font-family: var(--font-ui), 'Jost', sans-serif;
-            font-size: 0.9rem;
-            color: #806D68;
+            font-size: 0.86rem;
+            color: #6F6F6A;
             font-weight: 500;
           }
           @keyframes spin {
@@ -105,7 +106,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="access-denied-screen">
         <div className="denied-card">
           <div className="denied-icon-wrap">
-            <ShieldAlert size={36} className="text-[#B76E79]" />
+            <ShieldAlert size={34} className="text-[#111111]" />
           </div>
           <h1 className="denied-title">Administrator Access Required</h1>
           <p className="denied-desc">
@@ -135,40 +136,40 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #FAF5F0;
+            background-color: #F8F7F3;
             padding: 20px;
           }
           .denied-card {
             max-width: 480px;
             background: #FFFFFF;
-            border: 1px solid #EADFD5;
-            border-radius: 24px;
-            padding: 40px 32px;
+            border: 1px solid #E8E7E2;
+            border-radius: 12px;
+            padding: 36px 30px;
             text-align: center;
-            box-shadow: 0 16px 40px rgba(52, 39, 39, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
           }
           .denied-icon-wrap {
-            width: 72px;
-            height: 72px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
-            background-color: #FCE8DE;
+            background-color: #F2F0EA;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
+            margin: 0 auto 18px;
           }
           .denied-title {
             font-family: var(--font-display), 'Cormorant Garamond', Georgia, serif;
-            font-size: 1.8rem;
-            color: #342727;
-            margin-bottom: 10px;
+            font-size: 1.7rem;
+            color: #111111;
+            margin-bottom: 8px;
           }
           .denied-desc {
             font-family: var(--font-ui), 'Jost', sans-serif;
-            font-size: 0.88rem;
-            color: #7D6B66;
+            font-size: 0.86rem;
+            color: #6F6F6A;
             line-height: 1.6;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
           }
           .denied-actions {
             display: flex;
@@ -180,30 +181,35 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             align-items: center;
             justify-content: center;
             gap: 8px;
-            background-color: #B76E79;
+            background-color: #111111;
             color: #FFFFFF;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 0.88rem;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.86rem;
             font-weight: 500;
             text-decoration: none;
-            transition: background 0.2s ease;
+            transition: background 0.18s ease;
           }
           .btn-primary:hover {
-            background-color: #9C5762;
+            background-color: #252525;
           }
           .btn-secondary {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            background-color: #FAF5F0;
-            color: #4A3B39;
-            border: 1px solid #E5DCD5;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 0.88rem;
+            background-color: #FFFFFF;
+            color: #111111;
+            border: 1px solid #E8E7E2;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.86rem;
+            font-weight: 500;
             text-decoration: none;
+            transition: background 0.18s ease;
+          }
+          .btn-secondary:hover {
+            background-color: #F8F7F3;
           }
           .btn-danger {
             display: flex;
@@ -211,12 +217,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             justify-content: center;
             gap: 8px;
             background: none;
-            border: none;
-            color: #9C5762;
+            border: 1px solid transparent;
+            color: #C0392B;
             padding: 8px;
+            border-radius: 6px;
             font-size: 0.82rem;
             cursor: pointer;
-            margin-top: 4px;
+            margin-top: 2px;
+            transition: background 0.18s ease;
+          }
+          .btn-danger:hover {
+            background-color: #FDF0EE;
           }
         `}</style>
       </div>
@@ -224,57 +235,27 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="admin-root-layout">
-      {/* Sidebar */}
-      <AdminSidebar
-        collapsed={collapsed}
-        setCollapsed={setCollapsed}
-        mobileOpen={mobileOpen}
-        setMobileOpen={setMobileOpen}
-      />
+    <AdminStatsProvider>
+      <div className="admin-root-layout">
+        {/* Sidebar */}
+        <AdminSidebar
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+          mobileOpen={mobileOpen}
+          setMobileOpen={setMobileOpen}
+        />
 
-      {/* Top Header */}
-      <AdminHeader
-        collapsed={collapsed}
-        onToggleMobileMenu={() => setMobileOpen(true)}
-      />
+        {/* Top Header */}
+        <AdminHeader
+          collapsed={collapsed}
+          onToggleMobileMenu={() => setMobileOpen(true)}
+        />
 
-      {/* Main Content Area */}
-      <main className={`admin-main-container ${collapsed ? 'sidebar-collapsed' : ''}`}>
-        <div className="admin-main-inner">{children}</div>
-      </main>
-
-      <style jsx>{`
-        .admin-root-layout {
-          min-height: 100vh;
-          background-color: #F8F5F2;
-          font-family: var(--font-ui), 'Jost', sans-serif;
-          color: #342727;
-        }
-
-        .admin-main-container {
-          margin-left: 250px;
-          padding-top: 68px;
-          min-height: 100vh;
-          transition: margin-left 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        .admin-main-container.sidebar-collapsed {
-          margin-left: 76px;
-        }
-
-        .admin-main-inner {
-          padding: clamp(16px, 2.5vw, 32px);
-          max-width: 1560px;
-          margin: 0 auto;
-        }
-
-        @media (max-width: 1024px) {
-          .admin-main-container {
-            margin-left: 0 !important;
-          }
-        }
-      `}</style>
-    </div>
+        {/* Main Content Area */}
+        <main className={`admin-main-container ${collapsed ? 'sidebar-collapsed' : ''}`}>
+          <div className="admin-main-inner">{children}</div>
+        </main>
+      </div>
+    </AdminStatsProvider>
   );
 }

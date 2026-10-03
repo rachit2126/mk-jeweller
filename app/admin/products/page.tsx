@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Plus,
   Download,
@@ -28,11 +28,29 @@ export default function AdminProductsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
 
-  // Filters
+  const searchParams = useSearchParams();
   const [search, setSearch] = useState('');
-  const [category, setCategory] = useState('all');
+  const [category, setCategory] = useState(searchParams.get('category') || 'all');
   const [status, setStatus] = useState('all');
   const [sort, setSort] = useState('newest');
+  const [availableCategories, setAvailableCategories] = useState<{ id: string; name: string; slug: string }[]>([]);
+
+  useEffect(() => {
+    fetch('/api/admin/categories?limit=all')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.categories) setAvailableCategories(data.categories);
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const cat = searchParams.get('category');
+    if (cat && cat !== category) {
+      setCategory(cat);
+      setPage(1);
+    }
+  }, [searchParams]);
 
   // Bulk Selection
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -70,6 +88,13 @@ export default function AdminProductsPage() {
 
   useEffect(() => {
     fetchProducts();
+    const handleUpdate = () => fetchProducts();
+    window.addEventListener('mk:inventory-updated', handleUpdate);
+    window.addEventListener('mk:product-updated', handleUpdate);
+    return () => {
+      window.removeEventListener('mk:inventory-updated', handleUpdate);
+      window.removeEventListener('mk:product-updated', handleUpdate);
+    };
   }, [fetchProducts]);
 
   const showToast = (msg: string) => {
@@ -266,7 +291,6 @@ export default function AdminProductsPage() {
           </div>
 
           <div className="dropdowns-group">
-            {/* Category Dropdown */}
             <select
               value={category}
               onChange={(e) => {
@@ -277,11 +301,11 @@ export default function AdminProductsPage() {
               aria-label="Filter by category"
             >
               <option value="all">All Categories</option>
-              <option value="necklaces">Necklaces</option>
-              <option value="earrings">Earrings</option>
-              <option value="rings">Rings</option>
-              <option value="bracelets">Bracelets</option>
-              <option value="pendants">Pendants</option>
+              {availableCategories.map((c) => (
+                <option key={c.id || c.slug} value={c.slug}>
+                  {c.name}
+                </option>
+              ))}
             </select>
 
             {/* Status Dropdown */}
@@ -666,23 +690,23 @@ export default function AdminProductsPage() {
 
         .page-heading {
           font-family: var(--font-display), 'Cormorant Garamond', serif;
-          font-size: 2.2rem;
+          font-size: 2.1rem;
           font-weight: 600;
-          color: #342727;
+          color: #111111;
           margin: 0;
           line-height: 1.1;
         }
 
         .page-sub {
-          font-size: 0.88rem;
-          color: #806D68;
+          font-size: 0.86rem;
+          color: #6F6F6A;
           margin: 4px 0 0 0;
         }
 
         .top-actions-group {
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 8px;
         }
 
         .btn-secondary {
@@ -690,48 +714,46 @@ export default function AdminProductsPage() {
           align-items: center;
           gap: 6px;
           background-color: #FFFFFF;
-          border: 1px solid #EAE2DB;
-          color: #342727;
-          padding: 8px 14px;
-          border-radius: 10px;
+          border: 1px solid #E8E7E2;
+          color: #111111;
+          padding: 7px 12px;
+          border-radius: 6px;
           font-family: inherit;
-          font-size: 0.84rem;
+          font-size: 0.82rem;
           font-weight: 500;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.18s ease;
         }
 
         .btn-secondary:hover {
-          border-color: #B76E79;
-          color: #B76E79;
+          border-color: #111111;
+          background-color: #F8F7F3;
         }
 
         .btn-primary {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          background-color: #B76E79;
+          background-color: #111111;
           color: #FFFFFF;
-          padding: 9px 18px;
-          border-radius: 10px;
+          padding: 8px 16px;
+          border-radius: 6px;
           font-family: inherit;
-          font-size: 0.86rem;
+          font-size: 0.84rem;
           font-weight: 600;
           text-decoration: none;
-          box-shadow: 0 4px 14px rgba(183, 110, 121, 0.3);
-          transition: all 0.2s ease;
+          transition: all 0.18s ease;
         }
 
         .btn-primary:hover {
-          background-color: #9C5762;
-          transform: translateY(-1px);
+          background-color: #252525;
         }
 
         .products-table-card {
           background-color: #FFFFFF;
-          border: 1px solid #EAE2DB;
-          border-radius: 18px;
-          box-shadow: 0 4px 16px rgba(59, 43, 43, 0.03);
+          border: 1px solid #E8E7E2;
+          border-radius: 8px;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
           overflow: hidden;
         }
 
@@ -739,9 +761,9 @@ export default function AdminProductsPage() {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 16px 20px;
-          border-bottom: 1px solid #F0E8E2;
-          gap: 14px;
+          padding: 14px 18px;
+          border-bottom: 1px solid #E8E7E2;
+          gap: 12px;
           flex-wrap: wrap;
         }
 
@@ -749,23 +771,23 @@ export default function AdminProductsPage() {
           display: flex;
           align-items: center;
           gap: 10px;
-          background-color: #FFF9F3;
-          border: 1px solid #E8D8D0;
-          border-radius: 10px;
-          padding: 7px 14px;
+          background-color: #F8F7F3;
+          border: 1px solid #E8E7E2;
+          border-radius: 6px;
+          padding: 7px 12px;
           width: clamp(220px, 28vw, 360px);
         }
 
         .search-icon {
-          color: #806D68;
+          color: #6F6F6A;
         }
 
         .table-search-input {
           border: none;
           background: none;
           font-family: inherit;
-          font-size: 0.86rem;
-          color: #342727;
+          font-size: 0.84rem;
+          color: #111111;
           width: 100%;
           outline: none;
         }
@@ -773,79 +795,80 @@ export default function AdminProductsPage() {
         .dropdowns-group {
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 8px;
           flex-wrap: wrap;
         }
 
         .filter-select {
-          border: 1px solid #E8D8D0;
+          border: 1px solid #E8E7E2;
           background-color: #FFFFFF;
-          border-radius: 8px;
-          padding: 7px 12px;
+          border-radius: 6px;
+          padding: 6px 12px;
           font-family: inherit;
-          font-size: 0.82rem;
-          color: #342727;
+          font-size: 0.8rem;
+          color: #111111;
           cursor: pointer;
           outline: none;
         }
 
         .bulk-actions-strip {
-          background-color: #FFF5F2;
-          border-bottom: 1px solid #F6D6D9;
-          padding: 10px 20px;
+          background-color: #F8F7F3;
+          border-bottom: 1px solid #E8E7E2;
+          padding: 8px 18px;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          font-size: 0.82rem;
-          color: #B76E79;
+          font-size: 0.8rem;
+          color: #111111;
           font-weight: 500;
         }
 
         .bulk-btn-group {
           display: flex;
-          gap: 8px;
+          gap: 6px;
         }
 
         .bulk-pill {
           background-color: #FFFFFF;
-          border: 1px solid #B76E79;
-          color: #B76E79;
-          padding: 5px 12px;
-          border-radius: 6px;
-          font-size: 0.78rem;
+          border: 1px solid #111111;
+          color: #111111;
+          padding: 4px 10px;
+          border-radius: 4px;
+          font-size: 0.76rem;
           font-weight: 600;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.15s ease;
         }
 
         .bulk-pill:hover:not(:disabled) {
-          background-color: #B76E79;
+          background-color: #111111;
           color: #FFFFFF;
         }
 
         .bulk-pill.danger {
-          background-color: #FFF5F5;
-          border-color: #E53E3E;
-          color: #C53030;
+          background-color: #FDF0EE;
+          border-color: #FDF0EE;
+          color: #C0392B;
         }
 
         .bulk-pill.danger:hover:not(:disabled) {
-          background-color: #E53E3E;
+          background-color: #C0392B;
           color: #FFFFFF;
         }
 
         .bulk-pill.secondary {
-          background-color: #F8F9FA;
-          border-color: #D1D5DB;
-          color: #4B5563;
+          background-color: #FFFFFF;
+          border-color: #E8E7E2;
+          color: #6F6F6A;
         }
 
         .bulk-pill.secondary:hover:not(:disabled) {
-          background-color: #E5E7EB;
+          background-color: #F8F7F3;
+          color: #111111;
         }
 
         .bulk-pill:disabled {
-          opacity: 0.55;
+          opacity: 0.5;
           cursor: not-allowed;
         }
 
@@ -856,46 +879,46 @@ export default function AdminProductsPage() {
         .products-data-table {
           width: 100%;
           border-collapse: collapse;
-          font-size: 0.85rem;
+          font-size: 0.82rem;
         }
 
         .products-data-table th {
           text-align: left;
-          padding: 12px 16px;
-          font-weight: 600;
-          color: #806D68;
-          border-bottom: 1px solid #EAE2DB;
-          font-size: 0.78rem;
+          padding: 10px 14px;
+          font-weight: 700;
+          color: #6F6F6A;
+          border-bottom: 1px solid #E8E7E2;
+          font-size: 0.72rem;
           text-transform: uppercase;
           letter-spacing: 0.05em;
-          background-color: #FAF7F4;
+          background-color: #F8F7F3;
         }
 
         .products-data-table td {
-          padding: 12px 16px;
-          border-bottom: 1px solid #F4EFEB;
-          color: #342727;
+          padding: 11px 14px;
+          border-bottom: 1px solid #E8E7E2;
+          color: #111111;
           vertical-align: middle;
         }
 
         .selected-row {
-          background-color: #FFF9F3;
+          background-color: #F8F7F3;
         }
 
         .admin-checkbox {
-          width: 16px;
-          height: 16px;
-          accent-color: #B76E79;
+          width: 15px;
+          height: 15px;
+          accent-color: #111111;
           cursor: pointer;
         }
 
         .product-table-thumb {
-          width: 42px;
-          height: 42px;
-          border-radius: 8px;
+          width: 38px;
+          height: 38px;
+          border-radius: 6px;
           overflow: hidden;
-          background-color: #F8F5F2;
-          border: 1px solid #E8D8D0;
+          background-color: #F8F7F3;
+          border: 1px solid #E8E7E2;
         }
 
         :global(.table-img) {
@@ -909,21 +932,21 @@ export default function AdminProductsPage() {
 
         .prod-name {
           font-weight: 600;
-          color: #342727;
+          color: #111111;
         }
 
         .prod-sku {
-          font-size: 0.72rem;
-          color: #806D68;
+          font-size: 0.7rem;
+          color: #8E8D88;
         }
 
         .category-cell-text {
-          color: #6F5A58;
+          color: #6F6F6A;
         }
 
         .price-cell-text {
           font-weight: 600;
-          color: #342727;
+          color: #111111;
         }
 
         .stock-cell-text {
@@ -931,31 +954,31 @@ export default function AdminProductsPage() {
         }
 
         .stock-cell-text.low-stock-warn {
-          color: #C53030;
+          color: #C0392B;
           font-weight: 700;
         }
 
         .prod-status-pill {
           display: inline-block;
-          padding: 3px 10px;
-          border-radius: 6px;
-          font-size: 0.74rem;
+          padding: 3px 8px;
+          border-radius: 4px;
+          font-size: 0.72rem;
           font-weight: 600;
         }
 
         .prod-status-pill.active {
-          background-color: #E6FFFA;
-          color: #234E52;
+          background-color: #EDF7F2;
+          color: #1E7E5E;
         }
 
         .prod-status-pill.draft {
-          background-color: #FEFCBF;
-          color: #744210;
+          background-color: #FEF8ED;
+          color: #C07D1C;
         }
 
         .prod-status-pill.out-of-stock {
-          background-color: #FFF5F5;
-          color: #9B2C2C;
+          background-color: #FDF0EE;
+          color: #C0392B;
         }
 
         .action-icons-wrap {
@@ -966,12 +989,12 @@ export default function AdminProductsPage() {
         }
 
         .icon-action-btn {
-          width: 30px;
-          height: 30px;
-          border-radius: 6px;
-          border: 1px solid #EAE2DB;
+          width: 28px;
+          height: 28px;
+          border-radius: 4px;
+          border: 1px solid #E8E7E2;
           background: #FFFFFF;
-          color: #806D68;
+          color: #6F6F6A;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -981,21 +1004,21 @@ export default function AdminProductsPage() {
         }
 
         .icon-action-btn:hover {
-          border-color: #B76E79;
-          color: #B76E79;
-          background-color: #FFF5F2;
+          border-color: #111111;
+          color: #111111;
+          background-color: #F8F7F3;
         }
 
         .icon-action-btn.delete:hover {
-          border-color: #E53E3E;
-          color: #E53E3E;
-          background-color: #FFF5F5;
+          border-color: #C0392B;
+          color: #C0392B;
+          background-color: #FDF0EE;
         }
 
         .table-empty-row {
           text-align: center;
           padding: 40px !important;
-          color: #806D68;
+          color: #8E8D88;
         }
 
         /* PAGINATION FOOTER */
@@ -1003,35 +1026,40 @@ export default function AdminProductsPage() {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 14px 20px;
-          border-top: 1px solid #F0E8E2;
+          padding: 12px 18px;
+          border-top: 1px solid #E8E7E2;
           flex-wrap: wrap;
           gap: 12px;
         }
 
         .pagination-count-label {
-          font-size: 0.82rem;
-          color: #806D68;
+          font-size: 0.8rem;
+          color: #6F6F6A;
         }
 
         .pagination-controls {
           display: flex;
           align-items: center;
-          gap: 6px;
+          gap: 5px;
         }
 
         .page-nav-btn {
-          width: 32px;
-          height: 32px;
-          border-radius: 6px;
-          border: 1px solid #E8D8D0;
+          width: 30px;
+          height: 30px;
+          border-radius: 4px;
+          border: 1px solid #E8E7E2;
           background: #FFFFFF;
-          color: #342727;
+          color: #111111;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
           transition: all 0.15s ease;
+        }
+
+        .page-nav-btn:hover:not(:disabled) {
+          border-color: #111111;
+          background-color: #F8F7F3;
         }
 
         .page-nav-btn:disabled {
@@ -1040,27 +1068,31 @@ export default function AdminProductsPage() {
         }
 
         .page-num-btn {
-          min-width: 32px;
-          height: 32px;
-          border-radius: 6px;
-          border: 1px solid #E8D8D0;
+          min-width: 30px;
+          height: 30px;
+          border-radius: 4px;
+          border: 1px solid #E8E7E2;
           background: #FFFFFF;
-          color: #342727;
+          color: #111111;
           font-family: inherit;
-          font-size: 0.84rem;
+          font-size: 0.8rem;
           cursor: pointer;
           transition: all 0.15s ease;
         }
 
+        .page-num-btn:hover {
+          border-color: #111111;
+        }
+
         .page-num-btn.active {
-          background-color: #B76E79;
-          border-color: #B76E79;
+          background-color: #111111;
+          border-color: #111111;
           color: #FFFFFF;
           font-weight: 600;
         }
 
         .page-ellipsis {
-          color: #806D68;
+          color: #8E8D88;
           padding: 0 4px;
         }
 

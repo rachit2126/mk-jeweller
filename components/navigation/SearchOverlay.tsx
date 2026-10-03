@@ -41,9 +41,8 @@ export default function SearchOverlay({ isOpen = true, onClose }: SearchOverlayP
 
   useEffect(() => {
     if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 100);
-    } else {
-      setQuery('');
+      const timer = setTimeout(() => inputRef.current?.focus(), 100);
+      return () => clearTimeout(timer);
     }
   }, [isOpen]);
 

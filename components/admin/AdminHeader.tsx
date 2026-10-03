@@ -13,6 +13,7 @@ import {
   LogOut,
   Settings,
   User,
+  ShieldCheck,
 } from 'lucide-react';
 import GlobalCommandSearch from './GlobalCommandSearch';
 
@@ -124,14 +125,13 @@ export default function AdminHeader({ onToggleMobileMenu, collapsed }: AdminHead
             </select>
           </div>
 
-          {/* Notifications with badge 6 */}
+          {/* Notifications */}
           <button
             className="notifications-btn"
-            aria-label="Notifications (6 unread)"
-            title="6 unread notifications"
+            aria-label="Notifications"
+            title="System notifications"
           >
             <Bell size={17} />
-            <span className="notif-badge">6</span>
           </button>
 
           {/* Admin Profile Dropdown */}
@@ -165,21 +165,29 @@ export default function AdminHeader({ onToggleMobileMenu, collapsed }: AdminHead
                   onClick={() => setDropdownOpen(false)}
                   className="dd-item"
                 >
-                  <User size={15} />
-                  <span>Admin Profile</span>
+                  <User size={14} />
+                  <span>MY PROFILE</span>
                 </Link>
                 <Link
                   href="/admin/settings"
                   onClick={() => setDropdownOpen(false)}
                   className="dd-item"
                 >
-                  <Settings size={15} />
-                  <span>Store Settings</span>
+                  <Settings size={14} />
+                  <span>ACCOUNT SETTINGS</span>
+                </Link>
+                <Link
+                  href="/admin/audit-logs"
+                  onClick={() => setDropdownOpen(false)}
+                  className="dd-item"
+                >
+                  <ShieldCheck size={14} />
+                  <span>ACTIVITY / AUDIT</span>
                 </Link>
                 <div className="dd-divider" />
                 <button type="button" onClick={handleLogout} className="dd-item dd-danger">
-                  <LogOut size={15} />
-                  <span>Sign Out</span>
+                  <LogOut size={14} />
+                  <span>SIGN OUT</span>
                 </button>
               </div>
             )}

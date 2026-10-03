@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db/mongodb';
 import { DbOrder } from '@/lib/db/types';
 import { getCurrentAdmin } from '@/lib/services/auth';
+import { getOrderStats } from '@/lib/services/orderStats';
 
 export async function GET(req: NextRequest) {
   const session = await getCurrentAdmin();
@@ -63,16 +64,16 @@ export async function GET(req: NextRequest) {
     return { ...rest, id: rest.id || _id?.toString() } as DbOrder;
   });
 
-  // Calculate real MongoDB status counts for summary cards and tabs
-  const allOrders = await db.collection('orders').find({}).project({ status: 1, paymentStatus: 1 }).toArray();
+  // Calculate real MongoDB status counts using the shared OrderStatsService
+  const stats = await getOrderStats();
   const counts = {
-    all: allOrders.length,
-    pending: allOrders.filter((o) => o.status === 'pending').length,
-    processing: allOrders.filter((o) => o.status === 'processing').length,
-    shipped: allOrders.filter((o) => o.status === 'shipped').length,
-    delivered: allOrders.filter((o) => o.status === 'delivered').length,
-    cancelled: allOrders.filter((o) => o.status === 'cancelled').length,
-    refunded: allOrders.filter((o) => o.status === 'refunded' || o.paymentStatus === 'refunded').length,
+    all: stats.total,
+    pending: stats.pending,
+    processing: stats.processing,
+    shipped: stats.shipped,
+    delivered: stats.delivered,
+    cancelled: stats.cancelled,
+    refunded: stats.refunded,
   };
 
   return NextResponse.json({

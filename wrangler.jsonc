@@ -1,0 +1,29 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "mk-jeweller",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "assets": {
+    "directory": ".next/static",
+    "binding": "ASSETS"
+  },
+  "routes": [
+    {
+      "pattern": "mksilverhub.com/*",
+      "zone_name": "mksilverhub.com"
+    },
+    {
+      "pattern": "www.mksilverhub.com/*",
+      "zone_name": "mksilverhub.com"
+    }
+  ],
+  "vars": {
+    "NEXT_PUBLIC_SITE_URL": "https://mksilverhub.com",
+    "NODE_ENV": "production"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

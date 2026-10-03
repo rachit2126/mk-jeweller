@@ -315,7 +315,7 @@ export default function CheckoutPage() {
                         name="email"
                         required
                         autoComplete="email"
-                        placeholder="patron@example.com"
+                        placeholder="customer@domain.com"
                         value={formData.email}
                         onChange={handleInputChange}
                         style={{

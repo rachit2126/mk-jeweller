@@ -27,6 +27,9 @@ export interface Product {
   occasion: ('everyday' | 'office' | 'festive' | 'gifting')[];
   style: ('minimal' | 'classic' | 'statement' | 'festive')[];
   inStock: boolean;
+  stock?: number;
+  categoryName?: string;
+  subcategory?: string;
   _id?: string;
   numReviews?: number;
   featured?: boolean;

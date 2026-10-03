@@ -13,30 +13,6 @@ interface CartPreviewProps {
   onClose: () => void;
 }
 
-// Sample fallback items matching the reference image if cart is empty
-const SAMPLE_CART = [
-  {
-    product: {
-      id: 'sample-c-1',
-      slug: 'floral-silver-earrings',
-      name: 'Silver Hoop Earrings',
-      price: 2499,
-      images: ['https://images.unsplash.com/photo-1630019852942-f89202989a59?q=80&w=200&auto=format&fit=crop'],
-    },
-    quantity: 1,
-  },
-  {
-    product: {
-      id: 'sample-c-2',
-      slug: 'minimal-silver-ring',
-      name: 'Dainty Ring',
-      price: 1999,
-      images: ['https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=200&auto=format&fit=crop'],
-    },
-    quantity: 1,
-  },
-];
-
 export default function CartPreview({ isOpen = true, onClose }: CartPreviewProps) {
   const shouldReduceMotion = useReducedMotion();
   const {
@@ -51,12 +27,8 @@ export default function CartPreview({ isOpen = true, onClose }: CartPreviewProps
 
   if (!isOpen) return null;
 
-  const hasRealItems = cart.length > 0;
-  const items = hasRealItems ? cart : SAMPLE_CART;
-  const displayCount = hasRealItems ? cartCount : 2;
-  const displaySubtotal = hasRealItems ? cartSubtotal : 4498;
-  const displayAmountNeeded = hasRealItems ? amountNeededForFreeShipping : 501;
-  const progressPercent = Math.min(100, Math.round(((freeShippingThreshold - displayAmountNeeded) / freeShippingThreshold) * 100));
+  const hasItems = cart.length > 0;
+  const progressPercent = Math.min(100, Math.round(((freeShippingThreshold - amountNeededForFreeShipping) / freeShippingThreshold) * 100));
 
   return (
     <motion.div
@@ -72,98 +44,116 @@ export default function CartPreview({ isOpen = true, onClose }: CartPreviewProps
         <div className="cart-header">
           <div className="header-left">
             <h4 className="cart-title">My Cart</h4>
-            <span className="cart-count">({displayCount})</span>
+            <span className="cart-count">({cartCount})</span>
           </div>
-          <Link href="/cart" onClick={onClose} className="view-cart-link">
-            <span>View Cart</span>
-            <ArrowRight size={12} />
-          </Link>
+          {hasItems && (
+            <Link href="/cart" onClick={onClose} className="view-cart-link">
+              <span>View Cart</span>
+              <ArrowRight size={12} />
+            </Link>
+          )}
         </div>
 
-        {/* Free Shipping Progress */}
-        <div className="shipping-progress-box">
-          <div className="progress-text">
-            {displayAmountNeeded > 0 ? (
-              <>
-                You&apos;re <strong style={{ color: '#B76E79' }}>{formatPrice(displayAmountNeeded)}</strong> away from <strong>FREE SHIPPING</strong>
-              </>
-            ) : (
-              <strong style={{ color: '#2E7D32' }}>🎉 Congratulations! You have unlocked Free Shipping</strong>
-            )}
-          </div>
-          <div className="progress-bar-track">
-            <div className="progress-bar-fill" style={{ width: `${progressPercent}%` }} />
-          </div>
-        </div>
-
-        {/* Product Items */}
-        <div className="cart-items-list">
-          {items.map((item) => (
-            <div key={item.product.id} className="cart-item-row">
-              <Link href={`/product/${item.product.slug}`} onClick={onClose} className="item-thumb-link">
-                <div className="item-thumb">
-                  <Image
-                    src={item.product.images?.[0] || '/images/collection-rings.jpg'}
-                    alt={item.product.name}
-                    fill
-                    sizes="52px"
-                    style={{ objectFit: 'cover' }}
-                  />
-                </div>
-              </Link>
-
-              <div className="item-info">
-                <Link href={`/product/${item.product.slug}`} onClick={onClose} className="item-name">
-                  {item.product.name}
-                </Link>
-                <div className="item-price-unit">{formatPrice(item.product.price)}</div>
+        {hasItems ? (
+          <>
+            {/* Free Shipping Progress */}
+            <div className="shipping-progress-box">
+              <div className="progress-text">
+                {amountNeededForFreeShipping > 0 ? (
+                  <>
+                    Add <strong style={{ color: '#111111' }}>{formatPrice(amountNeededForFreeShipping)}</strong> more for <strong>FREE SHIPPING</strong>
+                  </>
+                ) : (
+                  <strong style={{ color: '#166534' }}>✓ Free Shipping unlocked</strong>
+                )}
               </div>
-
-              {/* Quantity controls */}
-              <div className="quantity-controls">
-                <button
-                  onClick={() => hasRealItems && updateQuantity(item.product.id, item.quantity - 1)}
-                  aria-label="Decrease quantity"
-                  className="qty-btn"
-                >
-                  <Minus size={11} />
-                </button>
-                <span className="qty-value">{item.quantity}</span>
-                <button
-                  onClick={() => hasRealItems && updateQuantity(item.product.id, item.quantity + 1)}
-                  aria-label="Increase quantity"
-                  className="qty-btn"
-                >
-                  <Plus size={11} />
-                </button>
+              <div className="progress-bar-track">
+                <div className="progress-bar-fill" style={{ width: `${progressPercent}%` }} />
               </div>
-
-              {/* Remove */}
-              <button
-                onClick={() => hasRealItems && removeFromCart(item.product.id)}
-                aria-label={`Remove ${item.product.name}`}
-                className="remove-btn"
-              >
-                <Trash2 size={13} />
-              </button>
             </div>
-          ))}
-        </div>
 
-        {/* Subtotal & Actions */}
-        <div className="cart-footer">
-          <div className="subtotal-row">
-            <span className="subtotal-label">Subtotal</span>
-            <span className="subtotal-value">{formatPrice(displaySubtotal)}</span>
-          </div>
+            {/* Product Items */}
+            <div className="cart-items-list">
+              {cart.map((item) => (
+                <div key={item.product.id} className="cart-item-row">
+                  <Link href={`/product/${item.product.slug}`} onClick={onClose} className="item-thumb-link">
+                    <div className="item-thumb">
+                      <Image
+                        src={item.product.images?.[0] || '/images/collection-rings.jpg'}
+                        alt={item.product.name}
+                        fill
+                        sizes="52px"
+                        style={{ objectFit: 'cover' }}
+                      />
+                    </div>
+                  </Link>
 
-          <div className="cart-actions-grid">
-            <Link href="/checkout" onClick={onClose} className="checkout-btn">
-              <span>Checkout</span>
-              <ArrowRight size={13} />
+                  <div className="item-info">
+                    <Link href={`/product/${item.product.slug}`} onClick={onClose} className="item-name">
+                      {item.product.name}
+                    </Link>
+                    <div className="item-price-unit">{formatPrice(item.product.price)}</div>
+                  </div>
+
+                  {/* Quantity controls */}
+                  <div className="quantity-controls">
+                    <button
+                      onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                      aria-label="Decrease quantity"
+                      className="qty-btn"
+                    >
+                      <Minus size={11} />
+                    </button>
+                    <span className="qty-value">{item.quantity}</span>
+                    <button
+                      onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                      aria-label="Increase quantity"
+                      className="qty-btn"
+                    >
+                      <Plus size={11} />
+                    </button>
+                  </div>
+
+                  {/* Remove */}
+                  <button
+                    onClick={() => removeFromCart(item.product.id)}
+                    aria-label={`Remove ${item.product.name}`}
+                    className="remove-btn"
+                  >
+                    <Trash2 size={13} />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* Subtotal & Actions */}
+            <div className="cart-footer">
+              <div className="subtotal-row">
+                <span className="subtotal-label">Subtotal</span>
+                <span className="subtotal-value">{formatPrice(cartSubtotal)}</span>
+              </div>
+
+              <div className="cart-actions-grid">
+                <Link href="/checkout" onClick={onClose} className="checkout-btn">
+                  <span>Proceed to Checkout</span>
+                  <ArrowRight size={13} />
+                </Link>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="empty-cart-state">
+            <div className="empty-cart-icon">
+              <ShoppingBag size={28} strokeWidth={1.5} />
+            </div>
+            <p className="empty-cart-title">Your cart is empty</p>
+            <p className="empty-cart-desc">Explore our fine 925 sterling jewellery collections and add your favourite pieces.</p>
+            <Link href="/shop" onClick={onClose} className="discover-btn">
+              <span>Explore Jewellery</span>
+              <ArrowRight size={12} />
             </Link>
           </div>
-        </div>
+        )}
       </div>
 
       <style jsx>{`
@@ -174,13 +164,11 @@ export default function CartPreview({ isOpen = true, onClose }: CartPreviewProps
         }
 
         .cart-preview-card {
-          width: 410px;
-          background: rgba(255, 249, 243, 0.98);
-          backdrop-filter: blur(24px);
-          -webkit-backdrop-filter: blur(24px);
-          border: 1.5px solid rgba(232, 216, 208, 0.85);
-          border-radius: 20px;
-          box-shadow: 0 20px 48px rgba(65, 40, 35, 0.12), 0 4px 12px rgba(183, 110, 121, 0.08);
+          width: 400px;
+          background: #FFFFFF;
+          border: 1px solid #E8E7E2;
+          border-radius: 16px;
+          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
           padding: 18px 20px;
         }
 
@@ -189,7 +177,7 @@ export default function CartPreview({ isOpen = true, onClose }: CartPreviewProps
           align-items: center;
           justify-content: space-between;
           padding-bottom: 12px;
-          border-bottom: 1px solid rgba(232, 216, 208, 0.6);
+          border-bottom: 1px solid #F0EFEA;
         }
 
         .header-left {
@@ -202,14 +190,14 @@ export default function CartPreview({ isOpen = true, onClose }: CartPreviewProps
           font-family: var(--font-display), 'Cormorant Garamond', Georgia, serif;
           font-size: 1.15rem;
           font-weight: 600;
-          color: #2D201E;
+          color: #111111;
           margin: 0;
         }
 
         .cart-count {
           font-family: var(--font-ui), 'Jost', sans-serif;
           font-size: 0.76rem;
-          color: #806D68;
+          color: #6F6F6A;
           font-weight: 500;
         }
 
@@ -220,13 +208,13 @@ export default function CartPreview({ isOpen = true, onClose }: CartPreviewProps
           font-family: var(--font-ui), 'Jost', sans-serif;
           font-size: 0.75rem;
           font-weight: 600;
-          color: #B76E79;
+          color: #111111;
           text-decoration: none;
           transition: transform 180ms ease, color 180ms ease;
         }
 
         .view-cart-link:hover {
-          color: #9C5762;
+          color: #6F6F6A;
           transform: translateX(2px);
         }
 
@@ -234,15 +222,15 @@ export default function CartPreview({ isOpen = true, onClose }: CartPreviewProps
         .shipping-progress-box {
           margin: 12px 0 14px;
           padding: 10px 12px;
-          background: #FFFFFF;
-          border: 1px solid rgba(232, 216, 208, 0.7);
-          border-radius: 12px;
+          background: #FAF9F6;
+          border: 1px solid #E8E7E2;
+          border-radius: 10px;
         }
 
         .progress-text {
           font-family: var(--font-ui), 'Jost', sans-serif;
           font-size: 0.72rem;
-          color: #6F5A58;
+          color: #6F6F6A;
           line-height: 1.3;
           margin-bottom: 6px;
           text-align: left;
@@ -250,15 +238,15 @@ export default function CartPreview({ isOpen = true, onClose }: CartPreviewProps
 
         .progress-bar-track {
           width: 100%;
-          height: 5px;
-          background: #F4E4DF;
+          height: 4px;
+          background: #E8E7E2;
           border-radius: 999px;
           overflow: hidden;
         }
 
         .progress-bar-fill {
           height: 100%;
-          background: linear-gradient(90deg, #D9B98A 0%, #B76E79 100%);
+          background: #111111;
           border-radius: 999px;
           transition: width 300ms ease;
         }
@@ -278,14 +266,14 @@ export default function CartPreview({ isOpen = true, onClose }: CartPreviewProps
           align-items: center;
           gap: 12px;
           padding: 8px 10px;
-          border-radius: 12px;
-          background: #FFFFFF;
-          border: 1px solid rgba(232, 216, 208, 0.5);
+          border-radius: 10px;
+          background: #FAF9F6;
+          border: 1px solid #E8E7E2;
           transition: border-color 180ms ease;
         }
 
         .cart-item-row:hover {
-          border-color: rgba(183, 110, 121, 0.35);
+          border-color: #BFC1C4;
         }
 
         .item-thumb-link {
@@ -296,9 +284,9 @@ export default function CartPreview({ isOpen = true, onClose }: CartPreviewProps
           position: relative;
           width: 48px;
           height: 48px;
-          border-radius: 10px;
+          border-radius: 8px;
           overflow: hidden;
-          background: #FCECE9;
+          background: #F0EFEA;
         }
 
         .item-info {
@@ -312,7 +300,7 @@ export default function CartPreview({ isOpen = true, onClose }: CartPreviewProps
           font-family: var(--font-ui), 'Jost', sans-serif;
           font-size: 0.82rem;
           font-weight: 500;
-          color: #2D201E;
+          color: #111111;
           text-decoration: none;
           white-space: nowrap;
           overflow: hidden;
@@ -321,21 +309,22 @@ export default function CartPreview({ isOpen = true, onClose }: CartPreviewProps
         }
 
         .item-name:hover {
-          color: #B76E79;
+          color: #6F6F6A;
         }
 
         .item-price-unit {
           font-family: var(--font-ui), 'Jost', sans-serif;
           font-size: 0.78rem;
           font-weight: 600;
-          color: #B76E79;
+          color: #111111;
           margin-top: 2px;
         }
 
         .quantity-controls {
           display: flex;
           align-items: center;
-          background: #FCECE9;
+          background: #FFFFFF;
+          border: 1px solid #E8E7E2;
           border-radius: 999px;
           padding: 2px 4px;
           gap: 4px;
@@ -349,14 +338,14 @@ export default function CartPreview({ isOpen = true, onClose }: CartPreviewProps
           justify-content: center;
           border: none;
           background: transparent;
-          color: #3B2B2B;
+          color: #111111;
           cursor: pointer;
           border-radius: 50%;
           transition: background-color 150ms ease;
         }
 
         .qty-btn:hover {
-          background: rgba(255, 255, 255, 0.8);
+          background: #F0EFEA;
         }
 
         .qty-value {
@@ -365,13 +354,13 @@ export default function CartPreview({ isOpen = true, onClose }: CartPreviewProps
           font-weight: 600;
           min-width: 14px;
           text-align: center;
-          color: #2D201E;
+          color: #111111;
         }
 
         .remove-btn {
           background: transparent;
           border: none;
-          color: #806D68;
+          color: #6F6F6A;
           padding: 6px;
           border-radius: 6px;
           cursor: pointer;
@@ -382,15 +371,15 @@ export default function CartPreview({ isOpen = true, onClose }: CartPreviewProps
         }
 
         .remove-btn:hover {
-          color: #B76E79;
-          background: #FCECE9;
+          color: #DC2626;
+          background: #FEE2E2;
         }
 
         /* FOOTER */
         .cart-footer {
           margin-top: 14px;
           padding-top: 12px;
-          border-top: 1px solid rgba(232, 216, 208, 0.6);
+          border-top: 1px solid #F0EFEA;
         }
 
         .subtotal-row {
@@ -404,7 +393,7 @@ export default function CartPreview({ isOpen = true, onClose }: CartPreviewProps
         .subtotal-label {
           font-family: var(--font-ui), 'Jost', sans-serif;
           font-size: 0.84rem;
-          color: #6F5A58;
+          color: #6F6F6A;
           font-weight: 500;
         }
 
@@ -412,7 +401,7 @@ export default function CartPreview({ isOpen = true, onClose }: CartPreviewProps
           font-family: var(--font-ui), 'Jost', sans-serif;
           font-size: 1.05rem;
           font-weight: 700;
-          color: #2D201E;
+          color: #111111;
         }
 
         .cart-actions-grid {
@@ -427,22 +416,80 @@ export default function CartPreview({ isOpen = true, onClose }: CartPreviewProps
           justify-content: center !important;
           gap: 7px !important;
           width: 100% !important;
-          background: #B76E79 !important;
+          background: #111111 !important;
           color: #FFFFFF !important;
-          padding: 12px 20px !important;
-          border-radius: 999px !important;
+          padding: 11px 20px !important;
+          border-radius: 8px !important;
           text-decoration: none !important;
           font-family: var(--font-ui), 'Jost', sans-serif !important;
           font-size: 0.86rem !important;
-          font-weight: 600 !important;
-          letter-spacing: 0.03em !important;
-          box-shadow: 0 4px 14px rgba(183, 110, 121, 0.3) !important;
+          font-weight: 500 !important;
+          letter-spacing: 0.02em !important;
           transition: background-color 180ms ease, transform 180ms ease !important;
         }
 
         :global(.checkout-btn:hover) {
-          background: #9C5762 !important;
+          background: #252525 !important;
           transform: translateY(-1px) !important;
+        }
+
+        /* EMPTY STATE */
+        .empty-cart-state {
+          padding: 28px 16px 16px;
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .empty-cart-icon {
+          width: 52px;
+          height: 52px;
+          border-radius: 50%;
+          background: #FAF9F6;
+          border: 1px solid #E8E7E2;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #6F6F6A;
+          margin-bottom: 12px;
+        }
+
+        .empty-cart-title {
+          font-family: var(--font-display), 'Cormorant Garamond', Georgia, serif;
+          font-size: 1.15rem;
+          font-weight: 600;
+          color: #111111;
+          margin: 0 0 6px;
+        }
+
+        .empty-cart-desc {
+          font-family: var(--font-ui), 'Jost', sans-serif;
+          font-size: 0.78rem;
+          color: #6F6F6A;
+          line-height: 1.4;
+          margin: 0 0 18px;
+          max-width: 260px;
+        }
+
+        :global(.discover-btn) {
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 6px !important;
+          background: #111111 !important;
+          color: #FFFFFF !important;
+          padding: 9px 18px !important;
+          border-radius: 8px !important;
+          text-decoration: none !important;
+          font-family: var(--font-ui), 'Jost', sans-serif !important;
+          font-size: 0.8rem !important;
+          font-weight: 500 !important;
+          transition: background 150ms ease !important;
+        }
+
+        :global(.discover-btn:hover) {
+          background: #252525 !important;
         }
       `}</style>
     </motion.div>

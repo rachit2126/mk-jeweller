@@ -384,29 +384,43 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Rating & Reviews */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '20px' }}>
-              <div style={{ display: 'flex', gap: '2px' }}>
-                {[1, 2, 3, 4, 5].map((s) => (
-                  <Star
-                    key={s}
-                    size={13}
-                    fill={s <= Math.round(product.rating || 5) ? '#111111' : 'none'}
-                    color="#111111"
-                    strokeWidth={1}
-                  />
-                ))}
+            {(product.reviewsCount ?? 0) > 0 ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '20px' }}>
+                <div style={{ display: 'flex', gap: '2px' }}>
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <Star
+                      key={s}
+                      size={13}
+                      fill={s <= Math.round(product.rating || 5) ? '#111111' : 'none'}
+                      color="#111111"
+                      strokeWidth={1}
+                    />
+                  ))}
+                </div>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                    fontSize: '0.78rem',
+                    color: '#6F6F6A',
+                    marginLeft: '4px',
+                  }}
+                >
+                  ({product.reviewsCount} {product.reviewsCount === 1 ? 'review' : 'reviews'})
+                </span>
               </div>
-              <span
-                style={{
-                  fontFamily: 'var(--font-ui), "Jost", sans-serif',
-                  fontSize: '0.78rem',
-                  color: '#6F6F6A',
-                  marginLeft: '4px',
-                }}
-              >
-                ({product.reviewsCount || product.numReviews || 86} reviews)
-              </span>
-            </div>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '20px' }}>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                    fontSize: '0.78rem',
+                    color: '#8E8D88',
+                  }}
+                >
+                  No reviews yet
+                </span>
+              </div>
+            )}
 
             {/* Short Editorial Description */}
             <p
@@ -867,8 +881,16 @@ export default function ProductDetailPage() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                gridTemplateColumns:
+                  relatedProducts.length === 1
+                    ? 'minmax(260px, 320px)'
+                    : relatedProducts.length === 2
+                    ? 'repeat(auto-fit, minmax(260px, 320px))'
+                    : 'repeat(auto-fit, minmax(240px, 1fr))',
+                justifyContent: relatedProducts.length < 3 ? 'center' : 'start',
                 gap: '24px',
+                maxWidth: relatedProducts.length === 1 ? '340px' : relatedProducts.length === 2 ? '700px' : '100%',
+                margin: relatedProducts.length < 3 ? '0 auto' : '0',
               }}
             >
               {relatedProducts.slice(0, 4).map((p) => (

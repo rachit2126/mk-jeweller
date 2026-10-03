@@ -26,7 +26,6 @@ async function seedMongo() {
   await usersCollection.createIndex({ email: 1 }, { unique: true });
 
   const adminPasswordHash = await bcrypt.hash('AdminPassword123!', 10);
-  const customerPasswordHash = await bcrypt.hash('CustomerPassword123!', 10);
 
   const initialUsers = [
     {
@@ -41,31 +40,6 @@ async function seedMongo() {
       createdAt: new Date().toISOString(),
       lastLogin: new Date().toISOString(),
     },
-    {
-      id: 'usr_normal_customer',
-      name: 'Priya Sharma',
-      email: 'customer@mksilverhub.com',
-      phone: '+91 98765 43210',
-      passwordHash: customerPasswordHash,
-      role: 'USER',
-      status: 'active',
-      avatar: '/images/avatars/customer.jpg',
-      addresses: [
-        {
-          id: 'addr_1',
-          name: 'Priya Sharma',
-          street: '14/B, Lotus Boulevard, Civil Lines',
-          city: 'Jaipur',
-          state: 'Rajasthan',
-          pincode: '302006',
-          phone: '+91 98765 43210',
-          isDefault: true,
-        },
-      ],
-      wishlist: ['prod-01', 'prod-03'],
-      createdAt: new Date().toISOString(),
-      lastLogin: new Date().toISOString(),
-    },
   ];
 
   for (const u of initialUsers) {
@@ -74,7 +48,7 @@ async function seedMongo() {
       { $set: u },
       { upsert: true }
     );
-    console.log(`✓ Seeded user in Atlas: ${u.email} [ROLE: ${u.role}]`);
+    console.log(`✓ Ensured admin user in Atlas: ${u.email} [ROLE: ${u.role}]`);
   }
 
   // Also verify count

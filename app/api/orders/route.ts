@@ -83,19 +83,41 @@ export async function POST(req: NextRequest) {
     const productsCol = db.collection('products');
     const ordersCol = db.collection('orders');
     const customersCol = db.collection('customers');
+    const settingsCol = db.collection('settings');
 
-    // 1. Validate & Safely Decrement Stock
+    // Fetch store settings for authoritative tax & shipping rules
+    const settingsDoc = await settingsCol.findOne({});
+    const taxRate = typeof settingsDoc?.taxRate === 'number' ? settingsDoc.taxRate : 3;
+    const freeShippingThreshold = typeof settingsDoc?.freeShippingThreshold === 'number' ? settingsDoc.freeShippingThreshold : 1999;
+
+    // 1. Authoritatively Validate Products & Calculate Prices from MongoDB
+    const verifiedItems: any[] = [];
+    let calculatedSubtotal = 0;
+
     for (const item of data.items) {
       const pId = item.productId || item.id;
+      let authoritativePrice = Number(item.price) || 0;
+      let authoritativeName = item.name || 'Fine Silver Jewellery';
+      let authoritativeSku = item.sku || 'MK-SILVER';
+      let authoritativeImage = item.image || '/images/products/placeholder.jpg';
+      const qty = Math.max(1, Number(item.quantity) || 1);
+
       if (pId) {
         const product = await productsCol.findOne({
           $or: [{ id: pId }, { slug: pId }],
         });
 
         if (product) {
-          const qty = Number(item.quantity) || 1;
-          // Decrement stock without going below 0
-          const newStock = Math.max(0, (product.stock || 0) - qty);
+          authoritativePrice = typeof product.price === 'number' ? product.price : authoritativePrice;
+          authoritativeName = product.name || authoritativeName;
+          authoritativeSku = product.sku || authoritativeSku;
+          if (Array.isArray(product.images) && product.images.length > 0) {
+            authoritativeImage = typeof product.images[0] === 'string' ? product.images[0] : (product.images[0].url || authoritativeImage);
+          }
+
+          // Decrement stock safely without going below 0
+          const currentStock = typeof product.stock === 'number' ? product.stock : 0;
+          const newStock = Math.max(0, currentStock - qty);
           const newStatus = newStock === 0 ? 'out_of_stock' : product.status;
           await productsCol.updateOne(
             { _id: product._id },
@@ -109,10 +131,29 @@ export async function POST(req: NextRequest) {
           );
         }
       }
+
+      const itemTotal = authoritativePrice * qty;
+      calculatedSubtotal += itemTotal;
+
+      verifiedItems.push({
+        productId: pId,
+        name: authoritativeName,
+        sku: authoritativeSku,
+        image: authoritativeImage,
+        price: authoritativePrice,
+        quantity: qty,
+        total: itemTotal,
+      });
     }
 
+    // Authoritative totals
+    const discount = Math.max(0, Number(data.discount) || 0);
+    const subtotalAfterDiscount = Math.max(0, calculatedSubtotal - discount);
+    const calculatedTax = Math.round(subtotalAfterDiscount * (taxRate / 100));
+    const calculatedShipping = subtotalAfterDiscount >= freeShippingThreshold ? 0 : (Number(data.shipping) || 99);
+    const grandTotal = subtotalAfterDiscount + calculatedTax + calculatedShipping;
+
     // 2. Generate unique order ID
-    const count = await ordersCol.countDocuments();
     const orderNumber = `#MK-${Math.floor(100000 + Math.random() * 900000)}`;
 
     const newOrder: any = {
@@ -122,20 +163,12 @@ export async function POST(req: NextRequest) {
       customerName: data.customerName || `${data.firstName || ''} ${data.lastName || ''}`.trim() || 'Patron',
       email: (data.email || session?.email || '').toLowerCase().trim(),
       phone: data.phone || '',
-      items: data.items.map((it: any) => ({
-        productId: it.productId || it.id,
-        name: it.name || 'Fine Silver Jewellery',
-        sku: it.sku || `MK-${(it.category || 'JEW').toUpperCase().slice(0, 3)}`,
-        image: it.image || '/images/products/placeholder.jpg',
-        price: Number(it.price) || 0,
-        quantity: Number(it.quantity) || 1,
-        total: (Number(it.price) || 0) * (Number(it.quantity) || 1),
-      })),
-      subtotal: Number(data.subtotal) || Number(data.cartSubtotal) || 0,
-      discount: Number(data.discount) || 0,
-      tax: Number(data.tax) || 0,
-      shipping: Number(data.shipping) || Number(data.shippingFee) || 0,
-      amount: Number(data.amount) || Number(data.cartTotal) || 0,
+      items: verifiedItems,
+      subtotal: calculatedSubtotal,
+      discount: discount,
+      tax: calculatedTax,
+      shipping: calculatedShipping,
+      amount: grandTotal,
       paymentStatus: data.paymentStatus || 'paid',
       paymentMethod: data.paymentMethod || 'Online / UPI',
       status: 'processing',
@@ -149,7 +182,7 @@ export async function POST(req: NextRequest) {
       timeline: [
         {
           status: 'Order Placed',
-          note: 'Customer successfully placed order with 100% MongoDB persistence',
+          note: 'Customer successfully placed order with 100% MongoDB persistence and verified pricing',
           timestamp: new Date().toISOString(),
         },
       ],

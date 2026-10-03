@@ -1,8 +1,23 @@
-import React from 'react';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { Gift, ArrowRight } from 'lucide-react';
 import ProductCard from '@/components/products/ProductCard';
 import { getProductsFromDb } from '@/lib/services/products';
+
+export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: 'Luxury Silver Gifts | Curated Occasions | MK Silver Hub',
+  description: 'Celebrate milestones, love, and joyous occasions with pure 925 sterling silver gifts that last a lifetime. Includes bespoke packaging and personalized handwritten greeting cards.',
+  alternates: {
+    canonical: 'https://mksilverhub.com/gifts',
+  },
+  openGraph: {
+    title: 'Luxury Silver Gifts | MK Silver Hub',
+    description: 'Bespoke 925 sterling silver gifts with hallmark certification.',
+    url: 'https://mksilverhub.com/gifts',
+  },
+};
 
 const GIFT_CATEGORIES = [
   { title: 'For Her', desc: 'Delicate floral halos & pearls', link: '/shop?occasion=gifting', count: '24 Designs' },
@@ -14,10 +29,18 @@ const GIFT_CATEGORIES = [
 ];
 
 export default async function GiftsPage() {
-  const result = await getProductsFromDb({ occasion: 'gifting', limit: 12 });
-  const giftingProducts = result.products.length > 0
-    ? result.products
-    : (await getProductsFromDb({ limit: 12 })).products;
+  let giftingProducts: any[] = [];
+  try {
+    const result = await getProductsFromDb({ occasion: 'gifting', limit: 12 });
+    if (result.products && result.products.length > 0) {
+      giftingProducts = result.products;
+    } else {
+      const fallbackResult = await getProductsFromDb({ limit: 12 });
+      giftingProducts = fallbackResult.products || [];
+    }
+  } catch (err) {
+    console.error('[Gifts Page Runtime Error]: Could not load gifting products:', err);
+  }
 
   return (
     <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '100vh', padding: '50px 0 100px' }}>
@@ -89,7 +112,22 @@ export default async function GiftsPage() {
             </Link>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }} className="gift-products-grid">
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns:
+                giftingProducts.length === 1
+                  ? 'minmax(260px, 340px)'
+                  : giftingProducts.length === 2
+                  ? 'repeat(auto-fit, minmax(260px, 340px))'
+                  : 'repeat(auto-fill, minmax(260px, 1fr))',
+              justifyContent: giftingProducts.length < 3 ? 'center' : 'start',
+              gap: '24px',
+              maxWidth: giftingProducts.length === 1 ? '340px' : giftingProducts.length === 2 ? '720px' : '100%',
+              margin: giftingProducts.length < 3 ? '0 auto' : '0',
+            }}
+            className="gift-products-grid"
+          >
             {giftingProducts.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}

@@ -6,18 +6,7 @@ import Link from 'next/link';
 import { SlidersHorizontal, ChevronDown, X, Check, ArrowUpDown } from 'lucide-react';
 import ProductCard from '@/components/products/ProductCard';
 import { Product } from '@/lib/types';
-
-const CATEGORIES_LIST = [
-  { label: 'All Jewellery', value: 'all' },
-  { label: 'Earrings', value: 'earrings' },
-  { label: 'Necklaces', value: 'necklaces' },
-  { label: 'Rings', value: 'rings' },
-  { label: 'Bracelets', value: 'bracelets' },
-  { label: 'Bangles', value: 'bangles' },
-  { label: 'Anklets', value: 'anklets' },
-  { label: 'Pendants', value: 'pendants' },
-  { label: 'Men', value: 'men' },
-];
+import { useNavigation } from '@/components/navigation/NavigationContext';
 
 const OCCASIONS_LIST = [
   { label: 'Everyday', value: 'everyday' },
@@ -44,8 +33,10 @@ function ShopContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+  const { categories: navCategories } = useNavigation();
 
   const categoryParam = searchParams.get('category') || 'all';
+  const subcategoryParam = searchParams.get('subcategory') || searchParams.get('sub') || '';
   const collectionParam = searchParams.get('collection') || '';
   const occasionParam = searchParams.get('occasion') || '';
   const searchParam = searchParams.get('q') || searchParams.get('search') || '';
@@ -57,6 +48,7 @@ function ShopContent() {
 
   // Filters state
   const [selectedCategory, setSelectedCategory] = useState(categoryParam);
+  const [selectedSubcategory, setSelectedSubcategory] = useState(subcategoryParam);
   const [selectedOccasions, setSelectedOccasions] = useState<string[]>(occasionParam ? [occasionParam] : []);
   const [selectedCollection, setSelectedCollection] = useState<string>(collectionParam);
   const [selectedMaterial, setSelectedMaterial] = useState<string>('925-sterling');
@@ -65,12 +57,24 @@ function ShopContent() {
   const [sortBy, setSortBy] = useState<string>(sortParam);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
+  // Derive dynamic categories list from MongoDB navigation data
+  const categoriesList = useMemo(() => {
+    return [
+      { label: 'All Jewellery', value: 'all' },
+      ...navCategories.map((c) => ({
+        label: c.name,
+        value: c.slug,
+      })),
+    ];
+  }, [navCategories]);
+
   // Fetch products from MongoDB API
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
       if (selectedCategory && selectedCategory !== 'all') params.set('category', selectedCategory);
+      if (selectedSubcategory) params.set('subcategory', selectedSubcategory);
       if (selectedCollection) params.set('collection', selectedCollection);
       if (searchParam) params.set('search', searchParam);
       params.set('limit', '50');
@@ -85,7 +89,7 @@ function ShopContent() {
     } finally {
       setLoading(false);
     }
-  }, [selectedCategory, selectedCollection, searchParam]);
+  }, [selectedCategory, selectedSubcategory, selectedCollection, searchParam]);
 
   useEffect(() => {
     fetchProducts();
@@ -93,11 +97,15 @@ function ShopContent() {
 
   useEffect(() => {
     setSelectedCategory(categoryParam);
-  }, [categoryParam]);
+    setSelectedSubcategory(subcategoryParam);
+  }, [categoryParam, subcategoryParam]);
 
   const updateCategory = (cat: string) => {
     setSelectedCategory(cat);
+    setSelectedSubcategory('');
     const params = new URLSearchParams(searchParams.toString());
+    params.delete('subcategory');
+    params.delete('sub');
     if (cat === 'all') params.delete('category');
     else params.set('category', cat);
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
@@ -111,6 +119,7 @@ function ShopContent() {
 
   const resetAllFilters = () => {
     setSelectedCategory('all');
+    setSelectedSubcategory('');
     setSelectedOccasions([]);
     setSelectedCollection('');
     setSelectedMaterial('925-sterling');
@@ -126,6 +135,19 @@ function ShopContent() {
     // Category filter
     if (selectedCategory && selectedCategory !== 'all') {
       list = list.filter((p) => p.category?.toLowerCase() === selectedCategory.toLowerCase());
+    }
+
+    // Subcategory filter
+    if (selectedSubcategory) {
+      const sub = selectedSubcategory.toLowerCase();
+      list = list.filter((p) => {
+        const pSub = ((p as any).subcategory || (p as any).subcategoryId || '').toLowerCase();
+        if (pSub === sub) return true;
+        const tags = (p as any).tags;
+        if (tags && Array.isArray(tags) && tags.some((t: string) => t.toLowerCase() === sub)) return true;
+        if (p.name && p.name.toLowerCase().includes(sub)) return true;
+        return false;
+      });
     }
 
     // Occasions filter
@@ -155,14 +177,21 @@ function ShopContent() {
     }
 
     return list;
-  }, [products, selectedCategory, selectedOccasions, inStockOnly, priceRange, sortBy]);
+  }, [products, selectedCategory, selectedSubcategory, selectedOccasions, inStockOnly, priceRange, sortBy]);
 
   const categoryTitle =
     selectedCategory !== 'all'
-      ? selectedCategory.toUpperCase()
+      ? selectedSubcategory
+        ? `${selectedCategory.toUpperCase()} — ${selectedSubcategory.replace(/-/g, ' ').toUpperCase()}`
+        : selectedCategory.toUpperCase()
       : searchParam
       ? `SEARCH: "${searchParam.toUpperCase()}"`
       : 'ALL JEWELLERY';
+
+  const activeNavCategory = useMemo(() => {
+    if (!selectedCategory || selectedCategory === 'all') return null;
+    return navCategories.find((c) => c.slug.toLowerCase() === selectedCategory.toLowerCase());
+  }, [navCategories, selectedCategory]);
 
   return (
     <div
@@ -181,7 +210,7 @@ function ShopContent() {
           boxSizing: 'border-box',
         }}
       >
-        {/* 1. BREADCRUMBS (Screen 4 in Mockup) */}
+        {/* 1. BREADCRUMBS */}
         <nav
           aria-label="Breadcrumb"
           style={{
@@ -204,9 +233,24 @@ function ShopContent() {
                 Shop
               </Link>
               <span>/</span>
-              <span style={{ color: '#111111', fontWeight: 600, textTransform: 'capitalize' }}>
-                {selectedCategory}
-              </span>
+              {selectedSubcategory ? (
+                <>
+                  <Link
+                    href={`/shop?category=${selectedCategory}`}
+                    style={{ color: '#6F6F6A', textDecoration: 'none', textTransform: 'capitalize' }}
+                  >
+                    {selectedCategory}
+                  </Link>
+                  <span>/</span>
+                  <span style={{ color: '#111111', fontWeight: 600, textTransform: 'capitalize' }}>
+                    {selectedSubcategory.replace(/-/g, ' ')}
+                  </span>
+                </>
+              ) : (
+                <span style={{ color: '#111111', fontWeight: 600, textTransform: 'capitalize' }}>
+                  {selectedCategory}
+                </span>
+              )}
             </>
           ) : (
             <span style={{ color: '#111111', fontWeight: 600 }}>Shop</span>
@@ -426,29 +470,92 @@ function ShopContent() {
                 Category
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {CATEGORIES_LIST.map((cat) => {
+                {categoriesList.map((cat) => {
                   const isChecked = selectedCategory === cat.value;
                   return (
-                    <button
-                      key={cat.value}
-                      onClick={() => updateCategory(cat.value)}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        textAlign: 'left',
-                        padding: '3px 0',
-                        fontSize: '0.8rem',
-                        color: isChecked ? '#111111' : '#6F6F6A',
-                        fontWeight: isChecked ? 600 : 400,
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <span>{cat.label}</span>
-                      {isChecked && <Check size={13} color="#111111" />}
-                    </button>
+                    <div key={cat.value}>
+                      <button
+                        onClick={() => updateCategory(cat.value)}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          textAlign: 'left',
+                          width: '100%',
+                          padding: '3px 0',
+                          fontSize: '0.8rem',
+                          color: isChecked ? '#111111' : '#6F6F6A',
+                          fontWeight: isChecked ? 600 : 400,
+                          cursor: 'pointer',
+                        }}
+                      >
+                        <span>{cat.label}</span>
+                        {isChecked && <Check size={13} color="#111111" />}
+                      </button>
+
+                      {/* Dynamic Subcategories if Category is Active */}
+                      {isChecked && activeNavCategory && activeNavCategory.children && activeNavCategory.children.length > 0 && (
+                        <div
+                          style={{
+                            marginLeft: '12px',
+                            marginTop: '6px',
+                            marginBottom: '6px',
+                            paddingLeft: '10px',
+                            borderLeft: '1px solid #E8E7E2',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '5px',
+                          }}
+                        >
+                          <button
+                            onClick={() => {
+                              setSelectedSubcategory('');
+                              const params = new URLSearchParams(searchParams.toString());
+                              params.delete('subcategory');
+                              params.delete('sub');
+                              router.push(`${pathname}?${params.toString()}`, { scroll: false });
+                            }}
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              textAlign: 'left',
+                              padding: '2px 0',
+                              fontSize: '0.74rem',
+                              color: !selectedSubcategory ? '#111111' : '#8A8A85',
+                              fontWeight: !selectedSubcategory ? 600 : 400,
+                              cursor: 'pointer',
+                            }}
+                          >
+                            All {activeNavCategory.name}
+                          </button>
+                          {activeNavCategory.children.map((sub) => (
+                            <button
+                              key={sub.slug}
+                              onClick={() => {
+                                setSelectedSubcategory(sub.slug);
+                                const params = new URLSearchParams(searchParams.toString());
+                                params.set('subcategory', sub.slug);
+                                router.push(`${pathname}?${params.toString()}`, { scroll: false });
+                              }}
+                              style={{
+                                background: 'none',
+                                border: 'none',
+                                textAlign: 'left',
+                                padding: '2px 0',
+                                fontSize: '0.74rem',
+                                color: selectedSubcategory === sub.slug ? '#111111' : '#8A8A85',
+                                fontWeight: selectedSubcategory === sub.slug ? 600 : 400,
+                                cursor: 'pointer',
+                              }}
+                            >
+                              {sub.name}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   );
                 })}
               </div>
@@ -775,28 +882,60 @@ function ShopContent() {
               <div style={{ fontWeight: 600, fontSize: '0.8rem', marginBottom: '8px' }}>
                 Category
               </div>
-              {CATEGORIES_LIST.map((c) => (
-                <button
-                  key={c.value}
-                  onClick={() => {
-                    updateCategory(c.value);
-                    setIsMobileFilterOpen(false);
-                  }}
-                  style={{
-                    display: 'block',
-                    width: '100%',
-                    textAlign: 'left',
-                    padding: '6px 0',
-                    background: 'none',
-                    border: 'none',
-                    fontSize: '0.82rem',
-                    color: selectedCategory === c.value ? '#111111' : '#6F6F6A',
-                    fontWeight: selectedCategory === c.value ? 600 : 400,
-                  }}
-                >
-                  {c.label}
-                </button>
-              ))}
+              {categoriesList.map((c) => {
+                const isSelected = selectedCategory === c.value;
+                return (
+                  <div key={c.value}>
+                    <button
+                      onClick={() => {
+                        updateCategory(c.value);
+                        if (c.value === 'all') setIsMobileFilterOpen(false);
+                      }}
+                      style={{
+                        display: 'block',
+                        width: '100%',
+                        textAlign: 'left',
+                        padding: '6px 0',
+                        background: 'none',
+                        border: 'none',
+                        fontSize: '0.82rem',
+                        color: isSelected ? '#111111' : '#6F6F6A',
+                        fontWeight: isSelected ? 600 : 400,
+                      }}
+                    >
+                      {c.label}
+                    </button>
+                    {isSelected && activeNavCategory && activeNavCategory.children && activeNavCategory.children.length > 0 && (
+                      <div style={{ paddingLeft: '12px', marginBottom: '6px', borderLeft: '1px solid #E8E7E2', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        {activeNavCategory.children.map((sub) => (
+                          <button
+                            key={sub.slug}
+                            onClick={() => {
+                              setSelectedSubcategory(sub.slug);
+                              const params = new URLSearchParams(searchParams.toString());
+                              params.set('subcategory', sub.slug);
+                              router.push(`${pathname}?${params.toString()}`, { scroll: false });
+                              setIsMobileFilterOpen(false);
+                            }}
+                            style={{
+                              display: 'block',
+                              textAlign: 'left',
+                              padding: '4px 0',
+                              background: 'none',
+                              border: 'none',
+                              fontSize: '0.76rem',
+                              color: selectedSubcategory === sub.slug ? '#111111' : '#8A8A85',
+                              fontWeight: selectedSubcategory === sub.slug ? 600 : 400,
+                            }}
+                          >
+                            {sub.name}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
             <button

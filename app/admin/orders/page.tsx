@@ -27,6 +27,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { DbOrder } from '@/lib/db/types';
+import { useAdminStats } from '@/components/admin/AdminStatsContext';
 
 interface OrderCounts {
   all: number;
@@ -39,6 +40,7 @@ interface OrderCounts {
 }
 
 export default function AdminOrdersPage() {
+  const { refreshOrderStats } = useAdminStats();
   const [orders, setOrders] = useState<DbOrder[]>([]);
   const [counts, setCounts] = useState<OrderCounts>({
     all: 0,
@@ -207,6 +209,10 @@ export default function AdminOrdersPage() {
         showToast('Order status updated successfully.', 'success');
         // Refresh orders list to update counters & table
         fetchOrders();
+        refreshOrderStats();
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('mk:order-updated'));
+        }
       }
     } catch (err: any) {
       console.error(err);
@@ -267,6 +273,10 @@ export default function AdminOrdersPage() {
       showToast('Order created successfully and saved to MongoDB.', 'success');
       setCreateModalOpen(false);
       fetchOrders();
+      refreshOrderStats();
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('mk:order-updated'));
+      }
     } catch (err: any) {
       console.error(err);
       showToast(err.message || 'Failed to create order.', 'error');
@@ -1297,7 +1307,7 @@ export default function AdminOrdersPage() {
                       required
                       value={newOrderForm.email}
                       onChange={(e) => setNewOrderForm({ ...newOrderForm, email: e.target.value })}
-                      placeholder="radhika@example.com"
+                      placeholder="customer@domain.com"
                       className="update-input-control"
                     />
                   </div>

@@ -97,7 +97,7 @@ export default function Footer() {
             <h4 className="footer-col-title">ABOUT</h4>
             <ul className="footer-links-list">
               <li><Link href="/about">Our Story</Link></li>
-              <li><Link href="/about">Craftsmanship</Link></li>
+              <li><Link href="/craftsmanship">Craftsmanship</Link></li>
               <li><Link href="/about">Journal</Link></li>
               <li><Link href="/contact">Contact</Link></li>
             </ul>
@@ -109,8 +109,8 @@ export default function Footer() {
             <ul className="footer-links-list">
               <li><Link href="/shipping">Shipping</Link></li>
               <li><Link href="/returns">Returns</Link></li>
-              <li><Link href="/exchange">Exchange</Link></li>
-              <li><Link href="/silver-care">Silver Care</Link></li>
+              <li><Link href="/returns">Exchange</Link></li>
+              <li><Link href="/jewellery-care">Silver Care</Link></li>
               <li><Link href="/faq">FAQ</Link></li>
             </ul>
           </div>
@@ -121,7 +121,7 @@ export default function Footer() {
             <ul className="footer-links-list">
               <li><Link href="/privacy">Privacy Policy</Link></li>
               <li><Link href="/terms">Terms & Conditions</Link></li>
-              <li><Link href="/refund-policy">Refund Policy</Link></li>
+              <li><Link href="/returns">Refund Policy</Link></li>
             </ul>
 
             <h4 className="footer-col-title" style={{ marginTop: '24px' }}>FOLLOW US</h4>

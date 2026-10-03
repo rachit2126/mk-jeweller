@@ -11,6 +11,8 @@ export async function GET(req: NextRequest) {
 
   const { searchParams } = new URL(req.url);
   const search = searchParams.get('search')?.toLowerCase().trim() || '';
+  const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+  const limit = Math.max(1, Math.min(100, parseInt(searchParams.get('limit') || '20', 10)));
 
   const db = await connectDB();
   const query: any = {};
@@ -21,29 +23,68 @@ export async function GET(req: NextRequest) {
       { name: regex },
       { email: regex },
       { phone: regex },
+      { id: regex },
     ];
   }
 
-  const [customers, orders] = await Promise.all([
-    db.collection('customers').find(query).toArray(),
+  const [rawCustomers, orders] = await Promise.all([
+    db.collection('customers').find(query).sort({ createdAt: -1 }).toArray(),
     db.collection('orders').find({}).toArray(),
   ]);
 
-  // Recalculate actual stats from real MongoDB orders
-  const enriched = customers.map(cust => {
-    const { _id, ...rest } = cust;
-    const custOrders = orders.filter(o => o.email?.toLowerCase() === cust.email?.toLowerCase());
-    const totalSpend = custOrders.reduce((sum, o) => sum + (o.paymentStatus === 'paid' ? (o.amount || o.total || 0) : 0), 0);
+  // Recalculate authoritative stats strictly from real MongoDB orders
+  const enriched = rawCustomers.map(cust => {
+    const { _id, password, passwordHash, ...rest } = cust as any;
+    const custId = rest.id || _id?.toString();
+
+    // Match orders by customer ID or email
+    const custOrders = orders.filter(o =>
+      (o.customerId && (o.customerId === custId || o.customerId === _id?.toString())) ||
+      (o.email && cust.email && o.email.toLowerCase() === cust.email.toLowerCase())
+    );
+
+    // Eligible paid spend (excluding cancelled and refunded orders)
+    const paidEligibleOrders = custOrders.filter(o =>
+      o.paymentStatus === 'paid' && o.status !== 'cancelled' && o.status !== 'refunded'
+    );
+    const totalSpend = paidEligibleOrders.reduce(
+      (sum, o) => sum + (Number(o.amount) || Number(o.total) || 0),
+      0
+    );
+
+    // Latest order date
+    const sortedOrders = [...custOrders].sort((a, b) => {
+      const timeA = new Date(a.createdAt || a.date || 0).getTime();
+      const timeB = new Date(b.createdAt || b.date || 0).getTime();
+      return timeB - timeA;
+    });
+    const lastOrder = sortedOrders[0];
+    const lastOrderDate = lastOrder
+      ? (lastOrder.date || (lastOrder.createdAt ? new Date(lastOrder.createdAt).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }) : null))
+      : null;
+
     return {
       ...rest,
-      id: rest.id || _id?.toString(),
+      id: custId,
       ordersCount: custOrders.length,
-      totalSpend: totalSpend || cust.totalSpend || 0,
-      orders: custOrders,
+      totalSpend,
+      lastOrderDate,
+      status: rest.status || 'active',
     };
   });
 
-  return NextResponse.json({ customers: enriched });
+  const total = enriched.length;
+  const skip = (page - 1) * limit;
+  const paginated = enriched.slice(skip, skip + limit);
+
+  return NextResponse.json({
+    success: true,
+    customers: paginated,
+    total,
+    page,
+    limit,
+    totalPages: Math.ceil(total / limit) || 1,
+  });
 }
 
 export async function PATCH(req: NextRequest) {

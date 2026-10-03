@@ -165,7 +165,7 @@ export default function GlobalCommandSearch({ onClose }: { onClose: () => void }
           }
 
           .search-lead-icon {
-            color: #B76E79;
+            color: #111111;
             flex-shrink: 0;
           }
 
@@ -235,18 +235,19 @@ export default function GlobalCommandSearch({ onClose }: { onClose: () => void }
           .result-icon-box {
             width: 32px;
             height: 32px;
-            border-radius: 8px;
-            background-color: #F8F1EC;
+            border-radius: 6px;
+            background-color: #F8F7F3;
+            border: 1px solid #E8E7E2;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
           }
 
-          :global(.item-icon.product) { color: #B76E79; }
-          :global(.item-icon.order) { color: #2B6CB0; }
-          :global(.item-icon.customer) { color: #2F855A; }
-          :global(.item-icon.category) { color: #D69E2E; }
+          :global(.item-icon.product) { color: #111111; }
+          :global(.item-icon.order) { color: #4A5568; }
+          :global(.item-icon.customer) { color: #1E7E5E; }
+          :global(.item-icon.category) { color: #C07D1C; }
 
           .result-text-col {
             flex: 1;
@@ -291,18 +292,20 @@ export default function GlobalCommandSearch({ onClose }: { onClose: () => void }
           }
 
           .hint-tags span {
-            background-color: #F8F1EC;
+            background-color: #F8F7F3;
+            border: 1px solid #E8E7E2;
             padding: 4px 10px;
             border-radius: 6px;
             font-size: 0.78rem;
-            color: #6F5A58;
+            color: #111111;
             cursor: pointer;
-            transition: background 0.15s ease;
+            transition: all 0.15s ease;
           }
 
           .hint-tags span:hover {
-            background-color: #FFEAE8;
-            color: #B76E79;
+            background-color: #111111;
+            color: #FFFFFF;
+            border-color: #111111;
           }
         `}</style>
       </div>

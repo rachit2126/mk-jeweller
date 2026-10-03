@@ -367,16 +367,17 @@ export default function AdminMediaPage() {
         }
 
         .page-heading {
-          font-family: var(--font-display), 'Cormorant Garamond', serif;
-          font-size: 2.2rem;
-          font-weight: 600;
-          color: #342727;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #111111;
           margin: 0;
+          letter-spacing: -0.02em;
         }
 
         .page-sub {
-          font-size: 0.88rem;
-          color: #806D68;
+          font-size: 0.85rem;
+          color: #6F6F6A;
           margin: 4px 0 0 0;
         }
 
@@ -390,21 +391,21 @@ export default function AdminMediaPage() {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          background-color: #B76E79;
+          background-color: #111111;
           color: #FFFFFF;
-          border: none;
+          border: 1px solid #111111;
           padding: 9px 18px;
-          border-radius: 10px;
+          border-radius: 8px;
           font-family: inherit;
           font-size: 0.86rem;
           font-weight: 600;
           cursor: pointer;
-          box-shadow: 0 4px 14px rgba(183, 110, 121, 0.3);
-          transition: background 0.2s ease;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+          transition: all 0.15s ease;
         }
 
         .btn-upload:hover:not(:disabled) {
-          background-color: #9C5762;
+          background-color: #252525;
         }
 
         .btn-upload:disabled {
@@ -417,14 +418,18 @@ export default function AdminMediaPage() {
           align-items: center;
           gap: 6px;
           background: #FFFFFF;
-          border: 1px solid #EAE2DB;
-          color: #342727;
+          border: 1px solid #E8E7E2;
+          color: #111111;
           padding: 8px 14px;
-          border-radius: 10px;
+          border-radius: 8px;
           font-family: inherit;
           font-size: 0.84rem;
           font-weight: 500;
           cursor: pointer;
+          transition: all 0.15s ease;
+        }
+        .btn-folder:hover {
+          background: #F8F7F3;
         }
 
         /* TABS */
@@ -437,11 +442,11 @@ export default function AdminMediaPage() {
 
         .media-tab-btn {
           background: #FFFFFF;
-          border: 1px solid #EAE2DB;
+          border: 1px solid #E8E7E2;
           padding: 7px 16px;
           border-radius: 8px;
           font-size: 0.82rem;
-          color: #6F5A58;
+          color: #6F6F6A;
           font-weight: 500;
           cursor: pointer;
           white-space: nowrap;
@@ -449,17 +454,17 @@ export default function AdminMediaPage() {
         }
 
         .media-tab-btn.active {
-          background-color: #FCE8DE;
-          border-color: #F6D6D9;
-          color: #B76E79;
+          background-color: #111111;
+          border-color: #111111;
+          color: #FFFFFF;
           font-weight: 600;
         }
 
         /* CONTROLS */
         .media-controls-card {
           background: #FFFFFF;
-          border: 1px solid #EAE2DB;
-          border-radius: 14px;
+          border: 1px solid #E8E7E2;
+          border-radius: 12px;
           padding: 12px 18px;
           display: flex;
           align-items: center;
@@ -472,15 +477,15 @@ export default function AdminMediaPage() {
           display: flex;
           align-items: center;
           gap: 8px;
-          background: #FFF9F3;
-          border: 1px solid #E8D8D0;
+          background: #F8F7F3;
+          border: 1px solid #E8E7E2;
           border-radius: 8px;
           padding: 6px 12px;
           width: clamp(200px, 30vw, 340px);
         }
 
         .search-icon {
-          color: #806D68;
+          color: #6F6F6A;
         }
 
         .media-search-input {
@@ -488,7 +493,7 @@ export default function AdminMediaPage() {
           background: none;
           font-family: inherit;
           font-size: 0.84rem;
-          color: #342727;
+          color: #111111;
           outline: none;
           width: 100%;
         }
@@ -500,13 +505,13 @@ export default function AdminMediaPage() {
         }
 
         .media-filter-select {
-          border: 1px solid #E8D8D0;
+          border: 1px solid #E8E7E2;
           border-radius: 8px;
           padding: 6px 10px;
           background: #FFFFFF;
           font-family: inherit;
           font-size: 0.8rem;
-          color: #342727;
+          color: #111111;
           outline: none;
           cursor: pointer;
         }
@@ -520,8 +525,8 @@ export default function AdminMediaPage() {
 
         .media-card-item {
           background: #FFFFFF;
-          border: 1px solid #EAE2DB;
-          border-radius: 14px;
+          border: 1px solid #E8E7E2;
+          border-radius: 12px;
           overflow: hidden;
           cursor: pointer;
           transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
@@ -531,14 +536,14 @@ export default function AdminMediaPage() {
 
         .media-card-item:hover {
           transform: translateY(-2px);
-          box-shadow: 0 8px 24px rgba(183, 110, 121, 0.12);
-          border-color: #B76E79;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+          border-color: #111111;
         }
 
         .media-thumb-area {
           position: relative;
           height: 140px;
-          background: #F8F5F2;
+          background: #F8F7F3;
         }
 
         :global(.media-img) {
@@ -549,7 +554,7 @@ export default function AdminMediaPage() {
           position: absolute;
           top: 6px;
           right: 6px;
-          background: rgba(0, 0, 0, 0.65);
+          background: rgba(0, 0, 0, 0.75);
           color: #FFFFFF;
           font-size: 0.62rem;
           font-weight: 700;
@@ -567,7 +572,7 @@ export default function AdminMediaPage() {
         .media-filename {
           font-size: 0.78rem;
           font-weight: 600;
-          color: #342727;
+          color: #111111;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -575,22 +580,22 @@ export default function AdminMediaPage() {
 
         .media-filesize {
           font-size: 0.7rem;
-          color: #806D68;
+          color: #6F6F6A;
         }
 
         .media-empty {
           grid-column: 1 / -1;
           text-align: center;
           padding: 48px;
-          color: #806D68;
+          color: #6F6F6A;
         }
 
         /* MODAL */
         .modal-backdrop {
           position: fixed;
           inset: 0;
-          background: rgba(52, 39, 39, 0.45);
-          backdrop-filter: blur(4px);
+          background: rgba(0, 0, 0, 0.4);
+          backdrop-filter: blur(2px);
           z-index: 250;
           display: flex;
           align-items: center;
@@ -601,9 +606,10 @@ export default function AdminMediaPage() {
         .modal-card {
           width: min(92%, 560px);
           background: #FFFFFF;
-          border-radius: 20px;
+          border-radius: 12px;
+          border: 1px solid #E8E7E2;
           padding: 24px;
-          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
         }
 
         .modal-header {
@@ -614,15 +620,16 @@ export default function AdminMediaPage() {
         }
 
         .modal-title {
-          font-family: var(--font-display), 'Cormorant Garamond', serif;
-          font-size: 1.4rem;
+          font-size: 1.15rem;
+          font-weight: 700;
+          color: #111111;
           margin: 0;
         }
 
         .close-btn {
           background: none;
           border: none;
-          color: #806D68;
+          color: #6F6F6A;
           cursor: pointer;
         }
 
@@ -633,10 +640,10 @@ export default function AdminMediaPage() {
         }
 
         .inspect-image-box {
-          border-radius: 12px;
+          border-radius: 8px;
           overflow: hidden;
-          background: #F8F5F2;
-          border: 1px solid #E8D8D0;
+          background: #F8F7F3;
+          border: 1px solid #E8E7E2;
           height: 200px;
           position: relative;
         }
@@ -660,18 +667,19 @@ export default function AdminMediaPage() {
         }
 
         .detail-label {
-          color: #806D68;
+          color: #6F6F6A;
           font-size: 0.72rem;
           font-weight: 600;
+          text-transform: uppercase;
         }
 
         .detail-val {
-          color: #342727;
+          color: #111111;
           font-weight: 500;
         }
 
         .detail-val.savings {
-          color: #2F855A;
+          color: #1E7E5E;
           font-weight: 700;
         }
 
@@ -686,12 +694,16 @@ export default function AdminMediaPage() {
           align-items: center;
           gap: 6px;
           padding: 7px 12px;
-          border-radius: 8px;
-          border: 1px solid #E8D8D0;
+          border-radius: 6px;
+          border: 1px solid #E8E7E2;
           background: #FFFFFF;
           font-size: 0.78rem;
-          color: #342727;
+          color: #111111;
           cursor: pointer;
+          transition: all 0.15s ease;
+        }
+        .btn-copy:hover {
+          background: #F8F7F3;
         }
 
         .btn-delete {
@@ -699,13 +711,14 @@ export default function AdminMediaPage() {
           align-items: center;
           gap: 6px;
           padding: 7px 12px;
-          border-radius: 8px;
-          border: none;
+          border-radius: 6px;
+          border: 1px solid #F8D7DA;
           background: #FFF5F5;
-          color: #C53030;
+          color: #C0392B;
           font-size: 0.78rem;
           font-weight: 600;
           cursor: pointer;
+          transition: all 0.15s ease;
         }
       `}</style>
     </div>

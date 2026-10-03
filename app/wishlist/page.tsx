@@ -7,8 +7,10 @@ import { Heart, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
 import { useCommerce } from '@/components/commerce/CommerceContext';
 import { formatPrice } from '@/lib/format';
 
+import ProductCard from '@/components/products/ProductCard';
+
 export default function WishlistPage() {
-  const { wishlist, toggleWishlist, addToCart } = useCommerce();
+  const { wishlist } = useCommerce();
 
   if (wishlist.length === 0) {
     return (
@@ -169,103 +171,7 @@ export default function WishlistPage() {
           className="wishlist-product-grid"
         >
           {wishlist.map((prod) => (
-            <div
-              key={prod.id}
-              style={{
-                backgroundColor: '#FFFFFF',
-                border: '1px solid #E8E7E2',
-                overflow: 'hidden',
-                display: 'flex',
-                flexDirection: 'column',
-                position: 'relative',
-              }}
-            >
-              {/* Image */}
-              <div
-                style={{
-                  position: 'relative',
-                  width: '100%',
-                  paddingTop: '115%',
-                  backgroundColor: '#F8F7F3',
-                  overflow: 'hidden',
-                }}
-              >
-                <Link href={`/product/${prod.slug}`} style={{ position: 'absolute', inset: 0 }}>
-                  <Image
-                    src={prod.images[0]}
-                    alt={prod.name}
-                    fill
-                    sizes="(max-width: 640px) 50vw, 25vw"
-                    style={{ objectFit: 'cover' }}
-                  />
-                </Link>
-
-                {/* Remove from wishlist button */}
-                <button
-                  onClick={() => toggleWishlist(prod)}
-                  aria-label="Remove from wishlist"
-                  style={{
-                    position: 'absolute',
-                    top: '10px',
-                    right: '10px',
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                    border: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    color: '#111111',
-                  }}
-                >
-                  <Trash2 size={15} />
-                </button>
-              </div>
-
-              {/* Info */}
-              <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
-                <div>
-                  <Link
-                    href={`/product/${prod.slug}`}
-                    style={{
-                      fontFamily: 'var(--font-heading), "Cormorant Garamond", serif',
-                      fontSize: '1.08rem',
-                      fontWeight: 600,
-                      color: '#111111',
-                      textDecoration: 'none',
-                      display: 'block',
-                      marginBottom: '6px',
-                    }}
-                  >
-                    {prod.name}
-                  </Link>
-                  <div style={{ fontWeight: 600, fontSize: '0.92rem', color: '#111111', marginBottom: '14px' }}>
-                    {formatPrice(prod.price)}
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => addToCart(prod, 1)}
-                  style={{
-                    width: '100%',
-                    padding: '10px 0',
-                    backgroundColor: '#111111',
-                    color: '#FFFFFF',
-                    border: 'none',
-                    fontFamily: 'var(--font-ui), "Jost", sans-serif',
-                    fontSize: '0.72rem',
-                    fontWeight: 600,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    cursor: 'pointer',
-                  }}
-                >
-                  MOVE TO BAG
-                </button>
-              </div>
-            </div>
+            <ProductCard key={prod.id || prod.slug} product={prod} />
           ))}
         </div>
       </div>

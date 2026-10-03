@@ -539,44 +539,8 @@ export const OCCASIONS_DATA = [
   }
 ];
 
-export const REVIEWS_DATA: Review[] = [
-  {
-    id: 'rev-01',
-    customerName: 'Priya S.',
-    rating: 5,
-    title: 'Exquisite Craftsmanship',
-    comment: 'Absolutely stunning designs and amazing quality! The jewellery looks even more beautiful in person. The weight of 925 silver is tangible and the polish is pure luxury.',
-    date: 'September 2026',
-    verified: true,
-    location: 'Jaipur, India',
-    purchasedProduct: 'Floral Silver Earrings',
-    avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop'
-  },
-  {
-    id: 'rev-02',
-    customerName: 'Ananya Sharma',
-    rating: 5,
-    title: 'Perfect Anniversary Gift',
-    comment: 'My husband surprised me with the Pearl Blossom necklace and earrings set from MK Silver Hub. The packaging with hallmark certificate and anti-tarnish pouch is so thoughtful.',
-    date: 'August 2026',
-    verified: true,
-    location: 'Mumbai, India',
-    purchasedProduct: 'Pearl Blossom Necklace',
-    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop'
-  },
-  {
-    id: 'rev-03',
-    customerName: 'Meera Rajput',
-    rating: 5,
-    title: 'Authentic 925 Silver',
-    comment: 'Being someone with sensitive skin, pure 925 silver without nickel is essential. I have worn my Kundan Chandbalis all festive week with zero irritation. Exceptional service on WhatsApp too!',
-    date: 'July 2026',
-    verified: true,
-    location: 'New Delhi, India',
-    purchasedProduct: 'Kundan Chandbali Earrings',
-    avatarUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=200&auto=format&fit=crop'
-  }
-];
+// Production Only - Customer reviews are fetched dynamically from MongoDB
+export const REVIEWS_DATA: Review[] = [];
 
 export const INSTAGRAM_POSTS = [
   {

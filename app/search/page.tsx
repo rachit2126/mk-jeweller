@@ -199,8 +199,14 @@ function SearchInner() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
+                gridTemplateColumns:
+                  results.length === 1
+                    ? 'minmax(260px, 320px)'
+                    : results.length === 2
+                    ? 'repeat(auto-fit, minmax(260px, 320px))'
+                    : 'repeat(4, 1fr)',
                 gap: '24px',
+                maxWidth: results.length === 1 ? '340px' : results.length === 2 ? '720px' : '100%',
               }}
               className="search-results-grid"
             >

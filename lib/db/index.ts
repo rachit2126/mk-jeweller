@@ -227,31 +227,8 @@ function generateInitialDatabase(): DatabaseSchema {
     },
   ];
 
-  // Inventory records
-  const initialInventory: DbInventoryRecord[] = initialProducts.map((p) => ({
-    id: `inv-${p.id}`,
-    sku: p.sku,
-    productId: p.id,
-    productName: p.name,
-    productImage: p.images[0] || '/images/collection-necklaces.jpg',
-    currentStock: p.stock,
-    reservedStock: 0,
-    availableStock: p.stock,
-    lowStockThreshold: 5,
-    status: p.stock === 0 ? 'out_of_stock' : p.stock <= 5 ? 'low_stock' : 'in_stock',
-    history: [
-      {
-        id: `hist-${Date.now()}-${p.id}`,
-        previous: 0,
-        change: p.stock,
-        new: p.stock,
-        reason: 'Initial Inventory Stocking',
-        admin: 'Rachit Sharma',
-        timestamp: new Date().toISOString(),
-      },
-    ],
-    updatedAt: new Date().toISOString(),
-  }));
+  // Inventory records - Derived dynamically from active products in MongoDB
+  const initialInventory: DbInventoryRecord[] = [];
 
   // Initial Orders matching reference screenshot (#MKT12345 to #MKT12341)
   const initialOrders: DbOrder[] = [
@@ -462,90 +439,11 @@ function generateInitialDatabase(): DatabaseSchema {
     },
   ];
 
-  // Customers
-  const initialCustomers: DbCustomer[] = [
-    {
-      id: 'cust-01',
-      name: 'Priya Sharma',
-      email: 'priya.sharma@example.com',
-      phone: '+91 98201 44521',
-      ordersCount: 4,
-      totalSpend: 16890,
-      lastOrderDate: '2026-09-30',
-      status: 'active',
-      addresses: [
-        {
-          id: 'addr-01',
-          type: 'home',
-          addressLine: 'A-402, Oberoi Splendor, JVLR',
-          city: 'Mumbai',
-          state: 'Maharashtra',
-          postalCode: '400060',
-          country: 'India',
-          isDefault: true,
-        },
-      ],
-      wishlist: ['prod-01', 'prod-02'],
-      createdAt: '2026-01-15T10:00:00Z',
-    },
-    {
-      id: 'cust-02',
-      name: 'Ananya Singh',
-      email: 'ananya.s@example.com',
-      phone: '+91 98112 55902',
-      ordersCount: 2,
-      totalSpend: 7498,
-      lastOrderDate: '2026-09-30',
-      status: 'active',
-      addresses: [
-        {
-          id: 'addr-02',
-          type: 'home',
-          addressLine: 'B-12, Sector 44',
-          city: 'Noida',
-          state: 'Uttar Pradesh',
-          postalCode: '201301',
-          country: 'India',
-          isDefault: true,
-        },
-      ],
-      wishlist: ['prod-03'],
-      createdAt: '2026-03-22T14:30:00Z',
-    },
-    {
-      id: 'cust-03',
-      name: 'Rohan Mehta',
-      email: 'rohan.mehta@example.com',
-      phone: '+91 97693 88123',
-      ordersCount: 3,
-      totalSpend: 18450,
-      lastOrderDate: '2026-09-29',
-      status: 'active',
-      addresses: [],
-      wishlist: [],
-      createdAt: '2026-04-10T09:15:00Z',
-    },
-    {
-      id: 'cust-04',
-      name: 'Neha Gupta',
-      email: 'neha.gupta@example.com',
-      phone: '+91 99304 12890',
-      ordersCount: 1,
-      totalSpend: 1999,
-      lastOrderDate: '2026-09-29',
-      status: 'active',
-      addresses: [],
-      wishlist: [],
-      createdAt: '2026-09-25T11:00:00Z',
-    },
-  ];
+  // Customers - Production Only (no mock or demo customers)
+  const initialCustomers: DbCustomer[] = [];
 
-  // Reviews
-  const initialReviews: DbReview[] = REVIEWS_DATA.map((r) => ({
-    ...r,
-    status: 'approved',
-    featured: true,
-  }));
+  // Reviews - Production Only (no mock or demo reviews)
+  const initialReviews: DbReview[] = [];
 
   // Coupons
   const initialCoupons: DbCoupon[] = [

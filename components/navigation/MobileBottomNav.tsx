@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Compass, Search, Heart, ShoppingBag } from 'lucide-react';
+import { Home, Compass, Search, Heart, ShoppingBag, User } from 'lucide-react';
 import { useCommerce } from '@/components/commerce/CommerceContext';
 
 export default function MobileBottomNav() {
@@ -13,6 +13,7 @@ export default function MobileBottomNav() {
   const isHome = pathname === '/';
   const isShop = pathname.startsWith('/shop');
   const isWishlist = pathname === '/wishlist';
+  const isAccount = pathname?.startsWith('/account');
   const isAuthOrAdmin = pathname?.startsWith('/admin') || pathname === '/login' || pathname === '/register' || pathname === '/forgot-password';
 
   if (isAuthOrAdmin) return null;
@@ -83,32 +84,7 @@ export default function MobileBottomNav() {
         <span>SHOP</span>
       </Link>
 
-      {/* 3. Search */}
-      <button
-        onClick={toggleSearchModal}
-        className="bottom-nav-item"
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '3px',
-          color: '#6F6F6A',
-          textDecoration: 'none',
-          fontSize: '0.66rem',
-          fontWeight: 500,
-          flex: 1,
-          padding: '4px 0',
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          letterSpacing: '0.04em',
-        }}
-      >
-        <Search size={19} strokeWidth={1.4} />
-        <span>SEARCH</span>
-      </button>
-
-      {/* 4. Wishlist */}
+      {/* 3. Wishlist */}
       <Link
         href="/wishlist"
         className="bottom-nav-item"
@@ -153,6 +129,28 @@ export default function MobileBottomNav() {
           )}
         </div>
         <span>WISHLIST</span>
+      </Link>
+
+      {/* 4. Account */}
+      <Link
+        href="/account"
+        className="bottom-nav-item"
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '3px',
+          color: isAccount ? '#111111' : '#6F6F6A',
+          textDecoration: 'none',
+          fontSize: '0.66rem',
+          fontWeight: isAccount ? 600 : 500,
+          flex: 1,
+          padding: '4px 0',
+          letterSpacing: '0.04em',
+        }}
+      >
+        <User size={19} strokeWidth={isAccount ? 2 : 1.4} />
+        <span>ACCOUNT</span>
       </Link>
 
       {/* 5. Bag */}

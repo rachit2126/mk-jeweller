@@ -139,9 +139,9 @@ async function main() {
   console.log(`Testing with product: ${activeProduct.name} (Initial Stock: ${initialStock})`);
 
   const orderPayload = {
-    customerName: 'Priya Sharma',
-    email: 'customer@mksilverhub.com',
-    phone: '+91 98765 43210',
+    customerName: 'Rachit Sharma',
+    email: 'rachit4907@gmail.com',
+    phone: '+91 98765 00001',
     items: [
       {
         productId: activeProduct.id,

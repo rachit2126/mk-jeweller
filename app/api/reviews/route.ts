@@ -12,10 +12,10 @@ export async function GET(req: NextRequest) {
     const db = await connectDB();
     const query: any = { status: 'approved' };
     if (productId) {
-      query.productId = productId;
+      query.$or = [{ productId }, { productSlug: productId }];
     }
 
-    const reviews = await db.collection('reviews').find(query).sort({ date: -1 }).toArray();
+    const reviews = await db.collection('reviews').find(query).sort({ createdAt: -1, date: -1 }).toArray();
     const formatted = reviews.map((r: any) => {
       const { _id, ...rest } = r;
       return { ...rest, id: rest.id || _id?.toString() };
@@ -36,28 +36,59 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required review fields.' }, { status: 400 });
     }
 
+    const numRating = Math.max(1, Math.min(5, Number(rating) || 5));
     const session = await getCurrentUser();
     const db = await connectDB();
 
-    // Check if customer actually ordered this item for verified buyer status
+    // Look up product to verify existence and get authentic name
+    const product = await db.collection('products').findOne({
+      $or: [{ id: productId }, { slug: productId }],
+    });
+
+    const reviewerEmail = session?.email?.toLowerCase().trim() || body.customerEmail?.toLowerCase().trim() || null;
+    const reviewerName = session?.name?.trim() || customerName?.trim() || 'Valued Patron';
+
+    // Check if customer actually purchased this item in a valid paid order
     let isVerified = false;
-    if (session?.email) {
+    if (reviewerEmail) {
       const pastOrder = await db.collection('orders').findOne({
-        email: session.email.toLowerCase(),
-        'items.productId': productId,
+        email: reviewerEmail,
+        paymentStatus: 'paid',
+        status: { $nin: ['cancelled', 'refunded'] },
+        $or: [
+          { 'items.productId': productId },
+          { 'items.slug': productId },
+          ...(product?.id ? [{ 'items.productId': product.id }] : []),
+        ],
       });
       if (pastOrder) isVerified = true;
+    }
+
+    // Check for existing review from this customer for this product to prevent spam
+    if (reviewerEmail) {
+      const existing = await db.collection('reviews').findOne({
+        productId,
+        $or: [{ customerEmail: reviewerEmail }, { email: reviewerEmail }],
+      });
+      if (existing) {
+        return NextResponse.json(
+          { error: 'You have already submitted a review for this jewellery piece.' },
+          { status: 409 }
+        );
+      }
     }
 
     const newReview = {
       id: `rev-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       productId,
-      customerName: session?.name || customerName || 'Valued Patron',
-      rating: Number(rating) || 5,
-      title: title || 'Exceptional Craftsmanship',
-      comment,
-      location: location || 'India',
-      verified: isVerified,
+      productName: product?.name || '925 Sterling Silver Jewellery',
+      customerName: reviewerName,
+      customerEmail: reviewerEmail || undefined,
+      rating: numRating,
+      title: title ? title.trim() : '',
+      comment: comment.trim(),
+      location: location ? location.trim() : null, // Never fabricate location
+      verifiedBuyer: isVerified,
       status: 'pending', // Pending admin approval by default
       date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
       createdAt: new Date().toISOString(),

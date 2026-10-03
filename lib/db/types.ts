@@ -8,6 +8,8 @@ export interface DbProduct extends Product {
   lowStockThreshold?: number;
   status: 'active' | 'draft' | 'archived' | 'out_of_stock';
   collectionIds?: string[];
+  subcategoryId?: string;
+  subcategory?: string;
   attributes?: Record<string, string>;
   createdAt: string;
   updatedAt: string;
@@ -25,6 +27,18 @@ export interface DbCategory {
   sortOrder: number;
   seoTitle?: string;
   seoDescription?: string;
+  seoKeywords?: string;
+  showInNavbar?: boolean;
+  visibleOnStore?: boolean;
+  megaMenuImage?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface CollectionRule {
+  field: 'category' | 'status' | 'price' | 'stock' | 'isNewArrival' | 'isBestSeller' | 'featured' | 'tag';
+  operator: 'equals' | 'not_equals' | 'greater_than' | 'less_than' | 'greater_than_or_equal' | 'less_than_or_equal' | 'contains';
+  value: string | number | boolean;
 }
 
 export interface DbCollection {
@@ -36,16 +50,18 @@ export interface DbCollection {
   thumbnail: string;
   productCount: number;
   type: 'manual' | 'automatic';
-  rules?: {
-    field: string;
-    operator: 'equals' | 'greater_than' | 'less_than' | 'contains';
-    value: string | number;
-  }[];
+  ruleMatch?: 'ALL' | 'ANY';
+  rules?: CollectionRule[];
   productIds: string[];
+  limit?: number;
+  sortBy?: 'newest' | 'oldest' | 'price_asc' | 'price_desc' | 'best_selling';
   status: 'active' | 'inactive';
   sortOrder: number;
   seoTitle?: string;
   seoDescription?: string;
+  seoKeywords?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface DbInventoryRecord {
@@ -197,34 +213,67 @@ export interface DbMediaItem {
 
 export interface DbBanner {
   id: string;
+  eyebrow?: string;
   title: string;
   subtitle?: string;
   desktopImage: string;
   mobileImage?: string;
+  altText?: string;
   ctaText?: string;
   ctaUrl?: string;
+  secondaryCtaText?: string;
+  secondaryCtaUrl?: string;
   placement: 'homepage_hero' | 'homepage_middle' | 'shop_top' | 'promotional';
   sortOrder: number;
   status: 'active' | 'inactive';
   startDate?: string;
   endDate?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface DbNavigationColumn {
+  heading: string;
+  links: {
+    label: string;
+    url: string;
+    count?: number;
+  }[];
 }
 
 export interface DbNavigationItem {
+  _id?: any;
   id: string;
   label: string;
+  slug?: string;
   url: string;
-  type?: string;
+  type?: 'category' | 'collection' | 'product' | 'custom' | string;
   icon?: string;
-  image?: string;
+  image?: string | null;
   badge?: string;
   highlight?: boolean;
-  menuColumns?: any[];
   parentId?: string | null;
+  referenceId?: string | null;
+  customUrl?: string | null;
+  order?: number;
+  sortOrder?: number;
+  level?: number;
+  isActive?: boolean;
+  status?: 'active' | 'inactive';
+  megaMenuEnabled?: boolean;
+  openInNewTab?: boolean;
+  description?: string | null;
+  featuredTitle?: string | null;
+  featuredDescription?: string | null;
+  featuredCtaText?: string | null;
+  featuredCtaUrl?: string | null;
+  columns?: DbNavigationColumn[];
+  menuColumns?: any[];
   placement?: 'header' | 'mega_menu' | 'mobile' | 'footer' | string;
-  sortOrder: number;
-  status: 'active' | 'inactive';
   children?: DbNavigationItem[];
+  productCount?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface DbHomepageSection {
@@ -283,4 +332,32 @@ export interface DbSettings {
   facebookUrl: string;
   youtubeUrl: string;
   maintenanceMode: boolean;
+}
+
+export interface DbContentItem {
+  id: string;
+  title: string;
+  slug: string;
+  type: 'blog' | 'editorial' | 'guide' | 'faq' | 'legal';
+  status: 'published' | 'draft' | 'scheduled';
+  author: string;
+  excerpt?: string;
+  content?: string;
+  coverImage?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  sections?: Array<{
+    id: string;
+    type: string;
+    title: string;
+    subtitle?: string;
+    content?: string;
+    image?: string;
+    buttonText?: string;
+    buttonUrl?: string;
+    items?: Array<{ title: string; description: string; icon?: string }>;
+  }>;
+  publishedAt?: string;
+  createdAt: string;
+  updatedAt: string;
 }

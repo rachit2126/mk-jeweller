@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import LuxuryAuthExperience from '@/components/auth/LuxuryAuthExperience';
+import LuxuryLoginPage from '@/components/auth/LuxuryLoginPage';
 
 export const metadata = {
   title: 'Sign In | MK Silver Hub — Fine 925 Sterling Jewellery',
@@ -9,11 +9,11 @@ export const metadata = {
 export default function LoginPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-[#FAF5F0] text-stone-500 font-sans text-sm">
+      <div className="min-h-screen flex items-center justify-center bg-white text-neutral-500 font-sans text-sm">
         Loading sign in...
       </div>
     }>
-      <LuxuryAuthExperience initialMode="login" />
+      <LuxuryLoginPage />
     </Suspense>
   );
 }

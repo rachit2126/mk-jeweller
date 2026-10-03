@@ -12,11 +12,7 @@ import {
   Users,
   Boxes,
   Star,
-  Image as ImageIcon,
-  Home,
-  Compass,
   Tag,
-  BarChart3,
   UserCheck,
   FolderOpen,
   FileText,
@@ -25,10 +21,12 @@ import {
   ChevronsRight,
   Headphones,
   ArrowRight,
-  FileSpreadsheet,
   ShieldCheck,
+  Menu,
 } from 'lucide-react';
 import { MKMonogramSvg } from '@/components/ui/BrandLogo';
+
+import { useAdminStats } from '@/components/admin/AdminStatsContext';
 
 interface SidebarProps {
   collapsed: boolean;
@@ -42,19 +40,17 @@ const NAV_ITEMS = [
   { label: 'Products', href: '/admin/products', icon: Package },
   { label: 'Categories', href: '/admin/categories', icon: Layers },
   { label: 'Collections', href: '/admin/collections', icon: Sparkles },
-  { label: 'Orders', href: '/admin/orders', icon: ShoppingBag, badge: '12' },
+  { label: 'Orders', href: '/admin/orders', icon: ShoppingBag, hasDynamicBadge: true },
   { label: 'Customers', href: '/admin/customers', icon: Users },
   { label: 'Inventory', href: '/admin/inventory', icon: Boxes },
-  { label: 'Reviews', href: '/admin/reviews', icon: Star, badge: '5' },
-  { label: 'Banners', href: '/admin/banners', icon: ImageIcon },
-  { label: 'Homepage', href: '/admin/content/homepage', icon: Home },
-  { label: 'Navigation', href: '/admin/navigation', icon: Compass },
+  { label: 'Reviews', href: '/admin/reviews', icon: Star, hasDynamicBadge: true },
+  { label: 'Navigation', href: '/admin/navbar', icon: Menu },
+  { label: 'Homepage CMS', href: '/admin/homepage', icon: LayoutDashboard },
+  { label: 'Banners', href: '/admin/banners', icon: FolderOpen },
   { label: 'Coupons', href: '/admin/coupons', icon: Tag },
-  { label: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
-  { label: 'Reports', href: '/admin/reports', icon: FileSpreadsheet },
   { label: 'Users & Roles', href: '/admin/users', icon: UserCheck },
   { label: 'Media Library', href: '/admin/media', icon: FolderOpen },
-  { label: 'Blog / Content', href: '/admin/content', icon: FileText },
+  { label: 'Content', href: '/admin/content', icon: FileText },
   { label: 'Settings', href: '/admin/settings', icon: Settings },
   { label: 'Audit Logs', href: '/admin/audit-logs', icon: ShieldCheck },
 ];
@@ -66,6 +62,19 @@ export default function AdminSidebar({
   setMobileOpen,
 }: SidebarProps) {
   const pathname = usePathname();
+  const { orderStats, reviewsCount, loading } = useAdminStats();
+
+  const getDynamicBadge = (href: string) => {
+    if (href === '/admin/orders') {
+      if (loading && !orderStats) return null;
+      return String(orderStats?.total ?? 0);
+    }
+    if (href === '/admin/reviews') {
+      if (loading && reviewsCount === null) return null;
+      return String(reviewsCount ?? 0);
+    }
+    return null;
+  };
 
   return (
     <>
@@ -114,7 +123,9 @@ export default function AdminSidebar({
               const isActive =
                 item.href === '/admin'
                   ? pathname === '/admin'
-                  : pathname === item.href || pathname.startsWith(`${item.href}/`);
+                  : item.href === '/admin/navigation'
+                    ? (pathname === '/admin/navigation' || pathname.startsWith('/admin/navigation/') || pathname === '/admin/navbar' || pathname.startsWith('/admin/navbar/'))
+                    : pathname === item.href || pathname.startsWith(`${item.href}/`);
 
               return (
                 <li key={item.href} className="nav-item">
@@ -128,8 +139,8 @@ export default function AdminSidebar({
                       <Icon size={17} strokeWidth={1.75} className="nav-icon" />
                     </span>
                     {!collapsed && <span className="nav-label">{item.label}</span>}
-                    {!collapsed && item.badge && (
-                      <span className="nav-badge-pill">{item.badge}</span>
+                    {!collapsed && getDynamicBadge(item.href) !== null && (
+                      <span className="nav-badge-pill">{getDynamicBadge(item.href)}</span>
                     )}
                   </Link>
                 </li>
@@ -144,16 +155,15 @@ export default function AdminSidebar({
             <div className="support-card">
               <div className="support-top-row">
                 <div className="support-icon-ring">
-                  <Headphones size={15} />
+                  <Headphones size={14} />
                 </div>
                 <div className="support-text">
-                  <span className="support-title">Need Help?</span>
+                  <span className="support-title">NEED HELP?</span>
                   <span className="support-sub">We&apos;re here to support you.</span>
                 </div>
               </div>
               <Link href="/admin/settings" className="support-action-btn">
-                <span>Contact Support</span>
-                <ArrowRight size={13} />
+                <span>CONTACT SUPPORT →</span>
               </Link>
             </div>
           )}

@@ -63,37 +63,12 @@ async function migrateDataToMongoDB() {
       createdAt: new Date().toISOString(),
       lastLogin: new Date().toISOString(),
     },
-    {
-      id: 'usr_normal_customer',
-      name: 'Priya Sharma',
-      email: 'customer@mksilverhub.com',
-      phone: '+91 98765 43210',
-      passwordHash: customerHash,
-      role: 'USER',
-      status: 'active',
-      avatar: '/images/avatars/customer.jpg',
-      addresses: [
-        {
-          id: 'addr_1',
-          name: 'Priya Sharma',
-          street: '14/B, Lotus Boulevard, Civil Lines',
-          city: 'Jaipur',
-          state: 'Rajasthan',
-          pincode: '302006',
-          phone: '+91 98765 43210',
-          isDefault: true,
-        },
-      ],
-      wishlist: ['prod-01', 'prod-03'],
-      createdAt: new Date().toISOString(),
-      lastLogin: new Date().toISOString(),
-    },
   ];
 
   for (const u of initialUsers) {
     await usersCol.updateOne({ email: u.email }, { $set: u }, { upsert: true });
   }
-  console.log(`   ✓ users: ${await usersCol.countDocuments()} records (Admin + Customer seeded)`);
+  console.log(`   ✓ users: ${await usersCol.countDocuments()} records (Admin only)`);
 
   // --- CATEGORIES ---
   const catCol = db.collection('categories');

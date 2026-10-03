@@ -63,65 +63,47 @@ const INSTAGRAM_POSTS = [
   },
 ];
 
-const DEFAULT_REVIEWS: ReviewItem[] = [
-  {
-    id: 'rev-default-1',
-    customerName: 'Priya Sharma',
-    productName: 'Minimal Silver Ring',
-    rating: 5,
-    comment: 'Absolutely love the quality and design. The jewellery is so elegant and perfect for everyday wear.',
-    avatar: '/images/avatars/customer.jpg',
-  },
-  {
-    id: 'rev-default-2',
-    customerName: 'Ananya Sharma',
-    productName: 'Petal Bloom Stud Earrings',
-    rating: 5,
-    comment: 'My husband surprised me with the Petal Bloom earrings. The packaging with hallmark certificate and anti-tarnish pouch is so thoughtful.',
-    avatar: '/images/avatars/customer.jpg',
-  },
-  {
-    id: 'rev-default-3',
-    customerName: 'Meera Rajput',
-    productName: 'Classic Solitaire Pendant',
-    rating: 5,
-    comment: 'Pure 925 sterling silver without nickel. I have worn my solitaire pendant every day with zero irritation. Exceptional craft from Jaipur!',
-    avatar: '/images/avatars/customer.jpg',
-  },
-];
-
 export default function SocialAndReviewsSection() {
-  const [reviews, setReviews] = useState<ReviewItem[]>(DEFAULT_REVIEWS);
+  const [reviews, setReviews] = useState<ReviewItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [currentIdx, setCurrentIdx] = useState(0);
 
   useEffect(() => {
     fetch('/api/reviews')
       .then((res) => res.json())
       .then((data) => {
-        if (data.reviews && data.reviews.length > 0) {
+        if (data.reviews && Array.isArray(data.reviews) && data.reviews.length > 0) {
           const mapped = data.reviews.map((r: any) => ({
-            id: r.id,
+            id: r.id || r._id,
             customerName: r.customerName || r.author || 'Valued Patron',
             productName: r.productName || r.purchasedProduct || 'Fine 925 Sterling Silver',
-            rating: r.rating || 5,
-            comment: r.comment || r.content || 'Exceptional craftsmanship and authentic 925 silver.',
+            rating: typeof r.rating === 'number' ? r.rating : 5,
+            comment: r.comment || r.content || '',
             avatar: r.avatar || r.avatarUrl || '/images/avatars/customer.jpg',
           }));
           setReviews(mapped);
+        } else {
+          setReviews([]);
         }
       })
-      .catch((err) => console.error('Failed to load reviews:', err));
+      .catch((err) => {
+        console.error('Failed to load reviews:', err);
+        setReviews([]);
+      })
+      .finally(() => setIsLoading(false));
   }, []);
 
   const nextReview = () => {
+    if (reviews.length === 0) return;
     setCurrentIdx((prev) => (prev + 1) % reviews.length);
   };
 
   const prevReview = () => {
+    if (reviews.length === 0) return;
     setCurrentIdx((prev) => (prev - 1 + reviews.length) % reviews.length);
   };
 
-  const currentReview = reviews[currentIdx] || DEFAULT_REVIEWS[0];
+  const currentReview = reviews[currentIdx];
 
   return (
     <section
@@ -224,59 +206,76 @@ export default function SocialAndReviewsSection() {
               </h2>
 
               {/* Slider Controls */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <button
-                  onClick={prevReview}
-                  aria-label="Previous review"
-                  className="review-arrow-btn"
-                >
-                  <ChevronLeft size={16} strokeWidth={1.5} />
-                </button>
-                <button
-                  onClick={nextReview}
-                  aria-label="Next review"
-                  className="review-arrow-btn"
-                >
-                  <ChevronRight size={16} strokeWidth={1.5} />
-                </button>
-              </div>
+              {reviews.length > 1 && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <button
+                    onClick={prevReview}
+                    aria-label="Previous review"
+                    className="review-arrow-btn"
+                  >
+                    <ChevronLeft size={16} strokeWidth={1.5} />
+                  </button>
+                  <button
+                    onClick={nextReview}
+                    aria-label="Next review"
+                    className="review-arrow-btn"
+                  >
+                    <ChevronRight size={16} strokeWidth={1.5} />
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Review Card */}
-            <div className="testimonial-card">
-              <span className="quote-mark">“</span>
+            {isLoading ? (
+              <div className="testimonial-card" style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <p style={{ color: '#6F6F6A', fontSize: '0.85rem' }}>Loading reviews...</p>
+              </div>
+            ) : reviews.length === 0 ? (
+              <div className="testimonial-card" style={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                <p style={{ fontFamily: 'var(--font-display), "Cormorant Garamond", Georgia, serif', fontSize: '1.25rem', color: '#111111', margin: '0 0 6px' }}>
+                  No customer reviews yet
+                </p>
+                <p style={{ fontFamily: 'var(--font-ui), "Jost", sans-serif', fontSize: '0.8rem', color: '#6F6F6A', margin: 0, maxWidth: '280px' }}>
+                  Customer reviews and ratings for purchased jewellery will appear here.
+                </p>
+              </div>
+            ) : currentReview ? (
+              <div className="testimonial-card">
+                <span className="quote-mark">“</span>
 
-              <p className="quote-text">
-                {currentReview.comment}
-              </p>
+                <p className="quote-text">
+                  {currentReview.comment}
+                </p>
 
-              <div className="reviewer-info">
-                <div>
-                  <h4 className="reviewer-name">{currentReview.customerName}</h4>
-                  {currentReview.productName && (
-                    <span className="reviewed-product">{currentReview.productName}</span>
-                  )}
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{ display: 'flex', color: '#111111' }}>
-                    {Array.from({ length: currentReview.rating }).map((_, i) => (
-                      <Star key={i} size={13} fill="#111111" stroke="#111111" />
-                    ))}
+                <div className="reviewer-info">
+                  <div>
+                    <h4 className="reviewer-name">{currentReview.customerName}</h4>
+                    {currentReview.productName && (
+                      <span className="reviewed-product">{currentReview.productName}</span>
+                    )}
                   </div>
 
-                  <div className="reviewer-avatar">
-                    <Image
-                      src="/images/logo/mk-monogram-silver.png"
-                      alt="Verified MK Silver Hub Patron"
-                      width={28}
-                      height={28}
-                      style={{ objectFit: 'contain' }}
-                    />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{ display: 'flex', color: '#111111' }}>
+                      {Array.from({ length: currentReview.rating }).map((_, i) => (
+                        <Star key={i} size={13} fill="#111111" stroke="#111111" />
+                      ))}
+                    </div>
+
+                    <div className="reviewer-avatar">
+                      <Image
+                        src="/images/logo/mk-monogram-silver.png"
+                        alt="Verified MK Silver Hub Patron"
+                        width={28}
+                        height={28}
+                        style={{ objectFit: 'contain' }}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            ) : null}
           </div>
         </div>
       </div>

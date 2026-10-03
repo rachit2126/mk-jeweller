@@ -1,11 +1,9 @@
 import { MongoClient, Db } from 'mongodb';
 
-const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/mk_silver_hub';
-
 const options = {
-  maxPoolSize: 20,
-  serverSelectionTimeoutMS: 10000,
-  connectTimeoutMS: 10000,
+  maxPoolSize: 10,
+  serverSelectionTimeoutMS: 8000,
+  connectTimeoutMS: 8000,
   socketTimeoutMS: 20000,
 };
 
@@ -16,7 +14,35 @@ declare global {
 
 let activeClient: MongoClient | null = null;
 
+/**
+ * Sanitizes MongoDB connection error messages to ensure credentials are never exposed in logs.
+ */
+function sanitizeMongoError(message?: string): string {
+  if (!message) return 'Unknown database error';
+  return message.replace(/mongodb(\+srv)?:\/\/[^@]+@/gi, 'mongodb$1://[credentials-hidden]@');
+}
+
+/**
+ * Validates if MongoDB URI is configured in current environment.
+ */
+export function isMongoConfigured(): boolean {
+  const uri = process.env.MONGODB_URI || process.env.MONGODB_ATLAS_URI;
+  return Boolean(uri && uri.trim().length > 0);
+}
+
+/**
+ * Returns an active cached MongoClient instance.
+ * Evaluates connection string lazily at runtime — never at module import time.
+ * Never falls back to localhost or 127.0.0.1.
+ */
 async function getClient(): Promise<MongoClient> {
+  const uri = (process.env.MONGODB_URI || process.env.MONGODB_ATLAS_URI || '').trim();
+
+  if (!uri) {
+    throw new Error('MONGODB_URI environment variable is not configured. Database access is unavailable.');
+  }
+
+  // Reuse development global client if alive
   if (process.env.NODE_ENV === 'development' && global._mongoClientInstance) {
     try {
       await global._mongoClientInstance.db('admin').command({ ping: 1 });
@@ -26,6 +52,7 @@ async function getClient(): Promise<MongoClient> {
     }
   }
 
+  // Reuse cached active client in serverless/worker runtime
   if (activeClient) {
     try {
       await activeClient.db('admin').command({ ping: 1 });
@@ -44,7 +71,8 @@ async function getClient(): Promise<MongoClient> {
     }
     return client;
   } catch (err: any) {
-    console.error('[MongoDB Connection Error]:', err?.message);
+    const safeMsg = sanitizeMongoError(err?.message);
+    console.error('[MongoDB Connection Error]:', safeMsg);
     throw new Error('Database connection currently unavailable');
   }
 }
@@ -52,7 +80,7 @@ async function getClient(): Promise<MongoClient> {
 /**
  * Centralized MongoDB Connection Utility.
  * Reuses active client pool across requests.
- * 100% database availability with automatic ping check.
+ * Evaluates connection lazily at request runtime.
  * Never exposes credentials to client.
  */
 export async function connectDB(dbName: string = 'mk_silver_hub'): Promise<Db> {

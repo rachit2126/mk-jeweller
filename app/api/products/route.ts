@@ -6,6 +6,7 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
 
     const category = searchParams.get('category') || undefined;
+    const subcategory = searchParams.get('subcategory') || searchParams.get('sub') || undefined;
     const collection = searchParams.get('collection') || undefined;
     const occasion = searchParams.get('occasion') || undefined;
     const search = searchParams.get('search') || searchParams.get('q') || undefined;
@@ -23,6 +24,7 @@ export async function GET(req: NextRequest) {
 
     const result = await getProductsFromDb({
       category,
+      subcategory,
       collection,
       occasion,
       search,

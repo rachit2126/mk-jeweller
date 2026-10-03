@@ -1,7 +1,12 @@
 import { MongoClient } from 'mongodb';
 
-const localUri = 'mongodb://127.0.0.1:27017/mk_silver_hub';
-const atlasUri = 'mongodb+srv://rachit4907_db_user:ODtTiSmnRdbnJkkx@cluster0.utsztvu.mongodb.net/mk_silver_hub?retryWrites=true&w=majority&appName=Cluster0';
+const localUri = process.env.LOCAL_MONGODB_URI || 'mongodb://127.0.0.1:27017/mk_silver_hub';
+const atlasUri = process.env.MONGODB_URI || process.env.MONGODB_ATLAS_URI;
+
+if (!atlasUri) {
+  console.error('Please configure MONGODB_URI in environment.');
+  process.exit(1);
+}
 
 async function migrateAllToAtlas() {
   console.log('Connecting to Local MongoDB...');

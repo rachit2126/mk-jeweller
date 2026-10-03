@@ -7,6 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "check:types": "tsc --noEmit",
+    "cf:check": "npx -y vinext check",
+    "deploy": "wrangler deploy",
+    "deploy:preview": "wrangler deploy --dry-run",
     "seed": "node scripts/seed_mongodb.mjs"
   },
   "dependencies": {

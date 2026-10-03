@@ -9,8 +9,10 @@ import SearchModal from '@/components/commerce/SearchModal';
 import WhatsAppFloat from '@/components/ui/WhatsAppFloat';
 import MobileBottomNav from '@/components/navigation/MobileBottomNav';
 import Footer from '@/components/layout/Footer';
+import { NavigationProvider } from '@/components/navigation/NavigationContext';
+import { getNavigationTree } from '@/lib/db/navigation';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://mk-jeweller.vercel.app';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://mksilverhub.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -63,11 +65,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const initialNav = await getNavigationTree();
+
   return (
     <html lang="en-IN" data-scroll-behavior="smooth">
       <head>
@@ -88,26 +92,28 @@ export default function RootLayout({
       </head>
       <body>
         <CommerceProvider>
-          {/* Top Announcement Bar */}
-          <AnnouncementBar />
+          <NavigationProvider initialNavbarItems={initialNav}>
+            {/* Top Announcement Bar */}
+            <AnnouncementBar />
 
-          {/* Floating Sticky Main Navbar */}
-          <MainNavbar />
+            {/* Floating Sticky Main Navbar */}
+            <MainNavbar />
 
-          {/* Main Page Content */}
-          <main style={{ minHeight: '80vh', margin: 0, padding: 0, border: 'none', width: '100%', overflowX: 'hidden' }}>
-            {children}
-          </main>
+            {/* Main Page Content */}
+            <main style={{ margin: 0, padding: 0, border: 'none', width: '100%' }}>
+              {children}
+            </main>
 
-          {/* Commerce Global Modals & Drawers */}
-          <CartDrawer />
-          <QuickViewModal />
-          <SearchModal />
-          <WhatsAppFloat />
-          <MobileBottomNav />
+            {/* Commerce Global Modals & Drawers */}
+            <CartDrawer />
+            <QuickViewModal />
+            <SearchModal />
+            <WhatsAppFloat />
+            <MobileBottomNav />
 
-          {/* Global Footer */}
-          <Footer />
+            {/* Global Footer */}
+            <Footer />
+          </NavigationProvider>
         </CommerceProvider>
       </body>
     </html>

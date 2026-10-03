@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -43,6 +43,29 @@ export default function ProductEditor({ initialProduct, isEditing = false }: Pro
   const [costPrice, setCostPrice] = useState<number | string>(initialProduct?.costPrice ?? 1600);
   const [stock, setStock] = useState<number | string>(initialProduct?.stock ?? 12);
   const [lowStockThreshold, setLowStockThreshold] = useState<number | string>(initialProduct?.lowStockThreshold ?? 5);
+
+  const [availableCategories, setAvailableCategories] = useState<{ id: string; name: string; slug: string; status: string }[]>([]);
+  const [availableCollections, setAvailableCollections] = useState<{ id: string; name: string; slug: string; status: string }[]>([]);
+
+  useEffect(() => {
+    fetch('/api/admin/categories?limit=all')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.categories) {
+          setAvailableCategories(data.categories);
+        }
+      })
+      .catch(() => {});
+
+    fetch('/api/admin/collections?limit=all')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.collections) {
+          setAvailableCollections(data.collections);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const [isFeatured, setIsFeatured] = useState(!!initialProduct?.featured);
   const [isNewArrival, setIsNewArrival] = useState(initialProduct?.isNewArrival ?? true);
@@ -100,7 +123,7 @@ export default function ProductEditor({ initialProduct, isEditing = false }: Pro
       slug,
       sku: sku || `MK-${category.toUpperCase().slice(0, 3)}-${Date.now().toString().slice(-3)}`,
       category,
-      categoryLabel: category.charAt(0).toUpperCase() + category.slice(1),
+      categoryLabel: availableCategories.find(c => c.slug === category)?.name || (category.charAt(0).toUpperCase() + category.slice(1)),
       price: Number(price),
       compareAtPrice: Number(compareAtPrice),
       costPrice: Number(costPrice),
@@ -297,11 +320,17 @@ export default function ProductEditor({ initialProduct, isEditing = false }: Pro
                     onChange={(e) => setCategory(e.target.value as any)}
                     className="form-select"
                   >
-                    <option value="necklaces">Necklaces</option>
-                    <option value="earrings">Earrings</option>
-                    <option value="rings">Rings</option>
-                    <option value="bracelets">Bracelets</option>
-                    <option value="pendants">Pendants</option>
+                    {availableCategories.length === 0 ? (
+                      <option value={category}>{category.charAt(0).toUpperCase() + category.slice(1)}</option>
+                    ) : (
+                      availableCategories
+                        .filter(c => c.status === 'active' || c.slug === category)
+                        .map(c => (
+                          <option key={c.id || c.slug} value={c.slug}>
+                            {c.name} {c.status === 'inactive' ? '(Inactive)' : ''}
+                          </option>
+                        ))
+                    )}
                   </select>
                 </div>
 
@@ -312,12 +341,14 @@ export default function ProductEditor({ initialProduct, isEditing = false }: Pro
                     onChange={(e) => setCollection(e.target.value)}
                     className="form-select"
                   >
-                    <option value="bridal-collection">Bridal Collection</option>
-                    <option value="festive-collection">Festive Collection</option>
-                    <option value="everyday-essentials">Everyday Essentials</option>
-                    <option value="gifts-collection">Gifts Collection</option>
-                    <option value="new-arrivals">New Arrivals</option>
-                    <option value="best-sellers">Best Sellers</option>
+                    <option value="">None</option>
+                    {availableCollections
+                      .filter((c) => c.status === 'active' || c.slug === collection)
+                      .map((c) => (
+                        <option key={c.id || c.slug} value={c.slug}>
+                          {c.name} {c.status === 'inactive' ? '(Inactive)' : ''}
+                        </option>
+                      ))}
                   </select>
                 </div>
               </div>
@@ -671,15 +702,15 @@ export default function ProductEditor({ initialProduct, isEditing = false }: Pro
         }
 
         .back-btn:hover {
-          background-color: #FCE8DE;
-          color: #B76E79;
+          background-color: #F2F0EA;
+          color: #111111;
         }
 
         .editor-page-title {
           font-family: var(--font-display), 'Cormorant Garamond', serif;
           font-size: 1.6rem;
           font-weight: 600;
-          color: #342727;
+          color: #111111;
           margin: 0;
         }
 
@@ -691,36 +722,35 @@ export default function ProductEditor({ initialProduct, isEditing = false }: Pro
 
         .btn-draft {
           background: #FFFFFF;
-          border: 1px solid #EAE2DB;
-          color: #342727;
+          border: 1px solid #E8E7E2;
+          color: #111111;
           padding: 8px 16px;
-          border-radius: 10px;
+          border-radius: 6px;
           font-size: 0.84rem;
           font-weight: 500;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.18s ease;
         }
 
         .btn-draft:hover {
-          border-color: #B76E79;
-          color: #B76E79;
+          border-color: #111111;
+          background-color: #F8F7F3;
         }
 
         .btn-publish {
-          background-color: #B76E79;
+          background-color: #111111;
           color: #FFFFFF;
           border: none;
-          padding: 9px 20px;
-          border-radius: 10px;
-          font-size: 0.86rem;
+          padding: 8px 20px;
+          border-radius: 6px;
+          font-size: 0.84rem;
           font-weight: 600;
           cursor: pointer;
-          box-shadow: 0 4px 14px rgba(183, 110, 121, 0.3);
-          transition: background 0.2s ease;
+          transition: background 0.18s ease;
         }
 
         .btn-publish:hover:not(:disabled) {
-          background-color: #9C5762;
+          background-color: #252525;
         }
 
         .btn-publish:disabled {
@@ -740,21 +770,26 @@ export default function ProductEditor({ initialProduct, isEditing = false }: Pro
 
         .tab-btn {
           background-color: #FFFFFF;
-          border: 1px solid #EAE2DB;
-          padding: 8px 16px;
-          border-radius: 10px;
-          font-size: 0.82rem;
+          border: 1px solid #E8E7E2;
+          padding: 7px 14px;
+          border-radius: 6px;
+          font-size: 0.8rem;
           font-weight: 500;
-          color: #6F5A58;
+          color: #6F6F6A;
           cursor: pointer;
           white-space: nowrap;
           transition: all 0.15s ease;
         }
 
+        .tab-btn:hover {
+          background-color: #F8F7F3;
+          color: #111111;
+        }
+
         .tab-btn.active {
-          background-color: #FCE8DE;
-          border-color: #F6D6D9;
-          color: #B76E79;
+          background-color: #111111;
+          border-color: #111111;
+          color: #FFFFFF;
           font-weight: 600;
         }
 
@@ -804,19 +839,19 @@ export default function ProductEditor({ initialProduct, isEditing = false }: Pro
         }
 
         .form-input, .form-select, .form-textarea {
-          background-color: #FFF9F3;
-          border: 1px solid #E8D8D0;
-          border-radius: 10px;
-          padding: 9px 12px;
+          background-color: #FFFFFF;
+          border: 1px solid #E8E7E2;
+          border-radius: 6px;
+          padding: 8px 12px;
           font-family: inherit;
-          font-size: 0.86rem;
-          color: #342727;
+          font-size: 0.84rem;
+          color: #111111;
           outline: none;
           transition: border-color 0.15s ease;
         }
 
         .form-input:focus, .form-select:focus, .form-textarea:focus {
-          border-color: #B76E79;
+          border-color: #111111;
           background-color: #FFFFFF;
         }
 
@@ -834,14 +869,14 @@ export default function ProductEditor({ initialProduct, isEditing = false }: Pro
           gap: 8px;
           font-size: 0.82rem;
           font-weight: 500;
-          color: #342727;
+          color: #111111;
           cursor: pointer;
         }
 
         .toggle-switch {
           width: 16px;
           height: 16px;
-          accent-color: #B76E79;
+          accent-color: #111111;
           cursor: pointer;
         }
 
@@ -931,12 +966,12 @@ export default function ProductEditor({ initialProduct, isEditing = false }: Pro
           position: absolute;
           top: 8px;
           left: 8px;
-          background-color: #B76E79;
+          background-color: #111111;
           color: #FFFFFF;
           font-size: 0.68rem;
           font-weight: 700;
           padding: 2px 8px;
-          border-radius: 6px;
+          border-radius: 4px;
           z-index: 10;
         }
 
@@ -949,10 +984,10 @@ export default function ProductEditor({ initialProduct, isEditing = false }: Pro
         .thumb-slot {
           position: relative;
           height: 86px;
-          border-radius: 10px;
+          border-radius: 6px;
           overflow: hidden;
-          background: #F8F5F2;
-          border: 1px solid #E8D8D0;
+          background: #F8F7F3;
+          border: 1px solid #E8E7E2;
         }
 
         :global(.slot-img) {
@@ -965,7 +1000,7 @@ export default function ProductEditor({ initialProduct, isEditing = false }: Pro
           right: 4px;
           width: 18px;
           height: 18px;
-          background: rgba(0, 0, 0, 0.6);
+          background: rgba(0, 0, 0, 0.7);
           color: #FFFFFF;
           border-radius: 50%;
           border: none;
@@ -977,9 +1012,9 @@ export default function ProductEditor({ initialProduct, isEditing = false }: Pro
         }
 
         .upload-dropzone {
-          border: 1.5px dashed #D9B98A;
-          background-color: #FFF9F3;
-          border-radius: 10px;
+          border: 1.5px dashed #D8D5CE;
+          background-color: #F8F7F3;
+          border-radius: 6px;
           height: 86px;
           display: flex;
           flex-direction: column;
@@ -988,23 +1023,24 @@ export default function ProductEditor({ initialProduct, isEditing = false }: Pro
           cursor: pointer;
           padding: 6px;
           text-align: center;
-          transition: background 0.15s ease;
+          transition: all 0.15s ease;
         }
 
         .upload-dropzone:hover {
-          background-color: #FCE8DE;
+          background-color: #F2F0EA;
+          border-color: #111111;
         }
 
         .upload-txt {
           font-size: 0.74rem;
           font-weight: 600;
-          color: #B76E79;
+          color: #111111;
           margin-top: 3px;
         }
 
         .upload-sub {
           font-size: 0.62rem;
-          color: #806D68;
+          color: #6F6F6A;
         }
 
         /* OPTIMIZATION CARD MATCHING SCREENSHOT */
@@ -1118,8 +1154,8 @@ export default function ProductEditor({ initialProduct, isEditing = false }: Pro
         }
 
         .format-pill {
-          background-color: #FCE8DE;
-          color: #B76E79;
+          background-color: #F2F0EA;
+          color: #111111;
           font-size: 0.7rem;
           font-weight: 600;
           padding: 2px 8px;

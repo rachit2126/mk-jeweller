@@ -1,33 +1,33 @@
 'use client';
 
 import React from 'react';
-import { Gem, Truck, RefreshCw, Feather, Award } from 'lucide-react';
+import { Gem, Truck, Package, ShieldCheck, Sparkles } from 'lucide-react';
 
 const TRUST_ITEMS = [
   {
+    icon: Sparkles,
+    line1: 'HANDCRAFTED',
+    line2: 'EXCELLENCE',
+  },
+  {
     icon: Gem,
-    title: '925 STERLING SILVER',
-    subtitle: 'Hallmarked',
+    line1: '925 STERLING',
+    line2: 'SILVER',
   },
   {
     icon: Truck,
-    title: 'SECURE SHIPPING',
-    subtitle: 'Across India',
+    line1: 'FREE SHIPPING',
+    line2: 'ON ₹1,000+',
   },
   {
-    icon: RefreshCw,
-    title: 'EASY EXCHANGE',
-    subtitle: 'Hassle Free',
+    icon: Package,
+    line1: 'EASY',
+    line2: 'RETURNS',
   },
   {
-    icon: Feather,
-    title: 'HYPOALLERGENIC',
-    subtitle: 'Skin Friendly',
-  },
-  {
-    icon: Award,
-    title: 'AUTHENTIC CRAFT',
-    subtitle: 'Made in Jaipur',
+    icon: ShieldCheck,
+    line1: 'TRUSTED',
+    line2: 'BY CUSTOMERS',
   },
 ];
 
@@ -40,86 +40,95 @@ export default function TrustStrip() {
         backgroundColor: '#FFFFFF',
         borderTop: '1px solid #E8E7E2',
         borderBottom: '1px solid #E8E7E2',
-        padding: '24px 0',
+        height: '84px',
+        display: 'flex',
+        alignItems: 'center',
+        boxSizing: 'border-box',
       }}
     >
       <div
+        className="trust-strip-container"
         style={{
           maxWidth: '1440px',
+          width: '100%',
           margin: '0 auto',
-          padding: '0 clamp(16px, 3vw, 40px)',
+          padding: '0 clamp(16px, 4vw, 48px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
+          height: '100%',
+          boxSizing: 'border-box',
         }}
-        className="trust-strip-container"
       >
         {TRUST_ITEMS.map((item, idx) => {
           const Icon = item.icon;
           return (
-            <React.Fragment key={item.title}>
+            <React.Fragment key={item.line1 + item.line2}>
               <div
+                className="trust-item"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '14px',
+                  gap: '12px',
                   flex: 1,
                   justifyContent: 'center',
-                  padding: '4px 12px',
+                  padding: '4px 10px',
                 }}
-                className="trust-item"
               >
                 <div
                   style={{
-                    width: '38px',
-                    height: '38px',
-                    borderRadius: '50%',
-                    backgroundColor: '#F8F7F3',
-                    border: '1px solid #E8E7E2',
+                    color: '#111111',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: '#111111',
                     flexShrink: 0,
                   }}
                 >
-                  <Icon size={18} strokeWidth={1.4} />
+                  <Icon size={20} strokeWidth={1.3} />
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    lineHeight: 1.25,
+                  }}
+                >
                   <span
                     style={{
-                      fontFamily: 'var(--font-ui), "Jost", sans-serif',
-                      fontSize: '0.74rem',
+                      fontFamily: 'var(--font-ui), "Jost", -apple-system, sans-serif',
+                      fontSize: '0.72rem',
                       fontWeight: 600,
                       letterSpacing: '0.12em',
                       textTransform: 'uppercase',
                       color: '#111111',
-                      lineHeight: 1.2,
                     }}
                   >
-                    {item.title}
+                    {item.line1}
                   </span>
                   <span
                     style={{
-                      fontFamily: 'var(--font-body), "Jost", sans-serif',
+                      fontFamily: 'var(--font-ui), "Jost", -apple-system, sans-serif',
                       fontSize: '0.72rem',
-                      color: '#6F6F6A',
-                      marginTop: '2px',
+                      fontWeight: 500,
+                      letterSpacing: '0.12em',
+                      textTransform: 'uppercase',
+                      color: '#4A4A45',
                     }}
                   >
-                    {item.subtitle}
+                    {item.line2}
                   </span>
                 </div>
               </div>
 
               {idx < TRUST_ITEMS.length - 1 && (
                 <div
+                  className="trust-divider"
                   style={{
                     width: '1px',
                     height: '32px',
                     backgroundColor: '#E8E7E2',
+                    flexShrink: 0,
                   }}
-                  className="trust-divider"
                 />
               )}
             </React.Fragment>
@@ -129,14 +138,17 @@ export default function TrustStrip() {
 
       <style jsx>{`
         @media (max-width: 900px) {
+          section {
+            height: auto !important;
+            padding: 14px 0 !important;
+          }
           .trust-strip-container {
-            display: flex !important;
             overflow-x: auto !important;
             scroll-snap-type: x mandatory;
             justify-content: flex-start !important;
-            gap: 20px;
-            padding-bottom: 8px !important;
+            gap: 16px !important;
             -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
           }
           .trust-strip-container::-webkit-scrollbar {
             display: none;
@@ -144,10 +156,10 @@ export default function TrustStrip() {
           .trust-item {
             flex: 0 0 auto !important;
             scroll-snap-align: start;
-            min-width: 190px;
+            padding: 4px 12px !important;
           }
           .trust-divider {
-            display: none !important;
+            display: block;
           }
         }
       `}</style>

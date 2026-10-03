@@ -1,47 +1,36 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Search, Heart, ShoppingBag, User, Menu } from 'lucide-react';
 import BrandLogo from '@/components/ui/BrandLogo';
 import MobileDrawer from './MobileDrawer';
 import { useCommerce } from '@/components/commerce/CommerceContext';
-
-import ShopMegaMenu from './ShopMegaMenu';
+import DynamicMegaMenu from './DynamicMegaMenu';
 import AccountDropdown from './AccountDropdown';
 import WishlistPreview from './WishlistPreview';
 import CartPreview from './CartPreview';
 import SearchOverlay from './SearchOverlay';
-
-const CATEGORY_NAV_ITEMS = [
-  { label: 'EARRINGS', href: '/shop?category=earrings', hasMega: true },
-  { label: 'NECKLACES', href: '/shop?category=necklaces', hasMega: true },
-  { label: 'RINGS', href: '/shop?category=rings', hasMega: true },
-  { label: 'BRACELETS', href: '/shop?category=bracelets', hasMega: true },
-  { label: 'BANGLES', href: '/shop?category=bangles', hasMega: true },
-  { label: 'ANKLETS', href: '/shop?category=anklets', hasMega: true },
-  { label: 'PENDANTS', href: '/shop?category=pendants', hasMega: true },
-  { label: 'MEN', href: '/shop?category=men', hasMega: true },
-  { label: 'BRIDAL', href: '/collections/bridal', hasMega: true },
-  { label: 'COLLECTIONS', href: '/collections', hasMega: true },
-  { label: 'NEW ARRIVALS', href: '/shop?sort=newest', hasMega: false },
-  { label: 'BEST SELLERS', href: '/shop?isBestSeller=true', hasMega: false },
-  { label: 'ABOUT', href: '/about', hasMega: false },
-];
+import { useNavigation } from './NavigationContext';
+import { DbNavigationItem } from '@/lib/db/types';
 
 export default function MainNavbar() {
   const pathname = usePathname();
+  const { navbarItems, loading: navLoading } = useNavigation();
+
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
-  const [activeMenu, setActiveMenu] = useState<'account' | 'wishlist' | 'cart' | 'search' | null>(null);
+  const [activeMenuSlug, setActiveMenuSlug] = useState<string | null>(null);
+  const [activeHeaderDropdown, setActiveHeaderDropdown] = useState<'account' | 'wishlist' | 'cart' | 'search' | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [bagAnimated, setBagAnimated] = useState(false);
-  const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const closeTimerRef = useRef<NodeJS.Timeout | null>(null);
   const navbarRef = useRef<HTMLDivElement>(null);
   const prevCartCountRef = useRef(0);
   const { cartCount, wishlistCount, toggleCartDrawer, toggleSearchModal } = useCommerce();
 
+  // Scroll detection for sticky header compression
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 30);
@@ -50,25 +39,29 @@ export default function MainNavbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close menus on page navigation
+  // Close menus on page route changes
   useEffect(() => {
-    setActiveMenu(null);
-    setIsMegaMenuOpen(false);
+    const timer = setTimeout(() => {
+      setActiveMenuSlug(null);
+      setActiveHeaderDropdown(null);
+      setIsMobileMenuOpen(false);
+    }, 0);
+    return () => clearTimeout(timer);
   }, [pathname]);
 
   // Click outside and Escape key handler
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (navbarRef.current && !navbarRef.current.contains(e.target as Node)) {
-        setActiveMenu(null);
-        setIsMegaMenuOpen(false);
+        setActiveMenuSlug(null);
+        setActiveHeaderDropdown(null);
       }
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        setActiveMenu(null);
-        setIsMegaMenuOpen(false);
+        setActiveMenuSlug(null);
+        setActiveHeaderDropdown(null);
       }
     };
 
@@ -80,7 +73,7 @@ export default function MainNavbar() {
     };
   }, []);
 
-  // Trigger bounce on Bag icon when an item is added
+  // Trigger bounce on Bag icon when items are added to cart
   useEffect(() => {
     if (cartCount > prevCartCountRef.current) {
       setBagAnimated(true);
@@ -90,26 +83,51 @@ export default function MainNavbar() {
     prevCartCountRef.current = cartCount;
   }, [cartCount]);
 
-  const handleNavMouseEnter = (hasMega: boolean) => {
-    if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
-    if (hasMega) {
-      setIsMegaMenuOpen(true);
+  // Pure MongoDB Navigation data (Single source of truth)
+  const navigationList: DbNavigationItem[] = useMemo(() => {
+    if (navbarItems && navbarItems.length > 0) {
+      return navbarItems;
+    }
+    return [];
+  }, [navbarItems]);
+
+  // Active mega menu item
+  const activeItem = useMemo(() => {
+    if (!activeMenuSlug) return null;
+    return navigationList.find((i) => i.slug === activeMenuSlug) || null;
+  }, [activeMenuSlug, navigationList]);
+
+  // Robust unified hover handlers
+  const handleNavPointerEnter = (item: DbNavigationItem) => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    if (item.megaMenuEnabled) {
+      setActiveMenuSlug(item.slug || null);
+      setActiveHeaderDropdown(null);
     } else {
-      setIsMegaMenuOpen(false);
+      setActiveMenuSlug(null);
     }
   };
 
-  const handleNavMouseLeave = () => {
-    dropdownTimeoutRef.current = setTimeout(() => {
-      setIsMegaMenuOpen(false);
-    }, 250);
+  const handleRegionPointerEnter = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
   };
 
-  const handleMegaMenuMouseEnter = () => {
-    if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
+  const handleRegionPointerLeave = () => {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    closeTimerRef.current = setTimeout(() => {
+      setActiveMenuSlug(null);
+    }, 200);
   };
 
-  const toggleMenu = (menu: 'account' | 'wishlist' | 'cart' | 'search') => {
+  // Header Dropdown Toggles (Account / Wishlist / Cart / Search)
+  const toggleHeaderDropdown = (menu: 'account' | 'wishlist' | 'cart' | 'search') => {
+    setActiveMenuSlug(null);
     if (menu === 'cart') {
       toggleCartDrawer();
       return;
@@ -118,7 +136,7 @@ export default function MainNavbar() {
       toggleSearchModal();
       return;
     }
-    setActiveMenu((prev) => (prev === menu ? null : menu));
+    setActiveHeaderDropdown((prev) => (prev === menu ? null : menu));
   };
 
   const isAuthOrAdmin = pathname?.startsWith('/admin') || pathname === '/login' || pathname === '/register' || pathname === '/forgot-password';
@@ -139,16 +157,18 @@ export default function MainNavbar() {
           backdropFilter: isScrolled ? 'blur(16px)' : 'none',
           WebkitBackdropFilter: isScrolled ? 'blur(16px)' : 'none',
           borderBottom: '1px solid #E8E7E2',
-          transition: 'all 0.25s ease',
+          transition: 'box-shadow 0.25s ease, background-color 0.25s ease',
           boxShadow: isScrolled ? '0 4px 20px rgba(0, 0, 0, 0.04)' : 'none',
         }}
       >
-        {/* ROW 1: MAIN HEADER (Search Left, Logo Center, Account/Wishlist/Bag Right) */}
+        {/* ======================================================== */}
+        {/* ROW 1: MAIN HEADER (Search Left, Logo Center, Right Actions) */}
+        {/* ======================================================== */}
         <div
           style={{
             maxWidth: '1440px',
             margin: '0 auto',
-            height: isScrolled ? '58px' : '68px',
+            height: isScrolled ? '56px' : '66px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -157,7 +177,7 @@ export default function MainNavbar() {
             position: 'relative',
           }}
         >
-          {/* Mobile Left: Menu Toggle Button */}
+          {/* Mobile Left: Hamburger Button */}
           <div className="mobile-nav-toggle">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
@@ -177,10 +197,10 @@ export default function MainNavbar() {
             </button>
           </div>
 
-          {/* Desktop Left: Search Bar & Icon */}
+          {/* Desktop Left: Search Quick Trigger */}
           <div className="hidden-mobile" style={{ display: 'flex', alignItems: 'center' }}>
             <button
-              onClick={() => toggleMenu('search')}
+              onClick={() => toggleHeaderDropdown('search')}
               aria-label="Search jewellery"
               style={{
                 background: 'transparent',
@@ -225,23 +245,23 @@ export default function MainNavbar() {
           >
             {/* Mobile Search Icon */}
             <button
-              onClick={() => toggleMenu('search')}
+              onClick={() => toggleHeaderDropdown('search')}
               aria-label="Search jewellery"
               className="nav-icon-btn mobile-only-icon"
             >
               <Search size={19} strokeWidth={1.4} />
             </button>
 
-            {/* Account */}
+            {/* Account Icon */}
             <div style={{ position: 'relative' }} className="hidden-mobile">
               <button
-                onClick={() => toggleMenu('account')}
+                onClick={() => toggleHeaderDropdown('account')}
                 aria-label="Account and orders"
                 className="nav-icon-btn"
               >
                 <User size={19} strokeWidth={1.4} />
               </button>
-              {activeMenu === 'account' && (
+              {activeHeaderDropdown === 'account' && (
                 <div
                   style={{
                     position: 'absolute',
@@ -250,15 +270,15 @@ export default function MainNavbar() {
                     zIndex: 130,
                   }}
                 >
-                  <AccountDropdown onClose={() => setActiveMenu(null)} />
+                  <AccountDropdown onClose={() => setActiveHeaderDropdown(null)} />
                 </div>
               )}
             </div>
 
-            {/* Wishlist */}
+            {/* Wishlist Icon */}
             <div style={{ position: 'relative' }}>
               <button
-                onClick={() => toggleMenu('wishlist')}
+                onClick={() => toggleHeaderDropdown('wishlist')}
                 aria-label={`Wishlist (${wishlistCount} items)`}
                 className="nav-icon-btn"
               >
@@ -269,7 +289,7 @@ export default function MainNavbar() {
                   </span>
                 )}
               </button>
-              {activeMenu === 'wishlist' && (
+              {activeHeaderDropdown === 'wishlist' && (
                 <div
                   style={{
                     position: 'absolute',
@@ -278,15 +298,15 @@ export default function MainNavbar() {
                     zIndex: 130,
                   }}
                 >
-                  <WishlistPreview onClose={() => setActiveMenu(null)} />
+                  <WishlistPreview onClose={() => setActiveHeaderDropdown(null)} />
                 </div>
               )}
             </div>
 
-            {/* Bag */}
+            {/* Bag Icon */}
             <div style={{ position: 'relative' }}>
               <button
-                onClick={() => toggleMenu('cart')}
+                onClick={() => toggleHeaderDropdown('cart')}
                 aria-label={`Shopping bag with ${cartCount} items`}
                 className={`nav-icon-btn ${bagAnimated ? 'bag-bounce' : ''}`}
               >
@@ -295,7 +315,7 @@ export default function MainNavbar() {
                   {cartCount}
                 </span>
               </button>
-              {activeMenu === 'cart' && (
+              {activeHeaderDropdown === 'cart' && (
                 <div
                   style={{
                     position: 'absolute',
@@ -304,173 +324,218 @@ export default function MainNavbar() {
                     zIndex: 130,
                   }}
                 >
-                  <CartPreview onClose={() => setActiveMenu(null)} />
+                  <CartPreview onClose={() => setActiveHeaderDropdown(null)} />
                 </div>
               )}
             </div>
           </div>
         </div>
 
-        {/* ROW 2: CATEGORY NAVIGATION ROW BELOW (Screen 1 & 2 in Mockup) */}
+        {/* ======================================================== */}
+        {/* ROW 2: UNIFIED CATEGORY NAVIGATION & DYNAMIC MEGA MENU   */}
+        {/* ======================================================== */}
         <div
-          className="desktop-category-bar"
-          style={{
-            borderTop: '1px solid #F2F0EA',
-            backgroundColor: '#FFFFFF',
-            width: '100%',
-          }}
+          className="nav-and-megamenu-region"
+          onMouseEnter={handleRegionPointerEnter}
+          onMouseLeave={handleRegionPointerLeave}
+          style={{ position: 'relative', width: '100%' }}
         >
+          {/* Category Bar */}
           <div
+            className="desktop-category-bar"
             style={{
-              maxWidth: '1440px',
-              margin: '0 auto',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 'clamp(14px, 1.8vw, 28px)',
-              padding: '0 24px',
-              height: isScrolled ? '36px' : '42px',
-              transition: 'height 0.25s ease',
+              borderTop: '1px solid #F2F0EA',
+              backgroundColor: '#FFFFFF',
+              width: '100%',
             }}
           >
-            {CATEGORY_NAV_ITEMS.map((item) => (
-              <div
-                key={item.label}
-                onMouseEnter={() => handleNavMouseEnter(item.hasMega)}
-                onMouseLeave={handleNavMouseLeave}
-                style={{ height: '100%', display: 'flex', alignItems: 'center' }}
-              >
-                <Link
-                  href={item.href}
-                  className={`nav-sub-link ${pathname === item.href || (item.hasMega && isMegaMenuOpen && pathname.startsWith(item.href.split('?')[0])) ? 'active' : ''}`}
-                >
-                  {item.label}
-                </Link>
-              </div>
-            ))}
+            <nav
+              aria-label="Category Navigation"
+              style={{
+                maxWidth: '1440px',
+                margin: '0 auto',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 'clamp(12px, 1.6vw, 26px)',
+                padding: '0 24px',
+                height: isScrolled ? '38px' : '44px',
+                transition: 'height 0.25s ease',
+              }}
+            >
+              {navLoading ? (
+                <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        width: '68px',
+                        height: '13px',
+                        backgroundColor: '#F8F7F3',
+                        borderRadius: '2px',
+                      }}
+                    />
+                  ))}
+                </div>
+              ) : navigationList.length === 0 ? (
+                <div style={{ padding: '8px 16px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.78rem', color: '#6F6F6A' }}>
+                  <span>Navigation hasn&apos;t been configured yet.</span>
+                  <Link href="/admin/navbar" style={{ color: '#111111', textDecoration: 'underline', fontWeight: 600 }}>
+                    Configure in Admin
+                  </Link>
+                </div>
+              ) : (
+                navigationList.map((item) => {
+                  const isItemActive =
+                    activeMenuSlug === item.slug ||
+                    (pathname === item.url && !activeMenuSlug);
+
+                  return (
+                    <div
+                      key={item.slug || item.id}
+                      onMouseEnter={() => handleNavPointerEnter(item)}
+                      style={{ height: '100%', display: 'flex', alignItems: 'center', position: 'relative' }}
+                    >
+                      <Link
+                        href={item.url}
+                        aria-haspopup={item.megaMenuEnabled ? 'true' : undefined}
+                        aria-expanded={activeMenuSlug === item.slug}
+                        onFocus={() => handleNavPointerEnter(item)}
+                        className={`nav-category-link ${isItemActive ? 'is-active' : ''}`}
+                        style={{
+                          fontFamily: 'var(--font-ui), "Jost", sans-serif',
+                          fontSize: '0.72rem',
+                          fontWeight: isItemActive ? 600 : 500,
+                          letterSpacing: '0.12em',
+                          textTransform: 'uppercase',
+                          color: isItemActive ? '#111111' : '#252525',
+                          textDecoration: 'none',
+                          padding: '10px 4px',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          position: 'relative',
+                          transition: 'color 0.15s ease',
+                        }}
+                      >
+                        <span>{item.label}</span>
+                        {/* Subtle Active Underline Indicator */}
+                        {isItemActive && (
+                          <span
+                            style={{
+                              position: 'absolute',
+                              bottom: 0,
+                              left: '4px',
+                              right: '4px',
+                              height: '2px',
+                              backgroundColor: '#111111',
+                              borderRadius: '1px',
+                            }}
+                          />
+                        )}
+                      </Link>
+                    </div>
+                  );
+                })
+              )}
+            </nav>
           </div>
+
+          {/* DYNAMIC MEGA MENU CONTAINER */}
+          {activeItem && activeItem.megaMenuEnabled && (
+            <div
+              style={{
+                position: 'absolute',
+                top: '100%',
+                left: 0,
+                right: 0,
+                width: '100%',
+                zIndex: 110,
+                paddingTop: '6px',
+              }}
+            >
+              <DynamicMegaMenu
+                categories={navigationList}
+                activeItem={activeItem}
+                onSelectCategory={(slug) => setActiveMenuSlug(slug)}
+                onClose={() => setActiveMenuSlug(null)}
+              />
+            </div>
+          )}
         </div>
 
-        {/* MEGA MENU DROPDOWN (Matches Screen 2 in Mockup) */}
-        {isMegaMenuOpen && (
-          <div
-            onMouseEnter={handleMegaMenuMouseEnter}
-            onMouseLeave={handleNavMouseLeave}
-            style={{
-              position: 'absolute',
-              top: '100%',
-              left: 0,
-              width: '100%',
-              zIndex: 120,
-            }}
-          >
-            <ShopMegaMenu onClose={() => setIsMegaMenuOpen(false)} />
-          </div>
-        )}
-
         {/* Global Search Overlay (if active) */}
-        {activeMenu === 'search' && (
-          <SearchOverlay onClose={() => setActiveMenu(null)} />
+        {activeHeaderDropdown === 'search' && (
+          <SearchOverlay onClose={() => setActiveHeaderDropdown(null)} />
         )}
       </header>
 
-      {/* Mobile Drawer */}
+      {/* Subtle Backdrop Dimmer when Mega Menu is Open (z-index: 90) */}
+      {activeItem && activeItem.megaMenuEnabled && (
+        <div
+          onClick={() => setActiveMenuSlug(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            top: isScrolled ? '94px' : '110px',
+            backgroundColor: 'rgba(0, 0, 0, 0.08)',
+            zIndex: 90,
+            transition: 'opacity 0.2s ease',
+          }}
+        />
+      )}
+
+      {/* Dedicated Mobile Drawer */}
       <MobileDrawer
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
       />
 
       <style jsx>{`
-        .nav-sub-link {
-          font-family: var(--font-ui), "Jost", -apple-system, sans-serif;
-          font-size: 0.72rem;
-          font-weight: 500;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          color: #252525;
-          text-decoration: none;
-          display: inline-flex;
-          align-items: center;
-          padding: 6px 2px;
-          position: relative;
-          transition: color 0.15s ease;
+        .nav-category-link:hover {
+          color: #111111 !important;
         }
-
-        .nav-sub-link:hover,
-        .nav-sub-link.active {
-          color: #111111;
-        }
-
-        .nav-sub-link::after {
-          content: '';
-          position: absolute;
-          bottom: 2px;
-          left: 50%;
-          transform: translateX(-50%) scaleX(0);
-          width: 100%;
-          height: 1.5px;
-          background-color: #111111;
-          transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        .nav-sub-link:hover::after,
-        .nav-sub-link.active::after {
-          transform: translateX(-50%) scaleX(1);
-        }
-
         .nav-icon-btn {
           background: transparent;
           border: none;
-          padding: 7px;
-          display: inline-flex;
+          color: #111111;
+          display: flex;
           align-items: center;
           justify-content: center;
-          color: #111111;
+          padding: 6px;
           cursor: pointer;
           position: relative;
-          border-radius: 50%;
-          transition: background-color 0.2s ease, transform 0.15s ease;
+          transition: transform 0.15s ease;
         }
-
         .nav-icon-btn:hover {
-          background-color: #F8F7F3;
+          transform: scale(1.06);
         }
-
         .nav-badge {
           position: absolute;
           top: 0px;
           right: 0px;
           background-color: #111111;
           color: #FFFFFF;
-          font-size: 0.6rem;
-          font-weight: 600;
-          width: 15px;
-          height: 15px;
+          font-family: var(--font-ui), "Jost", sans-serif;
+          font-size: 0.62rem;
+          font-weight: 700;
+          width: 16px;
+          height: 16px;
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          line-height: 1;
         }
-
         .bag-bounce {
-          animation: bagBounceAnim 0.35s ease;
+          animation: bagBounce 0.35s ease;
         }
-
-        @keyframes bagBounceAnim {
+        @keyframes bagBounce {
           0% { transform: scale(1); }
           50% { transform: scale(1.22); }
           100% { transform: scale(1); }
         }
-
         .mobile-only-icon {
           display: none;
         }
-
-        .mobile-nav-toggle {
-          display: none;
-        }
-
         @media (max-width: 1024px) {
           .desktop-category-bar {
             display: none !important;
@@ -479,10 +544,12 @@ export default function MainNavbar() {
             display: none !important;
           }
           .mobile-only-icon {
-            display: inline-flex !important;
+            display: flex !important;
           }
+        }
+        @media (min-width: 1025px) {
           .mobile-nav-toggle {
-            display: block !important;
+            display: none !important;
           }
         }
       `}</style>

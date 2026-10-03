@@ -22,15 +22,31 @@ export default function CartPage() {
   const [couponCode, setCouponCode] = useState('');
   const [discountApplied, setDiscountApplied] = useState(0);
   const [couponMessage, setCouponMessage] = useState<{ text: string; success: boolean } | null>(null);
+  const [validatingCoupon, setValidatingCoupon] = useState(false);
 
-  const handleApplyCoupon = (e: React.FormEvent) => {
+  const handleApplyCoupon = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (couponCode.trim().toUpperCase() === 'FIRST10' || couponCode.trim().toUpperCase() === 'MK10') {
-      const discount = Math.round(cartSubtotal * 0.1);
-      setDiscountApplied(discount);
-      setCouponMessage({ text: 'Code applied! 10% discount deducted.', success: true });
-    } else {
-      setCouponMessage({ text: 'Invalid coupon. Use FIRST10 for 10% off.', success: false });
+    if (!couponCode.trim()) return;
+    setValidatingCoupon(true);
+    setCouponMessage(null);
+    try {
+      const res = await fetch('/api/coupons/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: couponCode.trim(), subtotal: cartSubtotal }),
+      });
+      const data = await res.json();
+      if (res.ok && data.valid) {
+        setDiscountApplied(data.discountAmount);
+        setCouponMessage({ text: data.message || 'Coupon applied successfully!', success: true });
+      } else {
+        setDiscountApplied(0);
+        setCouponMessage({ text: data.message || 'Invalid coupon code.', success: false });
+      }
+    } catch {
+      setCouponMessage({ text: 'Unable to validate coupon at this time.', success: false });
+    } finally {
+      setValidatingCoupon(false);
     }
   };
 
@@ -443,9 +459,10 @@ export default function CartPage() {
                 />
                 <button
                   type="submit"
+                  disabled={validatingCoupon}
                   style={{
                     padding: '10px 18px',
-                    backgroundColor: '#111111',
+                    backgroundColor: validatingCoupon ? '#6F6F6A' : '#111111',
                     color: '#FFFFFF',
                     border: 'none',
                     fontFamily: 'var(--font-ui), "Jost", sans-serif',
@@ -453,10 +470,10 @@ export default function CartPage() {
                     fontWeight: 600,
                     letterSpacing: '0.12em',
                     textTransform: 'uppercase',
-                    cursor: 'pointer',
+                    cursor: validatingCoupon ? 'not-allowed' : 'pointer',
                   }}
                 >
-                  APPLY
+                  {validatingCoupon ? 'APPLYING...' : 'APPLY'}
                 </button>
               </div>
               {couponMessage && (
