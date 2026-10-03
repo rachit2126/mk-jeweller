@@ -34,7 +34,7 @@ async function runVerification() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       email: 'admin@mksilverhub.com',
-      password: 'AdminPassword123!',
+      password: process.env.ADMIN_PASSWORD || 'mksliver2007',
     }),
   });
 

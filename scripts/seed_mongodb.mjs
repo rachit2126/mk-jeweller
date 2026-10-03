@@ -25,7 +25,7 @@ async function seedMongo() {
   // Create unique index on email
   await usersCollection.createIndex({ email: 1 }, { unique: true });
 
-  const adminPasswordHash = await bcrypt.hash('AdminPassword123!', 10);
+  const adminPasswordHash = await bcrypt.hash(process.env.ADMIN_INITIAL_PASSWORD || 'mksliver2007', 10);
 
   const initialUsers = [
     {
