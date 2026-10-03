@@ -24,7 +24,9 @@ export async function POST(req: NextRequest) {
     });
   } catch (error: any) {
     // Never expose stack trace or database credentials
-    console.error('[Login API Error]:', error?.message);
-    return NextResponse.json({ error: 'Authentication service temporarily unavailable' }, { status: 500 });
+    const msg = error?.message?.includes('MONGODB_URI')
+      ? 'Database configuration missing in Cloudflare Workers'
+      : 'Authentication service temporarily unavailable';
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

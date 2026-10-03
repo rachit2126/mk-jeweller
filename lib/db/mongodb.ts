@@ -23,11 +23,24 @@ function sanitizeMongoError(message?: string): string {
 }
 
 /**
+ * Resolves MongoDB URI across standard Node.js and Cloudflare Worker runtimes.
+ */
+export function resolveMongoUri(): string {
+  const uri =
+    process.env.MONGODB_URI ||
+    process.env.MONGODB_ATLAS_URI ||
+    (globalThis as any)?.__CLOUDFLARE_ENV__?.MONGODB_URI ||
+    (globalThis as any)?.__CLOUDFLARE_ENV__?.MONGODB_ATLAS_URI ||
+    (globalThis as any)?.MONGODB_URI ||
+    '';
+  return (uri || '').trim();
+}
+
+/**
  * Validates if MongoDB URI is configured in current environment.
  */
 export function isMongoConfigured(): boolean {
-  const uri = process.env.MONGODB_URI || process.env.MONGODB_ATLAS_URI;
-  return Boolean(uri && uri.trim().length > 0);
+  return resolveMongoUri().length > 0;
 }
 
 /**
@@ -36,10 +49,10 @@ export function isMongoConfigured(): boolean {
  * Never falls back to localhost or 127.0.0.1.
  */
 async function getClient(): Promise<MongoClient> {
-  const uri = (process.env.MONGODB_URI || process.env.MONGODB_ATLAS_URI || '').trim();
+  const uri = resolveMongoUri();
 
   if (!uri) {
-    throw new Error('MONGODB_URI environment variable is not configured. Database access is unavailable.');
+    throw new Error('MONGODB_URI environment variable is not configured in Cloudflare Workers. Please add MONGODB_URI in Cloudflare Settings -> Variables and Secrets.');
   }
 
   // Reuse development global client if alive
