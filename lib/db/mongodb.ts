@@ -2,9 +2,10 @@ import { MongoClient, Db } from 'mongodb';
 
 const options = {
   maxPoolSize: 10,
-  serverSelectionTimeoutMS: 8000,
-  connectTimeoutMS: 8000,
-  socketTimeoutMS: 20000,
+  minPoolSize: 0,
+  serverSelectionTimeoutMS: 5000,
+  connectTimeoutMS: 5000,
+  socketTimeoutMS: 15000,
 };
 
 declare global {
@@ -96,9 +97,16 @@ async function getClient(): Promise<MongoClient> {
  * Evaluates connection lazily at request runtime.
  * Never exposes credentials to client.
  */
-export async function connectDB(dbName: string = 'mk_silver_hub'): Promise<Db> {
+export async function connectDB(dbName?: string): Promise<Db> {
+  const targetDb =
+    dbName ||
+    process.env.MONGODB_DB_NAME ||
+    process.env.MONGODB_DB ||
+    (globalThis as any)?.__CLOUDFLARE_ENV__?.MONGODB_DB_NAME ||
+    (globalThis as any)?.__CLOUDFLARE_ENV__?.MONGODB_DB ||
+    'mk_silver_hub';
   const client = await getClient();
-  return client.db(dbName);
+  return client.db(targetDb);
 }
 
 export async function getMongoClient(): Promise<MongoClient> {

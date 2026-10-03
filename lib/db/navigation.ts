@@ -1,8 +1,11 @@
-import { connectDB } from './mongodb';
+import { connectDB, isMongoConfigured } from './mongodb';
 import { DbNavigationItem } from './types';
 
 export async function getNavigationTree(): Promise<DbNavigationItem[]> {
   try {
+    if (!isMongoConfigured()) {
+      return [];
+    }
     const db = await connectDB();
     const navCol = db.collection('navigation');
 

@@ -27,8 +27,12 @@ function getAuthSecret(): string {
     process.env.AUTH_SECRET ||
     process.env.SESSION_SECRET ||
     process.env.NEXTAUTH_SECRET ||
+    process.env.JWT_SECRET ||
+    process.env.ADMIN_JWT_SECRET ||
     (globalThis as any)?.__CLOUDFLARE_ENV__?.AUTH_SECRET ||
     (globalThis as any)?.__CLOUDFLARE_ENV__?.SESSION_SECRET ||
+    (globalThis as any)?.__CLOUDFLARE_ENV__?.JWT_SECRET ||
+    (globalThis as any)?.__CLOUDFLARE_ENV__?.ADMIN_JWT_SECRET ||
     'mk-silver-hub-production-signing-secret-key-2026'
   );
 }
