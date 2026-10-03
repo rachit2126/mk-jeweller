@@ -1,10 +1,24 @@
 import { connectDB, isMongoConfigured } from './mongodb';
 import { DbNavigationItem } from './types';
 
+let cachedNavTree: DbNavigationItem[] | null = null;
+let navTreeCachedAt = 0;
+const NAV_CACHE_TTL = 60 * 1000; // 60s in-memory cache
+
+export function invalidateNavigationCache() {
+  cachedNavTree = null;
+  navTreeCachedAt = 0;
+}
+
 export async function getNavigationTree(): Promise<DbNavigationItem[]> {
+  const now = Date.now();
+  if (cachedNavTree && now - navTreeCachedAt < NAV_CACHE_TTL) {
+    return cachedNavTree;
+  }
+
   try {
     if (!isMongoConfigured()) {
-      return [];
+      return cachedNavTree || [];
     }
     const db = await connectDB();
     const navCol = db.collection('navigation');
@@ -87,9 +101,11 @@ export async function getNavigationTree(): Promise<DbNavigationItem[]> {
       }
     });
 
+    cachedNavTree = roots;
+    navTreeCachedAt = Date.now();
     return roots;
   } catch (error) {
     console.error('[getNavigationTree error]:', error);
-    return [];
+    return cachedNavTree || [];
   }
 }

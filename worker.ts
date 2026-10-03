@@ -1,4 +1,5 @@
 import handler from "vinext/server/fetch-handler";
+import { resetClient } from "./lib/db/mongodb";
 
 /**
  * Bridges Cloudflare Worker runtime env/secrets to process.env and global context.
@@ -26,6 +27,8 @@ export default {
         `Application Error: ${err?.message || "Internal Server Error"}`,
         { status: 500, headers: { "Content-Type": "text/plain" } }
       );
+    } finally {
+      resetClient();
     }
   },
 };

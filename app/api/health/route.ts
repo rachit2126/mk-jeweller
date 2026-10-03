@@ -28,11 +28,13 @@ export async function GET() {
   // 2. Test Live Database Connectivity
   try {
     const db = await connectDB();
-    await db.command({ ping: 1 });
+    const count = await db.collection('products').countDocuments({}, { limit: 1 });
+
     return NextResponse.json({
       status: 'ok',
       database: 'connected',
       configured: true,
+      items: count,
     }, { status: 200 });
   } catch (error: any) {
     // 3. Database Connection Failure State

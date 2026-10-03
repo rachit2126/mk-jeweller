@@ -1,11 +1,12 @@
 import { MongoClient, Db } from 'mongodb';
 
 const options = {
-  maxPoolSize: 10,
+  maxPoolSize: 1,
   minPoolSize: 0,
+  maxIdleTimeMS: 5000,
   serverSelectionTimeoutMS: 5000,
   connectTimeoutMS: 5000,
-  socketTimeoutMS: 15000,
+  socketTimeoutMS: 10000,
 };
 
 declare global {
@@ -14,6 +15,12 @@ declare global {
 }
 
 let activeClient: MongoClient | null = null;
+let clientPromise: Promise<MongoClient> | null = null;
+
+export function resetClient() {
+  activeClient = null;
+  clientPromise = null;
+}
 
 /**
  * Sanitizes MongoDB connection error messages to ensure credentials are never exposed in logs.
@@ -47,6 +54,8 @@ export function isMongoConfigured(): boolean {
 /**
  * Returns an active cached MongoClient instance.
  * Evaluates connection string lazily at runtime — never at module import time.
+ * Coalesces concurrent connection attempts so multiple requests never clash.
+ * Resets cached client immediately if closed or disconnected.
  * Never falls back to localhost or 127.0.0.1.
  */
 async function getClient(): Promise<MongoClient> {
@@ -58,37 +67,43 @@ async function getClient(): Promise<MongoClient> {
 
   // Reuse development global client if alive
   if (process.env.NODE_ENV === 'development' && global._mongoClientInstance) {
-    try {
-      await global._mongoClientInstance.db('admin').command({ ping: 1 });
-      return global._mongoClientInstance;
-    } catch {
-      global._mongoClientInstance = undefined;
-    }
+    return global._mongoClientInstance;
   }
 
-  // Reuse cached active client in serverless/worker runtime
   if (activeClient) {
-    try {
-      await activeClient.db('admin').command({ ping: 1 });
-      return activeClient;
-    } catch {
-      activeClient = null;
-    }
+    return activeClient;
   }
 
-  try {
-    const client = new MongoClient(uri, options);
-    await client.connect();
-    activeClient = client;
-    if (process.env.NODE_ENV === 'development') {
-      global._mongoClientInstance = client;
-    }
-    return client;
-  } catch (err: any) {
-    const safeMsg = sanitizeMongoError(err?.message);
-    console.error('[MongoDB Connection Error]:', safeMsg);
-    throw new Error('Database connection currently unavailable');
+  if (clientPromise) {
+    return clientPromise;
   }
+
+  clientPromise = (async () => {
+    try {
+      const client = new MongoClient(uri, options);
+
+      // Listen for socket/topology closure to prevent stale client hangs in serverless isolates
+      client.on('close', resetClient);
+      client.on('error', resetClient);
+      client.on('serverClosed', resetClient);
+      client.on('topologyClosed', resetClient);
+
+      await client.connect();
+      activeClient = client;
+
+      if (process.env.NODE_ENV === 'development') {
+        global._mongoClientInstance = client;
+      }
+      return client;
+    } catch (err: any) {
+      resetClient();
+      const safeMsg = sanitizeMongoError(err?.message);
+      console.error('[MongoDB Connection Error]:', safeMsg);
+      throw new Error('Database connection currently unavailable');
+    }
+  })();
+
+  return clientPromise;
 }
 
 /**
